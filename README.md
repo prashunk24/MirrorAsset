@@ -2,10 +2,13 @@
 
 MirrorAsset is a decentralized synthetic asset platform built on the **Stellar Network** using **Soroban Smart Contracts**. It allows users to lock collateral (USDC or XLM) into isolated vaults to mint synthetic tokens ($sXAU, $sAAPL, $sEUR) that track real-world asset prices. The platform incorporates decentralized oracle price feeds, direct redemptions, and liquidations to maintain price peg stability and solvency.
 
+Additionally, this repository features the **Stellar White Belt Challenge Playground**, a dedicated environment to learn, build, and submit your Stellar White Belt requirements directly in-app.
+
 ---
 
 ## 🚀 Key Features
 
+*   **Stellar White Belt Playground 🥋**: A step-by-step interactive interface for Stellar developers to generate wallets, fetch ledger balances from Testnet, fund via Friendbot, and sign/broadcast transactions to the network.
 *   **Freighter Wallet Connection**: Sign transactions securely using Stellar's native Freighter browser extension, with automatic fallback to a simulated ledger mode if the extension is not detected.
 *   **Over-Collateralized Vaults**: Create isolated debt vaults, lock USDC or XLM collateral, and mint synthetic assets.
 *   **Position Health Visualizer**: Interactive UI sliders showing real-time collateralization ratio indicators (Safe vs. Risky) to help users avoid liquidations.
@@ -127,6 +130,19 @@ The contract code resides in `contracts/mirror_vault/src/lib.rs` and implements 
 5.  **`burn_synths`**: Burn synthetic tokens to pay down outstanding vault debt.
 6.  **`redeem_synths`**: Arbitrage swap of synthetic tokens for collateral at current oracle prices.
 7.  **`liquidate`**: Liquidates an under-collateralized vault. The liquidator covers the vault's outstanding debt and receives the equivalent collateral value plus a 10% premium.
+
+---
+
+## 🥋 Stellar White Belt Challenge
+
+This project includes a fully integrated, interactive dashboard tab designed to fulfill the requirements of the **Stellar Journey to Mastery — White Belt** challenge.
+
+### Playground Features:
+1. **Task 1: Wallet Creation**: Cryptographically generates a secure Stellar Keypair, provides a secure down-loadable JSON backup file, masks secret keys in the UI, and prevents credentials from being committed to Git.
+2. **Task 2: Balance Retrieval**: Connects directly to the Horizon Testnet API. If the account is new (unfunded), a one-click connection to the Friendbot Faucet is provided to credit 10,000 testnet XLM.
+3. **Task 3: First Transaction**: Builds, signs, and broadcasts a native payment transaction to the Stellar Testnet. Provides direct lookup for the transaction hash on Stellar Expert.
+
+To view submission details and screenshots guide, read the [submission document](file:///Users/prashunk/MirrorAsset/docs/submission.md).
 
 ---
 
