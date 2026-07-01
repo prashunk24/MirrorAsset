@@ -23,10 +23,10 @@ pub enum DataKey {
     RedemptionFee,      // e.g. 50 for 0.50%
 }
 
-// Simple token interface for transfer/mint/burn
-mod token {
-    soroban_sdk::contractimport!(file = "../../target/wasm32-unknown-unknown/release/soroban_token_contract.wasm", optional = true);
-}
+// Simple token interface for transfer/mint/burn (Simulated for this implementation)
+// mod token {
+//     soroban_sdk::contractimport!(file = "../../target/wasm32-unknown-unknown/release/soroban_token_contract.wasm", optional = true);
+// }
 
 // Interface for Oracle
 #[contract]

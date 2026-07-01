@@ -26,7 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
   const navItems = [
     { id: 'dashboard', name: 'Dashboard' },
-    { id: 'whitebelt', name: 'White Belt' },
+    { id: 'whitebelt', name: 'Stellar Mastery' },
     { id: 'redemption', name: 'Redemptions' },
     { id: 'liquidation', name: 'Liquidations' },
     { id: 'transactions', name: 'History' },

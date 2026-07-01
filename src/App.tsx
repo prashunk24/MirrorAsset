@@ -10,7 +10,7 @@ import { LiquidationPanel } from './components/LiquidationPanel';
 import { TransactionHistory } from './components/TransactionHistory';
 import { ToastContainer } from './components/ToastContainer';
 
-import { WhiteBeltPlayground } from './components/WhiteBeltPlayground';
+import { MasteryPlayground } from './components/MasteryPlayground';
 
 const MainAppContent: React.FC = () => {
   const { walletConnected } = useStellar();
@@ -35,7 +35,7 @@ const MainAppContent: React.FC = () => {
           />
         );
       case 'whitebelt':
-        return <WhiteBeltPlayground />;
+        return <MasteryPlayground />;
       case 'redemption':
         return <RedemptionPanel />;
       case 'liquidation':

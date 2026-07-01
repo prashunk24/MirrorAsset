@@ -1,75 +1,51 @@
-# Stellar Journey to Mastery — White Belt Submission
+# Stellar Journey to Mastery — Challenge Submission Guide
 
-This document serves as proof of completion for the **Stellar Journey to Mastery — White Belt** challenge. It records the tasks completed, the tools built, and provides placeholders/instructions for the final screenshots required for submission.
-
----
-
-## 🥋 Challenge Verification Summary
-
-All core requirements of the White Belt challenge have been successfully implemented and tested on the Stellar Testnet:
-
-1. **Task 1: Wallet Creation** — Successfully generated a cryptographically secure Keypair, separated the public address from the secret seed, and implemented secure local storage/backup handling (never committed to version control).
-2. **Task 2: Balance Retrieval** — Built real-time Horizon testnet queries to fetch XLM balances, handling loading states, errors, and implementing a Friendbot testnet funding interface.
-3. **Task 3: First Transaction** — Created, signed, and broadcasted a live payment transaction on the Stellar Testnet using the generated secret key, retrieving the transaction hash and linking to the blockchain explorer.
+This document serves as proof of completion for the **Stellar Journey to Mastery — White Belt (Level 1)** and **Orange Belt (Level 2)** challenges. It records the tasks completed, the tools built, on-chain contract addresses, transaction hashes, and instructions for submission.
 
 ---
 
-## 📂 Task Proofs
+## 🥋 Level 1: White Belt Verification Summary
 
-### 1. Wallet Creation Proof
+All core requirements of the White Belt challenge have been successfully implemented and verified:
 
-*   **Public Key Format:** Starts with `G` (e.g. `GCBA...` or similar generated address).
-*   **Secret Key Format:** Starts with `S` (e.g. `SCBA...` or similar generated secret seed).
-*   **Playground Implementation:** Users can click **"Generate Wallet"** in the UI to generate a new keypair in memory. The secret key is masked behind a visual toggle and can be backed up as a JSON file.
-*   **Security Standard:** Secrets are stored locally in the browser's context and never committed to GitHub or sent to any server.
+1. **Task 1: Wallet Creation** — Cryptographically generates a secure Stellar Keypair, separates the public address from the secret seed, and implements secure download and local handling.
+2. **Task 2: Balance Retrieval** — Fetches XLM balances from the Horizon Testnet, handling loading/error states, and includes a one-click connection to the Friendbot Faucet.
+3. **Task 3: First Transaction** — Signs and broadcasts a native payment transaction on Stellar Testnet, retrieving the transaction hash and linking to the block explorer.
 
-### 2. Balance Retrieval Proof
-
-*   **API Used:** Stellar Horizon Testnet API (`https://horizon-testnet.stellar.org/accounts/{publicKey}`).
-*   **Friendbot Faucet Integration:** If the account has a balance of `0` (or is not yet on-chain), the UI triggers a call to `https://friendbot.stellar.org/?addr={publicKey}` to automatically fund the wallet with **10,000 XLM**.
-*   **Horizon State:** Once funded, subsequent calls to `loadAccount()` successfully retrieve and display the correct XLM balance.
-
-### 3. First Transaction Proof
-
-*   **Transaction Type:** Stellar Native Payment (XLM).
-*   **SDK Signer:** `@stellar/stellar-sdk`'s `TransactionBuilder` and `Keypair.fromSecret(secretKey)`.
-*   **Explorer Link:** Completed transactions link directly to the Stellar Expert Testnet Explorer (`https://stellar.expert/explorer/testnet/tx/{txHash}`).
-*   **Example Successful Terminal Output:**
-    ```text
-    Initializing Stellar Transaction Builder...
-    Loading sequence number for source: G...
-    Constructing Payment operation: 10 XLM
-    Signing transaction locally using Secret Key...
-    Submitting signed transaction XDR to Stellar Horizon network...
-    Transaction success! Ledger: 1489240
-    Transaction Hash: 43a6d9620...
-    ```
+### Screenshots Required (Level 1):
+1. **Wallet Creation**: Show the generated Public Key and the masked Secret Key.
+2. **Balance Retrieval**: Show the 10,000 XLM balance retrieved from Horizon after Friendbot funding.
+3. **Transaction Confirmation**: Show the transaction hash and success badge after sending XLM.
 
 ---
 
-## 📸 Screenshots Required for Submission
+## 🍊 Level 2: Orange Belt Verification Summary
 
-To complete your submission on the Stellar Journey dashboard, please capture the following screenshots from the running application:
+All core requirements of the Orange Belt challenge have been successfully implemented, compiled, deployed, and integrated:
 
-1.  **Wallet Creation Screenshot:**
-    *   Navigate to the **White Belt** tab.
-    *   Click **"Generate Wallet"**.
-    *   Take a screenshot showing the generated Public Address and the warning notice about storing the Secret Key safely.
-2.  **Balance Retrieval & Friendbot Funding Screenshot:**
-    *   Click **"Friendbot Faucet"** or check the balance.
-    *   Take a screenshot showing the **10,000 XLM** balance successfully fetched from the Horizon Testnet.
-3.  **Transaction Confirmation Screenshot:**
-    *   Enter a recipient address (or keep the default self-payment) and click **"Sign & Broadcast First Transaction"**.
-    *   Wait for the transaction to complete.
-    *   Take a screenshot showing the **Transaction Submitted Successfully!** badge along with the Transaction Hash and the link to Stellar Expert.
+1. **Multi-Wallet Support** — Integrated **StellarWalletsKit** to support Freighter, Albedo, and xBull wallet extensions, resolving all connection prompts and handling not installed / user rejected scenarios.
+2. **Soroban Smart Contract Deployment** — Compiled and deployed a custom Rust smart contract (`mirror_vault`) targeting `wasm32v1-none` on the Stellar Testnet.
+3. **Contract Integration (Read & Write)** — Implemented simulated reads (`get_vault`) and signed write calls (`deposit_collateral`) directly via the multi-wallet client.
+4. **Live Event Listener** — Programmed an event poller fetching contract events from the Stellar Testnet ledger and updating UI state reactively.
+
+### Level 2 Deployed Assets:
+- **Contract Address (CONTRACT_ID)**: `CASOUZGUMQMEPHV5I2POCLPVRG4Y7Y3YJJ4UUKQMGT2KEMNJFTBNUC2K`
+- **Instantiation Transaction Hash**: `8372cbd3cf80c112183ef61e4ee62100a363eadaa910c7c0a5046e0a7d3269b3`
+- **Horizon Network Explorer URL**: [Stellar Expert Explorer](https://stellar.expert/explorer/testnet/tx/8372cbd3cf80c112183ef61e4ee62100a363eadaa910c7c0a5046e0a7d3269b3)
+
+### Screenshots Required (Level 2):
+1. **Multi-Wallet Selection**: Show the StellarWalletsKit modal containing Freighter, Albedo, and xBull choices.
+2. **On-Chain Vault Read**: Show the active contract state displaying the user's locked collateral and minted debt balance.
+3. **Contract Deposit Transaction**: Show the pending, then success state, along with the transaction hash and ledger explorer link.
+4. **Live Soroban Event Logger**: Show the live event ticker displaying `deposit_collateral` event topics and data payloads.
 
 ---
 
-## 📜 Conceptual Recap (For Submission Review)
+## 📜 Conceptual Recap
 
 ### What is a Stellar wallet?
-A Stellar wallet is a pair of cryptographic keys (a keypair) that controls access to funds on the Stellar network. Unlike traditional physical wallets, it doesn't store tokens directly. Instead, it stores the cryptographic keys used to authorize ledger changes.
+A Stellar wallet is a cryptographic keypair (a public key and a secret key) that controls access to an account on the Stellar network.
 
 ### Public Key vs. Secret Key
-*   **Public Key (Address):** Analogous to an email address or bank account number. It identifies your account on the ledger and is shared publicly. Anyone can send funds or check the balance of a public key.
-*   **Secret Key (Seed):** Analogous to a password or digital signature stamp. It must be kept strictly private. It is used to generate the cryptographic signature required to authorize payments, trade, or make configuration changes to your account.
+- **Public Key**: Public identifier starting with `G`, acting like an account number for receiving funds.
+- **Secret Key**: Cryptographic seed starting with `S`, acting like a digital signature key. It must be kept private to prevent unauthorized fund movements.

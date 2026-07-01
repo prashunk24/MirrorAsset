@@ -26,3 +26,7 @@ dist-ssr
 # Rust target
 target/
 
+# Local env files and caches
+.env
+.npm_cache/
+
