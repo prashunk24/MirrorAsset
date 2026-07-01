@@ -10,6 +10,8 @@ import { LiquidationPanel } from './components/LiquidationPanel';
 import { TransactionHistory } from './components/TransactionHistory';
 import { ToastContainer } from './components/ToastContainer';
 
+import { WhiteBeltPlayground } from './components/WhiteBeltPlayground';
+
 const MainAppContent: React.FC = () => {
   const { walletConnected } = useStellar();
   const [activeTab, setActiveTab] = useState<string>('landing');
@@ -32,6 +34,8 @@ const MainAppContent: React.FC = () => {
             onCreateVaultClick={() => setIsCreateVaultOpen(true)}
           />
         );
+      case 'whitebelt':
+        return <WhiteBeltPlayground />;
       case 'redemption':
         return <RedemptionPanel />;
       case 'liquidation':

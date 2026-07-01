@@ -24,13 +24,13 @@ export const MintRedeemModal: React.FC<MintRedeemModalProps> = ({ vaultId, onClo
   const vault = vaults.find(v => v.id === vaultId);
   const asset = assets.find(a => a.symbol === vault?.syntheticAsset);
 
-  if (!vault || !asset) return null;
-
   // Tabs: 'collateral' or 'debt'
   const [activeTab, setActiveTab] = useState<'collateral' | 'debt'>('collateral');
   // Operations: 'deposit' | 'withdraw' OR 'mint' | 'burn'
   const [actionType, setActionType] = useState<'deposit' | 'withdraw' | 'mint' | 'burn'>('deposit');
   const [inputVal, setInputVal] = useState<string>('');
+
+  if (!vault || !asset) return null;
 
   const collateralBalance = vault.collateralAsset === 'XLM' ? balanceXLM : balanceUSDC;
   const synthBalance = balanceSynths[vault.syntheticAsset] || 0;
