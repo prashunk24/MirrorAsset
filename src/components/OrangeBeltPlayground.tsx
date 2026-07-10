@@ -29,7 +29,7 @@ import {
   Sparkles
 } from 'lucide-react';
 
-const CONTRACT_ID = (import.meta.env.VITE_VAULT_CONTRACT_ID as string) || 'CCNOBKEQJ22K5SG554W4QYR5JRUINMD4RQW7E354ANLBZPW53KVAEAJY';
+const CONTRACT_ID = (import.meta.env.VITE_VAULT_CONTRACT_ID as string) || 'CACI5JARB6WERDJZUTXPN357Q5PDSADLJ6XICJJE3XSKCOB62EMYXQ2D';
 const HORIZON_URL = 'https://horizon-testnet.stellar.org';
 const RPC_URL = 'https://soroban-testnet.stellar.org';
 const NETWORK_PASSPHRASE = Networks.TESTNET;

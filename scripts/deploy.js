@@ -1,4 +1,4 @@
-import { rpc, Keypair, Horizon, Networks, TransactionBuilder, Operation, Address, StrKey, xdr } from '@stellar/stellar-sdk';
+import { rpc, Keypair, Horizon, Networks, TransactionBuilder, Operation, Address, StrKey, xdr, Contract } from '@stellar/stellar-sdk';
 import fs from 'fs';
 import path from 'path';
 
@@ -145,7 +145,47 @@ async function run() {
     console.log(`Contract deployed successfully!`);
     console.log(`CONTRACT_ID: ${contractId}`);
 
-    // 4. Update .env files
+    // Wait a brief moment
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // 4. Initialize Contract
+    console.log('Initializing contract on-chain...');
+    const contract = new Contract(contractId);
+    const deployerAccountForInit = await server.loadAccount(deployer.publicKey());
+    
+    let initTx = new TransactionBuilder(deployerAccountForInit, {
+      fee: '100',
+      networkPassphrase: NETWORK_PASSPHRASE,
+    })
+      .addOperation(
+        contract.call(
+          'initialize',
+          new Address(deployer.publicKey()).toScVal(),
+          new Address(contractId).toScVal(), // Use own address as mock oracle
+          new Address(deployer.publicKey()).toScVal(), // Mock collateral token
+          new Address(deployer.publicKey()).toScVal(), // Mock synth token
+          xdr.ScVal.scvI128(new xdr.Int128Parts({ hi: new xdr.Int64(0n), lo: new xdr.Uint64(15000n) })), // 150% min ratio
+          xdr.ScVal.scvI128(new xdr.Int128Parts({ hi: new xdr.Int64(0n), lo: new xdr.Uint64(1000n) })),  // 10% bonus
+          xdr.ScVal.scvI128(new xdr.Int128Parts({ hi: new xdr.Int64(0n), lo: new xdr.Uint64(50n) })),    // 0.5% fee
+        )
+      )
+      .setTimeout(30)
+      .build();
+
+    console.log('Simulating and assembling Initialize transaction...');
+    const initSim = await rpcServer.simulateTransaction(initTx);
+    initTx = rpc.assembleTransaction(initTx, initSim).build();
+    initTx.sign(deployer);
+
+    console.log('Submitting Initialize transaction...');
+    const initResult = await rpcServer.sendTransaction(initTx);
+    if (initResult.status === 'ERROR') {
+      throw new Error(`Failed to submit initialize contract: ${JSON.stringify(initResult)}`);
+    }
+    await pollTx(initResult.hash);
+    console.log('Contract initialized successfully!');
+
+    // 5. Update .env files
     const envPath = path.resolve('./.env');
     const envExamplePath = path.resolve('./.env.example');
     
