@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useStellar } from '../context/StellarContext';
-import { Wallet, LogOut, Coins, Activity, ShieldAlert } from 'lucide-react';
+import { Wallet, LogOut, Coins, Activity, ShieldAlert, Menu, X } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
@@ -20,6 +20,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
     isLoading
   } = useStellar();
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const truncateAddress = (addr: string) => {
     return `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
   };
@@ -36,8 +38,20 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
     <nav className="border-b border-gray-800/80 bg-bg-dark/80 backdrop-blur-md sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+          {/* Mobile menu toggle button */}
+          {walletConnected && (
+            <div className="flex md:hidden mr-2">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="inline-flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 focus:outline-none transition-colors cursor-pointer"
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
+          )}
+
           {/* Logo & Name */}
-          <div className="flex items-center cursor-pointer" onClick={() => setActiveTab('landing')}>
+          <div className="flex items-center cursor-pointer flex-grow md:flex-grow-0" onClick={() => setActiveTab('landing')}>
             <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-accent-purple to-accent-cyan flex items-center justify-center shadow-lg shadow-accent-purple/20">
               <Activity className="h-6 w-6 text-white stroke-[2.5]" />
             </div>
@@ -46,14 +60,14 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             </span>
           </div>
 
-          {/* Navigation Links */}
+          {/* Navigation Links (Desktop) */}
           {walletConnected && (
             <div className="hidden md:flex items-center space-x-1">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
                     activeTab === item.id
                       ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20'
                       : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 border border-transparent'
@@ -69,7 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
           <div className="flex items-center gap-3">
             {walletConnected ? (
               <>
-                {/* Balance Display */}
+                {/* Balance Display (Desktop only) */}
                 <div className="hidden lg:flex items-center bg-gray-900/60 border border-gray-800/60 rounded-xl px-3 py-1.5 gap-3 text-xs text-gray-400 font-medium">
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse"></span>
@@ -86,10 +100,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                 <button
                   onClick={claimFaucet}
                   title="Claim test tokens from Stellar Faucet"
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan hover:text-white rounded-xl text-xs font-semibold transition-all duration-200"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan hover:text-white rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer"
                 >
                   <Coins className="h-3.5 w-3.5" />
-                  <span>Faucet</span>
+                  <span className="hidden sm:inline">Faucet</span>
                 </button>
 
                 {/* Simulation Mode indicator */}
@@ -99,18 +113,19 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                     className="flex items-center gap-1 px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-lg text-[10px] font-bold uppercase tracking-wider"
                   >
                     <ShieldAlert className="h-3 w-3" />
-                    <span>Simulated</span>
+                    <span className="hidden xs:inline">Simulated</span>
                   </div>
                 )}
 
                 {/* Wallet Info Dropdown / Button */}
                 <div className="flex items-center bg-gray-900/80 border border-gray-800 rounded-xl px-3.5 py-1.5 gap-2 text-sm text-gray-200">
                   <Wallet className="h-4 w-4 text-accent-purple" />
-                  <span className="font-mono text-xs">{publicKey ? truncateAddress(publicKey) : ''}</span>
+                  <span className="font-mono text-xs hidden sm:inline">{publicKey ? truncateAddress(publicKey) : ''}</span>
+                  <span className="font-mono text-xs sm:hidden">{publicKey ? publicKey.substring(0, 4) + '...' + publicKey.substring(publicKey.length - 3) : ''}</span>
                   <button
                     onClick={disconnectWallet}
                     title="Disconnect Wallet"
-                    className="ml-1 text-gray-500 hover:text-rose-400 transition-colors"
+                    className="ml-1 text-gray-500 hover:text-rose-400 transition-colors cursor-pointer"
                   >
                     <LogOut className="h-4 w-4" />
                   </button>
@@ -120,7 +135,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
               <button
                 onClick={connectWallet}
                 disabled={isLoading}
-                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-accent-purple to-violet-600 hover:from-accent-purple hover:to-violet-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-accent-purple/20 transition-all duration-300 hover:shadow-accent-purple/35 transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:pointer-events-none"
+                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-accent-purple to-violet-600 hover:from-accent-purple hover:to-violet-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-accent-purple/20 transition-all duration-300 hover:shadow-accent-purple/35 transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:pointer-events-none cursor-pointer"
               >
                 {isLoading ? (
                   <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -133,6 +148,28 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Links */}
+      {walletConnected && mobileMenuOpen && (
+        <div className="md:hidden border-b border-gray-800/80 bg-bg-dark/95 backdrop-blur-md px-4 pt-2 pb-3 space-y-1 animate-fade-in">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => {
+                setActiveTab(item.id);
+                setMobileMenuOpen(false);
+              }}
+              className={`block w-full text-left px-3 py-2 rounded-lg text-base font-medium transition-all duration-200 cursor-pointer ${
+                activeTab === item.id
+                  ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20 font-bold'
+                  : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
+              }`}
+            >
+              {item.name}
+            </button>
+          ))}
+        </div>
+      )}
     </nav>
   );
 };

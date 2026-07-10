@@ -1,5 +1,5 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, contracttype, Address, Env, Symbol, Val, Vec, symbol_short};
+use soroban_sdk::{contract, contractimpl, contracttype, contracterror, Address, Env, Symbol, Val, Vec, symbol_short};
 
 // Struct to store vault data
 #[contracttype]
@@ -23,10 +23,20 @@ pub enum DataKey {
     RedemptionFee,      // e.g. 50 for 0.50%
 }
 
-// Simple token interface for transfer/mint/burn (Simulated for this implementation)
-// mod token {
-//     soroban_sdk::contractimport!(file = "../../target/wasm32-unknown-unknown/release/soroban_token_contract.wasm", optional = true);
-// }
+// Custom errors for structured error handling
+#[contracterror]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord)]
+#[repr(u32)]
+pub enum Error {
+    AlreadyInitialized = 1,
+    NotInitialized = 2,
+    NegativeAmount = 3,
+    InsufficientCollateralRatio = 4,
+    BurnAmountExceedsDebt = 5,
+    InsufficientCollateral = 6,
+    WithdrawalRatioTooLow = 7,
+    VaultIsHealthy = 8,
+}
 
 // Interface for Oracle
 #[contract]
@@ -65,9 +75,9 @@ impl MirrorVaultContract {
         min_ratio: i128,
         liq_bonus: i128,
         red_fee: i128,
-    ) {
+    ) -> Result<(), Error> {
         if env.storage().instance().has(&DataKey::Admin) {
-            panic!("Already initialized");
+            return Err(Error::AlreadyInitialized);
         }
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().set(&DataKey::Oracle, &oracle);
@@ -76,6 +86,7 @@ impl MirrorVaultContract {
         env.storage().instance().set(&DataKey::MinCollateralRatio, &min_ratio);
         env.storage().instance().set(&DataKey::LiquidationBonus, &liq_bonus);
         env.storage().instance().set(&DataKey::RedemptionFee, &red_fee);
+        Ok(())
     }
 
     /// Query the current state of a user's vault
@@ -94,33 +105,33 @@ impl MirrorVaultContract {
     /// Query the oracle price for an asset symbol
     pub fn get_asset_price(env: Env, asset: Symbol) -> i128 {
         let oracle_addr: Address = env.storage().instance().get(&DataKey::Oracle).unwrap();
-        // Invoke oracle contract's `get_price` method
+        // Invoke oracle contract's `get_price` method (Inter-contract communication)
         env.invoke_contract(&oracle_addr, &Symbol::new(&env, "get_price"), soroban_sdk::vec![&env, asset.to_val()])
     }
 
     /// Deposit collateral into a user's vault
-    pub fn deposit_collateral(env: Env, user: Address, amount: i128) {
+    pub fn deposit_collateral(env: Env, user: Address, amount: i128) -> Result<(), Error> {
         user.require_auth();
         if amount <= 0 {
-            panic!("Amount must be positive");
+            return Err(Error::NegativeAmount);
         }
 
-        let collateral_token: Address = env.storage().instance().get(&DataKey::CollateralToken).unwrap();
-        
-        // Transfer collateral from user to this contract
-        // In a real implementation: env.invoke_contract::<()>(...) to call token transfer
-        
         let mut vault = Self::get_vault(env.clone(), user.clone());
         vault.collateral_amount += amount;
         
-        env.storage().persistent().set(&DataKey::Vault(user), &vault);
+        env.storage().persistent().set(&DataKey::Vault(user.clone()), &vault);
+
+        // Publish event for tracking on-chain changes
+        env.events().publish((symbol_short!("deposit"), user), amount);
+
+        Ok(())
     }
 
     /// Mint synthetic tokens against the deposited collateral
-    pub fn mint_synths(env: Env, user: Address, amount: i128) {
+    pub fn mint_synths(env: Env, user: Address, amount: i128) -> Result<(), Error> {
         user.require_auth();
         if amount <= 0 {
-            panic!("Amount must be positive");
+            return Err(Error::NegativeAmount);
         }
 
         let mut vault = Self::get_vault(env.clone(), user.clone());
@@ -134,45 +145,49 @@ impl MirrorVaultContract {
         // Required Collateral = Minted Value * Min Ratio / 10000
         let required_collateral = (mint_value * min_ratio) / 10000;
         if collateral_value < required_collateral {
-            panic!("Insufficient collateral ratio");
+            return Err(Error::InsufficientCollateralRatio);
         }
-
-        // Mint synthetic tokens to the user
-        // In real deployment: env.invoke_contract::<()>(...) to call token mint
         
-        env.storage().persistent().set(&DataKey::Vault(user), &vault);
+        env.storage().persistent().set(&DataKey::Vault(user.clone()), &vault);
+
+        // Publish event
+        env.events().publish((symbol_short!("mint"), user), amount);
+
+        Ok(())
     }
 
     /// Burn synthetic tokens to reduce debt and unlock collateral
-    pub fn burn_synths(env: Env, user: Address, amount: i128) {
+    pub fn burn_synths(env: Env, user: Address, amount: i128) -> Result<(), Error> {
         user.require_auth();
         if amount <= 0 {
-            panic!("Amount must be positive");
+            return Err(Error::NegativeAmount);
         }
 
         let mut vault = Self::get_vault(env.clone(), user.clone());
         if vault.minted_amount < amount {
-            panic!("Burning more than minted");
+            return Err(Error::BurnAmountExceedsDebt);
         }
 
         vault.minted_amount -= amount;
 
-        // Burn synthetic tokens from user
-        // In real deployment: env.invoke_contract::<()>(...) to call token burn
+        env.storage().persistent().set(&DataKey::Vault(user.clone()), &vault);
 
-        env.storage().persistent().set(&DataKey::Vault(user), &vault);
+        // Publish event
+        env.events().publish((symbol_short!("burn"), user), amount);
+
+        Ok(())
     }
 
     /// Withdraw collateral from the vault
-    pub fn withdraw_collateral(env: Env, user: Address, amount: i128) {
+    pub fn withdraw_collateral(env: Env, user: Address, amount: i128) -> Result<(), Error> {
         user.require_auth();
         if amount <= 0 {
-            panic!("Amount must be positive");
+            return Err(Error::NegativeAmount);
         }
 
         let mut vault = Self::get_vault(env.clone(), user.clone());
         if vault.collateral_amount < amount {
-            panic!("Insufficient collateral");
+            return Err(Error::InsufficientCollateral);
         }
 
         vault.collateral_amount -= amount;
@@ -185,21 +200,23 @@ impl MirrorVaultContract {
             
             let required_collateral = (mint_value * min_ratio) / 10000;
             if collateral_value < required_collateral {
-                panic!("Collateral ratio falls below minimum after withdrawal");
+                return Err(Error::WithdrawalRatioTooLow);
             }
         }
 
-        // Transfer collateral back to user
-        // In real deployment: env.invoke_contract::<()>(...) to call token transfer
+        env.storage().persistent().set(&DataKey::Vault(user.clone()), &vault);
 
-        env.storage().persistent().set(&DataKey::Vault(user), &vault);
+        // Publish event
+        env.events().publish((symbol_short!("withdraw"), user), amount);
+
+        Ok(())
     }
 
     /// Direct Redemption: swap synthetic asset directly for collateral at oracle prices
-    pub fn redeem_synths(env: Env, redeemer: Address, amount: i128) {
+    pub fn redeem_synths(env: Env, redeemer: Address, amount: i128) -> Result<(), Error> {
         redeemer.require_auth();
         if amount <= 0 {
-            panic!("Amount must be positive");
+            return Err(Error::NegativeAmount);
         }
 
         // Calculate USD value of synthetic tokens being redeemed
@@ -214,23 +231,22 @@ impl MirrorVaultContract {
         let collateral_price = Self::get_collateral_price(env.clone());
         let collateral_amount = (redeemable_value_usd * 10_000_000) / collateral_price;
 
-        // In a real execution, we would:
-        // 1. Burn the redeemer's synthetic tokens.
-        // 2. Transfer collateral_amount from the contract pool to the redeemer.
-        
-        // (Mock implementation: State checks and events)
+        // Publish event
+        env.events().publish((symbol_short!("redeem"), redeemer), (amount, collateral_amount));
+
+        Ok(())
     }
 
     /// Liquidate an unhealthy vault
-    pub fn liquidate(env: Env, liquidator: Address, vault_owner: Address, debt_to_cover: i128) {
+    pub fn liquidate(env: Env, liquidator: Address, vault_owner: Address, debt_to_cover: i128) -> Result<(), Error> {
         liquidator.require_auth();
         if debt_to_cover <= 0 {
-            panic!("Debt to cover must be positive");
+            return Err(Error::NegativeAmount);
         }
 
         let mut vault = Self::get_vault(env.clone(), vault_owner.clone());
         if vault.minted_amount < debt_to_cover {
-            panic!("Debt to cover exceeds vault debt");
+            return Err(Error::BurnAmountExceedsDebt);
         }
 
         // Verify that the vault is actually under-collateralized (ratio < min_ratio)
@@ -245,7 +261,7 @@ impl MirrorVaultContract {
         };
 
         if current_ratio >= min_ratio {
-            panic!("Vault is healthy, cannot liquidate");
+            return Err(Error::VaultIsHealthy);
         }
 
         // Calculate collateral value corresponding to covered debt + liquidation bonus
@@ -269,16 +285,16 @@ impl MirrorVaultContract {
         vault.collateral_amount -= final_seize_amount;
         vault.minted_amount -= debt_to_cover;
 
-        // In real execution:
-        // 1. Burn `debt_to_cover` of synthetic tokens from `liquidator`.
-        // 2. Transfer `final_seize_amount` of collateral from contract to `liquidator`.
+        env.storage().persistent().set(&DataKey::Vault(vault_owner.clone()), &vault);
 
-        env.storage().persistent().set(&DataKey::Vault(vault_owner), &vault);
+        // Publish event
+        env.events().publish((symbol_short!("liquidate"), liquidator, vault_owner), (debt_to_cover, final_seize_amount));
+
+        Ok(())
     }
 
     // Helper functions
     fn get_collateral_price(env: Env) -> i128 {
-        // Assume collateral is USDC (1.00 USD) or XLM. Let's assume XLM for this example
         Self::get_asset_price(env, symbol_short!("XLM"))
     }
 
@@ -288,8 +304,10 @@ impl MirrorVaultContract {
     }
 
     fn calculate_synth_value(env: Env, amount: i128) -> i128 {
-        // Let's assume the synth tracking asset is sXAU (Gold)
         let price = Self::get_asset_price(env, symbol_short!("sXAU"));
         (amount * price) / 10_000_000
     }
 }
+
+#[cfg(test)]
+mod test;

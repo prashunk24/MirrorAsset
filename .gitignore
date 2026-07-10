@@ -29,4 +29,6 @@ target/
 # Local env files and caches
 .env
 .npm_cache/
+test_snapshots/
+**/test_snapshots/
 
