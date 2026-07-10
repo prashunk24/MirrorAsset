@@ -71,5 +71,5 @@ jobs:
         uses: stellar/stellar-cli@v27.0.0
 
       - name: Build Optimized WASM Contract
-        run: cargo build --target wasm32v1-none --release
+        run: stellar contract build
         working-directory: contracts/mirror_vault
