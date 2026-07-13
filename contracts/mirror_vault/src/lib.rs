@@ -1,5 +1,5 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, contracttype, contracterror, Address, Env, Symbol, Val, Vec, symbol_short};
+use soroban_sdk::{contract, contractimpl, contracttype, contracterror, Address, Env, Symbol, symbol_short};
 
 // Struct to store vault data
 #[contracttype]
@@ -45,7 +45,7 @@ pub struct MockOracle;
 #[contractimpl]
 impl MockOracle {
     // Returns price in 7 decimal places (e.g., $1.00 = 10_000_000)
-    pub fn get_price(env: Env, asset: Symbol) -> i128 {
+    pub fn get_price(_env: Env, asset: Symbol) -> i128 {
         if asset == symbol_short!("XLM") {
             1_200_000 // $0.12
         } else if asset == symbol_short!("USDC") {
