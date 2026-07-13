@@ -25,6 +25,9 @@ jobs:
       - name: TypeScript Compile Check
         run: npx tsc -b
 
+      - name: Run Frontend Unit & Integration Tests
+        run: npm run test
+
   contract-test:
     name: Soroban Contract Unit Tests
     runs-on: ubuntu-latest

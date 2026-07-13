@@ -151,7 +151,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
       {/* Mobile Menu Links */}
       {walletConnected && mobileMenuOpen && (
-        <div className="md:hidden border-b border-gray-800/80 bg-bg-dark/95 backdrop-blur-md px-4 pt-2 pb-3 space-y-1 animate-fade-in">
+        <div data-testid="mobile-menu" className="md:hidden border-b border-gray-800/80 bg-bg-dark/95 backdrop-blur-md px-4 pt-2 pb-3 space-y-1 animate-fade-in">
           {navItems.map((item) => (
             <button
               key={item.id}
