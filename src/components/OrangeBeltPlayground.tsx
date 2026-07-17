@@ -523,7 +523,7 @@ export const OrangeBeltPlayground: React.FC = () => {
                   <button
                     onClick={writeDepositContract}
                     disabled={!walletConnected || writeStatus === 'Pending' || parseFloat(depositAmount) <= 0}
-                    className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-accent-purple hover:from-indigo-600 hover:to-accent-purple/90 disabled:opacity-40 disabled:pointer-events-none text-white rounded-xl text-xs font-bold transition-all shadow-lg flex items-center gap-2 cursor-pointer"
+                    className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-accent-purple hover:from-indigo-600 hover:to-accent-purple/90 disabled:opacity-40 disabled:pointer-events-none text-white rounded-xl text-xs font-bold interactive-action shadow-lg flex items-center gap-2 cursor-pointer"
                   >
                     {writeStatus === 'Pending' ? (
                       <>

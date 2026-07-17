@@ -48,8 +48,12 @@ const MainAppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark text-text-primary flex flex-col justify-between selection:bg-accent-purple/35 selection:text-white">
-      <div>
+    <div className="min-h-screen bg-bg-dark text-text-primary flex flex-col justify-between selection:bg-accent-purple/35 selection:text-white relative overflow-hidden">
+      {/* Background glow vectors */}
+      <div className="absolute top-20 left-1/4 w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
+      <div className="absolute bottom-20 right-1/4 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
+      
+      <div className="relative z-10">
         <Navbar
           activeTab={activeTab}
           setActiveTab={(tab) => {

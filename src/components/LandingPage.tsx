@@ -159,7 +159,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
             onClick={handleStart}
             id="connect-launch-btn"
             aria-label="Connect Freighter wallet and launch dashboard"
-            className="group flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-accent-purple to-indigo-600 hover:from-accent-purple hover:to-indigo-700 text-white rounded-xl text-base font-bold shadow-2xl shadow-accent-purple/30 transition-all duration-300 hover:shadow-accent-purple/50 transform hover:-translate-y-1 active:translate-y-0 cursor-pointer"
+            className="group flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-accent-purple to-indigo-600 hover:from-accent-purple hover:to-indigo-700 text-white rounded-xl text-base font-bold shadow-2xl shadow-accent-purple/30 interactive-action transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
           >
             <Wallet className="h-5 w-5" />
             <span>{walletConnected ? 'Launch Dashboard' : 'Connect & Launch'}</span>
@@ -173,7 +173,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
               onClick={handleConnectWallet}
               id="connect-wallet-btn"
               aria-label="Connect Freighter wallet via freighter-api"
-              className="flex items-center gap-2 px-6 py-4 bg-bg-surface hover:bg-bg-card border border-border-subtle hover:border-border-default text-text-secondary hover:text-text-primary rounded-xl text-base font-semibold transition-all duration-300 transform hover:-translate-y-1 active:translate-y-0 cursor-pointer backdrop-blur-sm"
+              className="flex items-center gap-2 px-6 py-4 bg-bg-surface hover:bg-bg-card border border-border-subtle hover:border-border-default text-text-secondary hover:text-text-primary rounded-xl text-base font-semibold interactive-action transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer backdrop-blur-sm"
             >
               <Coins className="h-5 w-5 text-accent-cyan" />
               <span>Connect Wallet</span>

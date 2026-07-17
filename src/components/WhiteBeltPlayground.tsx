@@ -582,7 +582,7 @@ export const WhiteBeltPlayground: React.FC = () => {
                 <button
                   onClick={sendTransaction}
                   disabled={!wallet || !task2Done || isSubmittingTx}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-indigo-500 to-accent-purple hover:from-indigo-600 hover:to-accent-purple/90 disabled:opacity-40 disabled:pointer-events-none text-white rounded-xl text-xs font-bold transition-all shadow-lg cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-indigo-500 to-accent-purple hover:from-indigo-600 hover:to-accent-purple/90 disabled:opacity-40 disabled:pointer-events-none text-white rounded-xl text-xs font-bold interactive-action shadow-lg cursor-pointer"
                 >
                   {isSubmittingTx ? (
                     <>
