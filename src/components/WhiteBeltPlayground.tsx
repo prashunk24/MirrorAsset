@@ -305,30 +305,30 @@ export const WhiteBeltPlayground: React.FC = () => {
             <Zap className="h-3.5 w-3.5" />
             <span>Journey to Mastery</span>
           </div>
-          <h2 className="text-3xl font-extrabold text-white">Stellar White Belt Challenge</h2>
-          <p className="text-sm text-gray-400">
+          <h2 className="text-3xl font-extrabold text-text-primary">Stellar White Belt Challenge</h2>
+          <p className="text-sm text-text-secondary">
             Learn the basics of Stellar development: wallet creation, balance checks, and submitting transaction signatures directly on the Testnet network.
           </p>
         </div>
 
         {/* Progress Tracker */}
-        <div className="flex-shrink-0 bg-gray-900/60 border border-gray-800 rounded-xl p-4 min-w-[240px] space-y-3">
+        <div className="flex-shrink-0 bg-bg-surface border border-border-subtle rounded-xl p-4 min-w-[240px] space-y-3">
           <div className="flex justify-between items-center text-xs">
-            <span className="font-semibold text-gray-400">Completion Status</span>
-            <span className={`font-bold ${progressPercent === 100 ? 'text-emerald-400' : 'text-accent-purple'}`}>
+            <span className="font-semibold text-text-muted">Completion Status</span>
+            <span className={`font-bold ${progressPercent === 100 ? 'text-accent-green' : 'text-accent-purple'}`}>
               {progressPercent}%
             </span>
           </div>
-          <div className="w-full h-2.5 bg-gray-950 rounded-full overflow-hidden">
+          <div className="w-full h-2.5 bg-bg-dark rounded-full overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-accent-purple to-accent-cyan rounded-full transition-all duration-500"
               style={{ width: `${progressPercent}%` }}
             ></div>
           </div>
-          <div className="flex justify-between items-center text-[10px] text-gray-500 font-medium">
-            <span className={task1Done ? 'text-emerald-400 font-bold' : ''}>Wallet Create</span>
-            <span className={task2Done ? 'text-emerald-400 font-bold' : ''}>Balance Check</span>
-            <span className={task3Done ? 'text-emerald-400 font-bold' : ''}>Tx Sent</span>
+          <div className="flex justify-between items-center text-[10px] text-text-muted font-medium">
+            <span className={task1Done ? 'text-accent-green font-bold' : ''}>Wallet Create</span>
+            <span className={task2Done ? 'text-accent-green font-bold' : ''}>Balance Check</span>
+            <span className={task3Done ? 'text-accent-green font-bold' : ''}>Tx Sent</span>
           </div>
         </div>
       </div>
@@ -341,20 +341,20 @@ export const WhiteBeltPlayground: React.FC = () => {
           
           {/* TASK 1: WALLET CREATION */}
           <div className={`glass-panel p-6 rounded-2xl border-l-4 transition-all duration-300 ${
-            task1Done ? 'border-l-emerald-500 bg-emerald-500/[0.01]' : 'border-l-accent-purple'
+            task1Done ? 'border-l-accent-green bg-accent-green/[0.01]' : 'border-l-accent-purple'
           }`}>
             <div className="flex justify-between items-start">
               <div className="space-y-1">
                 <span className="text-[10px] font-bold text-accent-purple uppercase tracking-wider">Task 1</span>
-                <h3 className="text-lg font-bold text-gray-100 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
                   Stellar Wallet Creation
-                  {task1Done && <CheckCircle2 className="h-4.5 w-4.5 text-emerald-400 fill-emerald-950" />}
+                  {task1Done && <CheckCircle2 className="h-4.5 w-4.5 text-accent-green fill-emerald-950" />}
                 </h3>
               </div>
               {!wallet && (
                 <button
                   onClick={generateWallet}
-                  className="px-4 py-2 bg-accent-purple hover:bg-accent-purple/90 text-white rounded-xl text-xs font-bold transition-all"
+                  className="px-4 py-2 bg-accent-purple hover:bg-accent-purple/90 text-white rounded-xl text-xs font-bold transition-all cursor-pointer"
                 >
                   Generate Wallet
                 </button>
@@ -365,16 +365,16 @@ export const WhiteBeltPlayground: React.FC = () => {
               <div className="mt-4 space-y-4">
                 {/* Public Key Display */}
                 <div>
-                  <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
                     Public Address (G...)
                   </label>
-                  <div className="flex items-center gap-2 bg-gray-950/80 border border-gray-900 rounded-xl px-3 py-2">
-                    <span className="font-mono text-xs text-gray-300 break-all select-all flex-grow">
+                  <div className="flex items-center gap-2 bg-bg-dark border border-border-subtle rounded-xl px-3 py-2">
+                    <span className="font-mono text-xs text-text-secondary break-all select-all flex-grow">
                       {wallet.publicKey}
                     </span>
                     <button
                       onClick={() => copyToClipboard(wallet.publicKey)}
-                      className="p-1.5 hover:bg-gray-800 text-gray-500 hover:text-gray-200 rounded-lg transition-colors"
+                      className="p-1.5 hover:bg-bg-card-hover text-text-muted hover:text-text-secondary rounded-lg transition-colors cursor-pointer"
                       title="Copy Address"
                     >
                       <Copy className="h-3.5 w-3.5" />
@@ -384,30 +384,30 @@ export const WhiteBeltPlayground: React.FC = () => {
 
                 {/* Secret Key Display */}
                 <div>
-                  <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 flex items-center gap-1.5 text-rose-400">
-                    <AlertTriangle className="h-3.5 w-3.5 text-rose-400" />
+                  <label className="block text-[10px] font-semibold uppercase tracking-wider mb-1.5 flex items-center gap-1.5 text-accent-red">
+                    <AlertTriangle className="h-3.5 w-3.5 text-accent-red" />
                     Secret Key (S...) - DO NOT SHARE
                   </label>
-                  <div className="flex items-center gap-2 bg-gray-950/80 border border-rose-950/20 rounded-xl px-3 py-2">
-                    <span className="font-mono text-xs text-rose-400 break-all flex-grow select-all">
+                  <div className="flex items-center gap-2 bg-bg-dark border border-accent-red/20 rounded-xl px-3 py-2">
+                    <span className="font-mono text-xs text-accent-red break-all flex-grow select-all">
                       {showSecret ? wallet.secretKey : '••••••••••••••••••••••••••••••••••••••••••••••••••••••••'}
                     </span>
                     <button
                       onClick={() => setShowSecret(!showSecret)}
-                      className="p-1.5 hover:bg-gray-800 text-gray-500 hover:text-gray-200 rounded-lg transition-colors"
+                      className="p-1.5 hover:bg-bg-card-hover text-text-muted hover:text-text-secondary rounded-lg transition-colors cursor-pointer"
                       title={showSecret ? "Hide Secret Key" : "Reveal Secret Key"}
                     >
                       {showSecret ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                     </button>
                     <button
                       onClick={() => copyToClipboard(wallet.secretKey, true)}
-                      className="p-1.5 hover:bg-gray-800 text-gray-500 hover:text-gray-200 rounded-lg transition-colors"
+                      className="p-1.5 hover:bg-bg-card-hover text-text-muted hover:text-text-secondary rounded-lg transition-colors cursor-pointer"
                       title="Copy Secret Key"
                     >
                       <Copy className="h-3.5 w-3.5" />
                     </button>
                   </div>
-                  <p className="text-[10px] text-gray-500 mt-1">
+                  <p className="text-[10px] text-text-muted mt-1">
                     Your secret key is held entirely in transient local memory. It will never be committed to Git.
                   </p>
                 </div>
@@ -416,22 +416,22 @@ export const WhiteBeltPlayground: React.FC = () => {
                 <div className="flex flex-wrap gap-2.5 pt-1">
                   <button
                     onClick={downloadBackup}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-300 hover:text-white rounded-lg text-xs font-semibold transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle text-text-secondary hover:text-text-primary rounded-lg text-xs font-semibold transition-all cursor-pointer"
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Download Backup JSON</span>
                   </button>
                   <button
                     onClick={generateWallet}
-                    className="px-3 py-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-400 hover:text-rose-400 rounded-lg text-xs font-semibold transition-all"
+                    className="px-3 py-1.5 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle text-text-muted hover:text-accent-red rounded-lg text-xs font-semibold transition-all cursor-pointer"
                   >
                     Regenerate Wallet
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="mt-4 p-4 rounded-xl bg-gray-950/40 border border-gray-900/60 text-center">
-                <p className="text-xs text-gray-500">
+              <div className="mt-4 p-4 rounded-xl bg-bg-surface/40 border border-border-subtle text-center">
+                <p className="text-xs text-text-muted">
                   No active playground wallet. Click "Generate Wallet" to create a new Stellar account.
                 </p>
               </div>
@@ -440,51 +440,51 @@ export const WhiteBeltPlayground: React.FC = () => {
 
           {/* TASK 2: BALANCE RETRIEVAL */}
           <div className={`glass-panel p-6 rounded-2xl border-l-4 transition-all duration-300 ${
-            task2Done ? 'border-l-emerald-500 bg-emerald-500/[0.01]' : 'border-l-accent-cyan'
+            task2Done ? 'border-l-accent-green bg-accent-green/[0.01]' : 'border-l-accent-cyan'
           }`}>
             <div className="space-y-1 mb-4">
               <span className="text-[10px] font-bold text-accent-cyan uppercase tracking-wider">Task 2</span>
-              <h3 className="text-lg font-bold text-gray-100 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
                 Stellar Balance Retrieval
-                {task2Done && <CheckCircle2 className="h-4.5 w-4.5 text-emerald-400 fill-emerald-950" />}
+                {task2Done && <CheckCircle2 className="h-4.5 w-4.5 text-accent-green fill-emerald-950" />}
               </h3>
             </div>
 
             <div className="space-y-4">
               {/* Balance Result Board */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-gray-950/60 border border-gray-900/80 flex flex-col justify-between">
-                  <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Horizon Testnet Balance</span>
+                <div className="p-4 rounded-xl bg-bg-surface border border-border-subtle flex flex-col justify-between">
+                  <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Horizon Testnet Balance</span>
                   <div className="mt-2 flex items-baseline gap-1.5">
-                    <span className="text-2xl font-black text-white">
+                    <span className="text-2xl font-black text-text-primary">
                       {balance !== null ? balance : '—'}
                     </span>
                     {balance !== null && !balance.includes('Unfunded') && (
                       <span className="text-xs font-bold text-accent-cyan">XLM</span>
                     )}
                   </div>
-                  <span className="text-[10px] text-gray-500 mt-2 block">
+                  <span className="text-[10px] text-text-muted mt-2 block">
                     Stellar Testnet Horizon Network API
                   </span>
                 </div>
 
-                <div className="p-4 rounded-xl bg-gray-950/60 border border-gray-900/80 flex flex-col justify-between gap-3">
-                  <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Horizon Account Status</span>
+                <div className="p-4 rounded-xl bg-bg-surface border border-border-subtle flex flex-col justify-between gap-3">
+                  <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Horizon Account Status</span>
                   <div className="text-xs">
                     {balance === null ? (
-                      <span className="text-gray-500 font-medium">Verify wallet to fetch ledger state.</span>
+                      <span className="text-text-muted font-medium">Verify wallet to fetch ledger state.</span>
                     ) : balance.includes('Unfunded') ? (
                       <div className="space-y-1">
-                        <span className="text-amber-500 font-bold flex items-center gap-1">
+                        <span className="text-accent-amber font-bold flex items-center gap-1">
                           <AlertTriangle className="h-3.5 w-3.5" />
                           Unfunded (Doesn't Exist)
                         </span>
-                        <p className="text-[10px] text-gray-400">
+                        <p className="text-[10px] text-text-muted">
                           A Stellar wallet must hold a minimum reserve of 1 XLM to exist on-chain.
                         </p>
                       </div>
                     ) : (
-                      <span className="text-emerald-400 font-bold flex items-center gap-1">
+                      <span className="text-accent-green font-bold flex items-center gap-1">
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         Active on Stellar Testnet
                       </span>
@@ -494,7 +494,7 @@ export const WhiteBeltPlayground: React.FC = () => {
                     <button
                       onClick={checkBalance}
                       disabled={!wallet || isCheckingBalance}
-                      className="flex-grow flex items-center justify-center gap-1.5 px-3 py-2 bg-gray-900 hover:bg-gray-800 border border-gray-800 disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-all cursor-pointer"
+                      className="flex-grow flex items-center justify-center gap-1.5 px-3 py-2 bg-bg-card hover:bg-bg-card-hover border border-border-subtle disabled:opacity-50 text-text-primary rounded-lg text-xs font-bold transition-all cursor-pointer"
                     >
                       {isCheckingBalance ? (
                         <>
@@ -510,7 +510,7 @@ export const WhiteBeltPlayground: React.FC = () => {
                       <button
                         onClick={fundWithFriendbot}
                         disabled={isFunding}
-                        className="flex-grow flex items-center justify-center gap-1.5 px-3 py-2 bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan hover:text-white rounded-lg text-xs font-bold transition-all cursor-pointer"
+                        className="flex-grow flex items-center justify-center gap-1.5 px-3 py-2 bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan hover:text-text-primary rounded-lg text-xs font-bold transition-all cursor-pointer"
                       >
                         {isFunding ? (
                           <>
@@ -530,25 +530,25 @@ export const WhiteBeltPlayground: React.FC = () => {
 
           {/* TASK 3: FIRST ON-CHAIN TRANSACTION */}
           <div className={`glass-panel p-6 rounded-2xl border-l-4 transition-all duration-300 ${
-            task3Done ? 'border-l-emerald-500 bg-emerald-500/[0.01]' : 'border-l-indigo-500'
+            task3Done ? 'border-l-accent-green bg-accent-green/[0.01]' : 'border-l-indigo-500'
           }`}>
             <div className="space-y-1 mb-4">
               <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Task 3</span>
-              <h3 className="text-lg font-bold text-gray-100 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
                 Stellar First Transaction
-                {task3Done && <CheckCircle2 className="h-4.5 w-4.5 text-emerald-400 fill-emerald-950" />}
+                {task3Done && <CheckCircle2 className="h-4.5 w-4.5 text-accent-green fill-emerald-950" />}
               </h3>
             </div>
 
             <div className="space-y-4">
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-text-secondary">
                 Submit an on-chain transaction. By default, this builds a **self-payment** transaction (sending XLM back to yourself), which is the safest and most direct way to test transaction signing and broadcast without requiring a third-party account.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {/* Destination Input */}
                 <div className="sm:col-span-2">
-                  <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
                     Destination Address (G...)
                   </label>
                   <input
@@ -556,14 +556,14 @@ export const WhiteBeltPlayground: React.FC = () => {
                     value={txDestination}
                     onChange={(e) => setTxDestination(e.target.value)}
                     placeholder="Enter Stellar public key"
-                    className="w-full bg-gray-950/80 border border-gray-900 rounded-xl px-3.5 py-2 text-xs font-mono text-gray-300 focus:outline-none focus:border-accent-purple"
+                    className="w-full bg-bg-dark border border-border-subtle rounded-xl px-3.5 py-2 text-xs font-mono text-text-secondary focus:outline-none focus:border-accent-purple transition-colors"
                     disabled={!wallet || isSubmittingTx}
                   />
                 </div>
 
                 {/* Amount Input */}
                 <div>
-                  <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
                     Amount (XLM)
                   </label>
                   <input
@@ -571,7 +571,7 @@ export const WhiteBeltPlayground: React.FC = () => {
                     value={txAmount}
                     onChange={(e) => setTxAmount(e.target.value)}
                     placeholder="10"
-                    className="w-full bg-gray-950/80 border border-gray-900 rounded-xl px-3.5 py-2 text-xs font-bold text-gray-300 focus:outline-none focus:border-accent-purple"
+                    className="w-full bg-bg-dark border border-border-subtle rounded-xl px-3.5 py-2 text-xs font-bold text-text-secondary focus:outline-none focus:border-accent-purple transition-colors"
                     disabled={!wallet || isSubmittingTx}
                   />
                 </div>
@@ -598,19 +598,19 @@ export const WhiteBeltPlayground: React.FC = () => {
                 </button>
 
                 {txHash && (
-                  <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20 space-y-2">
-                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block">
+                  <div className="p-4 rounded-xl bg-accent-green/5 border border-accent-green/20 space-y-2">
+                    <span className="text-[10px] font-bold text-accent-green uppercase tracking-wider block">
                       Transaction Submitted Successfully!
                     </span>
                     <div className="flex items-center justify-between gap-4">
-                      <span className="font-mono text-xs text-gray-300 break-all select-all flex-grow">
+                      <span className="font-mono text-xs text-text-secondary break-all select-all flex-grow">
                         {txHash}
                       </span>
                       <a
                         href={`https://stellar.expert/explorer/testnet/tx/${txHash}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-300 hover:text-white rounded-lg text-[10px] font-bold transition-all"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle text-text-secondary hover:text-text-primary rounded-lg text-[10px] font-bold transition-all"
                       >
                         <span>Stellar Expert</span>
                         <ExternalLink className="h-3 w-3" />
@@ -629,15 +629,15 @@ export const WhiteBeltPlayground: React.FC = () => {
           
           {/* Challenge Reference Panel */}
           <div className="glass-panel p-5 rounded-2xl space-y-4">
-            <h3 className="text-base font-bold text-gray-100 flex items-center gap-2">
+            <h3 className="text-base font-bold text-text-primary flex items-center gap-2">
               <BookOpen className="h-4.5 w-4.5 text-accent-purple" />
               White Belt Quick Study
             </h3>
             
-            <div className="text-xs text-gray-400 space-y-3.5">
+            <div className="text-xs text-text-secondary space-y-3.5">
               <div>
-                <h4 className="font-bold text-gray-200 flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                <h4 className="font-bold text-text-primary flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-accent-green" />
                   What is a Stellar Wallet?
                 </h4>
                 <p className="mt-1 leading-relaxed">
@@ -645,10 +645,10 @@ export const WhiteBeltPlayground: React.FC = () => {
                 </p>
               </div>
 
-              <div className="w-full h-[1px] bg-gray-900"></div>
+              <div className="w-full h-[1px] bg-border-subtle"></div>
 
               <div>
-                <h4 className="font-bold text-gray-200 flex items-center gap-1.5">
+                <h4 className="font-bold text-text-primary flex items-center gap-1.5">
                   <Info className="h-3.5 w-3.5 text-accent-cyan" />
                   Public vs Secret Key
                 </h4>
@@ -658,10 +658,10 @@ export const WhiteBeltPlayground: React.FC = () => {
                 </ul>
               </div>
 
-              <div className="w-full h-[1px] bg-gray-900"></div>
+              <div className="w-full h-[1px] bg-border-subtle"></div>
 
               <div>
-                <h4 className="font-bold text-gray-200 flex items-center gap-1.5">
+                <h4 className="font-bold text-text-primary flex items-center gap-1.5">
                   <Terminal className="h-3.5 w-3.5 text-indigo-400" />
                   Understanding Friendbot & Horizon
                 </h4>
@@ -675,29 +675,29 @@ export const WhiteBeltPlayground: React.FC = () => {
           {/* Real-time Ledger Logs Console */}
           <div className="glass-panel p-5 rounded-2xl flex flex-col h-[320px]">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
-                <Terminal className="h-4 w-4 text-emerald-400" />
+              <h3 className="text-xs font-bold text-text-muted uppercase tracking-widest flex items-center gap-1.5">
+                <Terminal className="h-4 w-4 text-accent-green" />
                 Horizon Ledger Console
               </h3>
               <button 
                 onClick={clearPlayground}
-                className="text-[10px] text-gray-500 hover:text-rose-400 font-bold transition-all cursor-pointer"
+                className="text-[10px] text-text-muted hover:text-accent-red font-bold transition-all cursor-pointer"
               >
                 Clear Wallet & Logs
               </button>
             </div>
             
-            <div className="flex-grow bg-gray-950/90 rounded-xl p-3 font-mono text-[10px] overflow-y-auto border border-gray-900/60 space-y-2">
+            <div className="flex-grow bg-bg-dark rounded-xl p-3 font-mono text-[10px] overflow-y-auto border border-border-subtle space-y-2">
               {logs.length === 0 ? (
-                <span className="text-gray-600 block italic">System idle. Actions will log here...</span>
+                <span className="text-text-muted block italic">System idle. Actions will log here...</span>
               ) : (
                 logs.map((log, idx) => (
                   <div key={idx} className="leading-relaxed">
-                    <span className="text-gray-600">[{log.timestamp}]</span>{' '}
+                    <span className="text-text-muted">[{log.timestamp}]</span>{' '}
                     <span className={
-                      log.type === 'success' ? 'text-emerald-400 font-bold' :
-                      log.type === 'error' ? 'text-rose-500 font-bold' :
-                      'text-gray-400'
+                      log.type === 'success' ? 'text-accent-green font-bold' :
+                      log.type === 'error' ? 'text-accent-red font-bold' :
+                      'text-text-secondary'
                     }>
                       {log.message}
                     </span>

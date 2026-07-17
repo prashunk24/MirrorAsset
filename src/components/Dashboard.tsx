@@ -39,25 +39,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
     : 0;
 
   const getRatioColor = (ratio: number, minRatio: number) => {
-    if (ratio === 0) return 'text-gray-500';
-    if (ratio < minRatio) return 'text-rose-500';
-    if (ratio < minRatio + 15) return 'text-amber-500';
+    if (ratio === 0) return 'text-text-muted';
+    if (ratio < minRatio) return 'text-accent-red';
+    if (ratio < minRatio + 15) return 'text-accent-amber';
     if (ratio < minRatio + 40) return 'text-yellow-400';
-    return 'text-emerald-400';
+    return 'text-accent-green';
   };
 
   const getHealthBadge = (health: string) => {
     switch (health) {
       case 'Safe':
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Safe</span>;
+        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-accent-green/10 text-accent-green border border-accent-green/20">Safe</span>;
       case 'Warning':
         return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">Warning</span>;
       case 'Danger':
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20">Danger</span>;
+        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-accent-amber/10 text-accent-amber border border-accent-amber/20">Danger</span>;
       case 'Liquidatable':
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20 animate-pulse">Liquidatable</span>;
+        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-accent-red/10 text-accent-red border border-accent-red/20 animate-pulse">Liquidatable</span>;
       default:
-        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-500/10 text-gray-400 border border-gray-500/20">Empty</span>;
+        return <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-bg-surface text-text-muted border border-border-subtle">Empty</span>;
     }
   };
 
@@ -86,7 +86,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
       <svg className="w-24 h-8" viewBox={`0 0 ${width} ${height}`}>
         <polyline
           fill="none"
-          stroke={isUp ? '#10b981' : '#f43f5e'}
+          stroke={isUp ? '#22c55e' : '#ef4444'}
           strokeWidth="1.5"
           points={points}
         />
@@ -101,31 +101,31 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
         {/* Total Collateral Card */}
         <div className="glass-panel p-6 rounded-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-accent-cyan/5 rounded-full blur-2xl"></div>
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Deposited Collateral</span>
-          <h2 className="text-3xl font-extrabold text-white mt-2">
+          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">Deposited Collateral</span>
+          <h2 className="text-3xl font-extrabold text-text-primary mt-2">
             ${totalCollateralUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
-          <p className="text-xs text-gray-500 mt-2">Combined value of XLM and USDC locked in vaults</p>
+          <p className="text-xs text-text-muted mt-2">Combined value of XLM and USDC locked in vaults</p>
         </div>
 
         {/* Total Minted Debt Card */}
         <div className="glass-panel p-6 rounded-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-accent-purple/5 rounded-full blur-2xl"></div>
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Minted Synthetic Debt</span>
-          <h2 className="text-3xl font-extrabold text-white mt-2">
+          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">Minted Synthetic Debt</span>
+          <h2 className="text-3xl font-extrabold text-text-primary mt-2">
             ${totalDebtUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
-          <p className="text-xs text-gray-500 mt-2">Total outstanding debt in sAssets</p>
+          <p className="text-xs text-text-muted mt-2">Total outstanding debt in sAssets</p>
         </div>
 
         {/* Global Collateral Ratio Card */}
         <div className="glass-panel p-6 rounded-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-violet-500/5 rounded-full blur-2xl"></div>
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Health Ratio</span>
-          <h2 className={`text-3xl font-extrabold mt-2 ${globalRatio > 0 ? getRatioColor(globalRatio, 150) : 'text-gray-300'}`}>
+          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">Health Ratio</span>
+          <h2 className={`text-3xl font-extrabold mt-2 ${globalRatio > 0 ? getRatioColor(globalRatio, 150) : 'text-text-secondary'}`}>
             {globalRatio > 0 ? `${globalRatio}%` : 'N/A'}
           </h2>
-          <p className="text-xs text-gray-500 mt-2">Average backing multiplier of active debt</p>
+          <p className="text-xs text-text-muted mt-2">Average backing multiplier of active debt</p>
         </div>
       </div>
 
@@ -137,11 +137,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Layers className="h-5 w-5 text-accent-purple" />
-              <h3 className="text-lg font-bold text-gray-100">My Synthetic Vaults</h3>
+              <h3 className="text-lg font-bold text-text-primary">My Synthetic Vaults</h3>
             </div>
             <button
               onClick={onCreateVaultClick}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-purple hover:bg-accent-purple/90 text-white rounded-xl text-xs font-bold transition-all duration-200"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-purple hover:bg-accent-purple/90 text-white rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>New Vault</span>
@@ -149,17 +149,17 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
           </div>
 
           {userVaults.length === 0 ? (
-            <div className="glass-panel rounded-2xl p-10 text-center border-dashed border-gray-800 flex flex-col items-center">
-              <div className="p-4 bg-gray-900/60 rounded-full border border-gray-800 mb-4">
-                <Settings2 className="h-8 w-8 text-gray-500" />
+            <div className="glass-panel rounded-2xl p-10 text-center border-dashed border-border-subtle flex flex-col items-center">
+              <div className="p-4 bg-bg-surface rounded-full border border-border-subtle mb-4">
+                <Settings2 className="h-8 w-8 text-text-muted" />
               </div>
-              <h4 className="font-semibold text-gray-300 text-base">No Vaults Found</h4>
-              <p className="text-gray-500 text-xs mt-2 max-w-sm">
+              <h4 className="font-semibold text-text-secondary text-base">No Vaults Found</h4>
+              <p className="text-text-muted text-xs mt-2 max-w-sm">
                 Create a vault, deposit collateral, and mint synthetic assets tracking real-world values.
               </p>
               <button
                 onClick={onCreateVaultClick}
-                className="mt-5 px-4.5 py-2.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white rounded-xl text-xs font-semibold transition-all duration-200"
+                className="mt-5 px-4.5 py-2.5 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle hover:border-border-default text-text-secondary hover:text-text-primary rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer"
               >
                 Create Your First Vault
               </button>
@@ -174,12 +174,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
                   <div key={vault.id} className="glass-panel p-5 rounded-2xl flex flex-col justify-between border-l-2 border-l-accent-purple">
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-[10px] font-bold text-gray-400">
+                        <span className="px-2 py-0.5 rounded bg-bg-surface border border-border-subtle text-[10px] font-bold text-text-muted">
                           ID: {vault.id.toUpperCase()}
                         </span>
-                        <h4 className="text-base font-bold text-gray-100 mt-2 flex items-center gap-1.5">
+                        <h4 className="text-base font-bold text-text-primary mt-2 flex items-center gap-1.5">
                           {vault.syntheticAsset} Vault
-                          <span className="text-xs font-medium text-gray-500">({asset?.name})</span>
+                          <span className="text-xs font-medium text-text-muted">({asset?.name})</span>
                         </h4>
                       </div>
                       {getHealthBadge(vault.health)}
@@ -187,31 +187,31 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
 
                     <div className="my-5 grid grid-cols-2 gap-4">
                       <div>
-                        <span className="block text-[10px] uppercase font-semibold text-gray-500 tracking-wider">Collateral Locked</span>
-                        <span className="block text-sm font-bold text-gray-200 mt-1">
+                        <span className="block text-[10px] uppercase font-semibold text-text-muted tracking-wider">Collateral Locked</span>
+                        <span className="block text-sm font-bold text-text-secondary mt-1">
                           {vault.collateralAmount.toLocaleString()} {vault.collateralAsset}
                         </span>
                       </div>
                       <div>
-                        <span className="block text-[10px] uppercase font-semibold text-gray-500 tracking-wider">Minted Debt</span>
-                        <span className="block text-sm font-bold text-gray-200 mt-1">
+                        <span className="block text-[10px] uppercase font-semibold text-text-muted tracking-wider">Minted Debt</span>
+                        <span className="block text-sm font-bold text-text-secondary mt-1">
                           {vault.mintedAmount.toLocaleString()} {vault.syntheticAsset}
                         </span>
                       </div>
                     </div>
 
-                    <div className="border-t border-gray-900/60 pt-4 flex items-center justify-between">
+                    <div className="border-t border-border-subtle pt-4 flex items-center justify-between">
                       <div>
-                        <span className="block text-[10px] text-gray-500 font-medium">Collateral Ratio</span>
+                        <span className="block text-[10px] text-text-muted font-medium">Collateral Ratio</span>
                         <span className={`text-sm font-bold ${getRatioColor(vault.collateralRatio, minRatio)}`}>
                           {vault.collateralRatio === Infinity ? '∞' : `${vault.collateralRatio}%`}
                         </span>
-                        <span className="text-[10px] text-gray-500 ml-1">(min {minRatio}%)</span>
+                        <span className="text-[10px] text-text-muted ml-1">(min {minRatio}%)</span>
                       </div>
 
                       <button
                         onClick={() => onManageVault(vault.id)}
-                        className="flex items-center gap-1.5 px-3.5 py-2 bg-gray-900 hover:bg-gray-800/80 border border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white rounded-xl text-xs font-bold transition-all duration-200"
+                        className="flex items-center gap-1.5 px-3.5 py-2 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle hover:border-border-default text-text-secondary hover:text-text-primary rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer"
                       >
                         <Settings2 className="h-3.5 w-3.5" />
                         <span>Manage</span>
@@ -229,33 +229,33 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-accent-cyan" />
-              <h3 className="text-lg font-bold text-gray-100">Synth Asset Markets</h3>
+              <h3 className="text-lg font-bold text-text-primary">Synth Asset Markets</h3>
             </div>
             
             {/* Oracle Ticker Manual Tick */}
             <button
               onClick={handlePriceRefresh}
-              className="p-1.5 bg-gray-900/80 hover:bg-gray-800 border border-gray-800 hover:border-gray-700 rounded-xl text-gray-400 hover:text-gray-200 transition-all duration-200"
+              className="p-1.5 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle hover:border-border-default rounded-xl text-text-muted hover:text-text-secondary transition-all duration-200 cursor-pointer"
               title="Force oracle price update"
             >
               <RefreshCw className={`h-4.5 w-4.5 ${tickerLoading ? 'animate-spin' : ''}`} />
             </button>
           </div>
 
-          <div className="glass-panel rounded-2xl overflow-hidden divide-y divide-gray-900/60">
+          <div className="glass-panel rounded-2xl overflow-hidden divide-y divide-border-subtle">
             {assets.map((asset) => {
               const isUp = asset.change24h >= 0;
 
               return (
-                <div key={asset.symbol} className="p-4 flex items-center justify-between hover:bg-gray-900/20 transition-colors">
+                <div key={asset.symbol} className="p-4 flex items-center justify-between hover:bg-bg-card-hover/30 transition-colors">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-gray-100">{asset.symbol}</span>
-                      <span className="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800/60 text-[9px] text-gray-500 font-semibold uppercase">
+                      <span className="text-sm font-bold text-text-primary">{asset.symbol}</span>
+                      <span className="px-1.5 py-0.5 rounded bg-bg-surface border border-border-subtle text-[9px] text-text-muted font-semibold uppercase">
                         {asset.type}
                       </span>
                     </div>
-                    <span className="text-xs text-gray-500 mt-1 block">{asset.name}</span>
+                    <span className="text-xs text-text-muted mt-1 block">{asset.name}</span>
                   </div>
 
                   {/* Sparkline chart */}
@@ -264,15 +264,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
                   </div>
 
                   <div className="text-right">
-                    <span className="block text-sm font-bold text-gray-200">${asset.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
+                    <span className="block text-sm font-bold text-text-secondary">${asset.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
                     
                     <div className="flex items-center justify-end gap-1 mt-0.5">
                       {isUp ? (
-                        <TrendingUp className="h-3 w-3 text-emerald-400" />
+                        <TrendingUp className="h-3 w-3 text-accent-green" />
                       ) : (
-                        <TrendingDown className="h-3 w-3 text-rose-400" />
+                        <TrendingDown className="h-3 w-3 text-accent-red" />
                       )}
-                      <span className={`text-[10px] font-bold ${isUp ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      <span className={`text-[10px] font-bold ${isUp ? 'text-accent-green' : 'text-accent-red'}`}>
                         {isUp ? '+' : ''}{asset.change24h.toFixed(2)}%
                       </span>
                     </div>

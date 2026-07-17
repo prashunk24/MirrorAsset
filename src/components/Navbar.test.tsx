@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Navbar } from './Navbar';
@@ -22,10 +21,10 @@ describe('Navbar Component', () => {
       publicKey: null,
       balanceXLM: 0,
       balanceUSDC: 0,
-      simulationMode: false,
       connectWallet: vi.fn(),
       disconnectWallet: vi.fn(),
       claimFaucet: vi.fn(),
+      fetchBalance: vi.fn(),
       isLoading: false,
     });
 
@@ -42,10 +41,10 @@ describe('Navbar Component', () => {
       publicKey: 'GD6ZH3G5WBLPFLV74PDK7JOH3B2W5JHLV637Q6NNSL2SPN5G737V4WEX',
       balanceXLM: 1250.5,
       balanceUSDC: 5000.25,
-      simulationMode: false,
       connectWallet: vi.fn(),
       disconnectWallet: vi.fn(),
       claimFaucet: vi.fn(),
+      fetchBalance: vi.fn(),
       isLoading: false,
     });
 
@@ -72,10 +71,10 @@ describe('Navbar Component', () => {
       publicKey: 'GD6ZH3G5WBLPFLV74PDK7JOH3B2W5JHLV637Q6NNSL2SPN5G737V4WEX',
       balanceXLM: 1250.5,
       balanceUSDC: 5000.25,
-      simulationMode: false,
       connectWallet: vi.fn(),
       disconnectWallet: vi.fn(),
       claimFaucet: vi.fn(),
+      fetchBalance: vi.fn(),
       isLoading: false,
     });
 
@@ -93,10 +92,10 @@ describe('Navbar Component', () => {
       publicKey: 'GD6ZH3G5WBLPFLV74PDK7JOH3B2W5JHLV637Q6NNSL2SPN5G737V4WEX',
       balanceXLM: 1250.5,
       balanceUSDC: 5000.25,
-      simulationMode: false,
       connectWallet: vi.fn(),
       disconnectWallet: vi.fn(),
       claimFaucet: vi.fn(),
+      fetchBalance: vi.fn(),
       isLoading: false,
     });
 

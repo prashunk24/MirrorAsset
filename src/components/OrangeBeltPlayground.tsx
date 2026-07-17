@@ -373,8 +373,8 @@ export const OrangeBeltPlayground: React.FC = () => {
             <Cpu className="h-3.5 w-3.5 animate-spin" />
             <span>Stellar Orange Belt Challenge</span>
           </div>
-          <h2 className="text-3xl font-extrabold text-white">Soroban Smart Contract Playground</h2>
-          <p className="text-sm text-gray-400">
+          <h2 className="text-3xl font-extrabold text-text-primary">Soroban Smart Contract Playground</h2>
+          <p className="text-sm text-text-secondary">
             Interact with our deployed contract on Testnet using **StellarWalletsKit** to support multiple wallet extensions, perform read/write contract calls, and listen for live network events.
           </p>
         </div>
@@ -386,23 +386,23 @@ export const OrangeBeltPlayground: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           
           {/* MULTI-WALLET CONNECT */}
-          <div className={`glass-panel p-6 rounded-2xl border-l-4 ${walletConnected ? 'border-l-emerald-500' : 'border-l-accent-purple'}`}>
-            <h3 className="text-lg font-bold text-gray-100 mb-4 flex items-center justify-between">
+          <div className={`glass-panel p-6 rounded-2xl border-l-4 ${walletConnected ? 'border-l-accent-green' : 'border-l-accent-purple'}`}>
+            <h3 className="text-lg font-bold text-text-primary mb-4 flex items-center justify-between">
               <span>Multi-Wallet Connection</span>
               {walletConnected && (
-                <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-medium">Connected</span>
+                <span className="px-2 py-0.5 rounded bg-accent-green/10 text-accent-green border border-accent-green/20 text-xs font-medium">Connected</span>
               )}
             </h3>
 
             {walletConnected && publicKey ? (
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-gray-950/60 border border-gray-900 space-y-2">
-                  <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold block">Connected Wallet Address</span>
+                <div className="p-4 rounded-xl bg-bg-surface border border-border-subtle space-y-2">
+                  <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold block">Connected Wallet Address</span>
                   <div className="flex items-center justify-between gap-4">
-                    <span className="font-mono text-xs text-gray-300 break-all select-all">{publicKey}</span>
+                    <span className="font-mono text-xs text-text-secondary break-all select-all">{publicKey}</span>
                     <button
                       onClick={disconnectWallet}
-                      className="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg text-xs font-bold transition-all cursor-pointer"
+                      className="px-3 py-1.5 bg-accent-red/10 hover:bg-accent-red/20 text-accent-red rounded-lg text-xs font-bold transition-all cursor-pointer"
                     >
                       Disconnect
                     </button>
@@ -410,19 +410,19 @@ export const OrangeBeltPlayground: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-xl bg-gray-950/40 border border-gray-900/50">
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold block">Connected Status</span>
-                    <span className="text-sm font-bold text-white mt-1 block capitalize">Wallet Connected</span>
+                  <div className="p-4 rounded-xl bg-bg-surface/60 border border-border-subtle">
+                    <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold block">Connected Status</span>
+                    <span className="text-sm font-bold text-text-primary mt-1 block capitalize">Wallet Connected</span>
                   </div>
-                  <div className="p-4 rounded-xl bg-gray-950/40 border border-gray-900/50">
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold block">Horizon Wallet Balance</span>
-                    <span className="text-sm font-bold text-white mt-1 block">{balance ? `${balance} XLM` : 'Loading...'}</span>
+                  <div className="p-4 rounded-xl bg-bg-surface/60 border border-border-subtle">
+                    <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold block">Horizon Wallet Balance</span>
+                    <span className="text-sm font-bold text-text-primary mt-1 block">{balance ? `${balance} XLM` : 'Loading...'}</span>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="space-y-4">
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-text-secondary">
                   Select your preferred browser wallet extension to connect. The kit supports multiple providers out-of-the-box.
                 </p>
                 
@@ -452,14 +452,14 @@ export const OrangeBeltPlayground: React.FC = () => {
           {/* READ CONTRACT DATA */}
           <div className="glass-panel p-6 rounded-2xl border-l-4 border-l-accent-cyan space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-bold text-gray-100 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
                 <Layers className="h-5 w-5 text-accent-cyan" />
                 Read Contract: Vault Health
               </h3>
               <button
                 onClick={readContractVault}
                 disabled={!walletConnected || isReadingContract}
-                className="p-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded-lg text-gray-400 hover:text-white transition-all cursor-pointer"
+                className="p-1.5 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle rounded-lg text-text-muted hover:text-text-primary transition-all cursor-pointer"
                 title="Refresh contract state"
               >
                 <RefreshCw className={`h-4 w-4 ${isReadingContract ? 'animate-spin' : ''}`} />
@@ -467,29 +467,29 @@ export const OrangeBeltPlayground: React.FC = () => {
             </div>
 
             {!walletConnected ? (
-              <div className="p-4 bg-gray-950/40 border border-gray-900 rounded-xl text-center text-xs text-gray-500">
+              <div className="p-4 bg-bg-surface/40 border border-border-subtle rounded-xl text-center text-xs text-text-muted">
                 Connect your wallet to fetch your live on-chain vault data.
               </div>
             ) : vaultData ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-gray-950/60 border border-gray-900 flex justify-between items-center">
+                <div className="p-4 rounded-xl bg-bg-surface border border-border-subtle flex justify-between items-center">
                   <div>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold block">On-Chain Collateral</span>
-                    <span className="text-xl font-black text-white mt-1 block">{vaultData.collateral.toLocaleString()} XLM</span>
+                    <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold block">On-Chain Collateral</span>
+                    <span className="text-xl font-black text-text-primary mt-1 block">{vaultData.collateral.toLocaleString()} XLM</span>
                   </div>
-                  <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                  <CheckCircle2 className="h-5 w-5 text-accent-green" />
                 </div>
 
-                <div className="p-4 rounded-xl bg-gray-950/60 border border-gray-900 flex justify-between items-center">
+                <div className="p-4 rounded-xl bg-bg-surface border border-border-subtle flex justify-between items-center">
                   <div>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold block">On-Chain Minted Debt</span>
-                    <span className="text-xl font-black text-white mt-1 block">{vaultData.debt.toLocaleString()} sXAU</span>
+                    <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold block">On-Chain Minted Debt</span>
+                    <span className="text-xl font-black text-text-primary mt-1 block">{vaultData.debt.toLocaleString()} sXAU</span>
                   </div>
                   <Sparkles className="h-5 w-5 text-accent-cyan" />
                 </div>
               </div>
             ) : (
-              <div className="p-4 bg-gray-950/40 border border-gray-900 rounded-xl text-center text-xs text-gray-500">
+              <div className="p-4 bg-bg-surface/40 border border-border-subtle rounded-xl text-center text-xs text-text-muted">
                 Loading vault data from Soroban ledger...
               </div>
             )}
@@ -497,18 +497,18 @@ export const OrangeBeltPlayground: React.FC = () => {
 
           {/* WRITE CONTRACT TRANSACTION */}
           <div className="glass-panel p-6 rounded-2xl border-l-4 border-l-indigo-500 space-y-4">
-            <h3 className="text-lg font-bold text-gray-100 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
               <Send className="h-5 w-5 text-indigo-400" />
               Write Contract: Deposit Collateral
             </h3>
 
             <div className="space-y-4">
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-text-secondary">
                 Lock XLM collateral directly inside our deployed Testnet Soroban contract. This builds a Soroban contract invocation transaction, simulates footprint assembly, requests user wallet signature, and broadcasts it to the ledger.
               </p>
 
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
                   Amount to Deposit (XLM)
                 </label>
                 <div className="flex gap-2">
@@ -518,7 +518,7 @@ export const OrangeBeltPlayground: React.FC = () => {
                     onChange={(e) => setDepositAmount(e.target.value)}
                     placeholder="10"
                     disabled={!walletConnected || writeStatus === 'Pending'}
-                    className="flex-grow bg-gray-950/80 border border-gray-900 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-300 focus:outline-none focus:border-accent-purple"
+                    className="flex-grow bg-bg-dark border border-border-subtle rounded-xl px-4 py-2.5 text-sm font-bold text-text-secondary focus:outline-none focus:border-accent-purple transition-colors"
                   />
                   <button
                     onClick={writeDepositContract}
@@ -540,9 +540,9 @@ export const OrangeBeltPlayground: React.FC = () => {
               {/* Status Board */}
               {writeStatus !== 'Idle' && (
                 <div className={`p-4 rounded-xl border ${
-                  writeStatus === 'Pending' ? 'bg-amber-500/5 border-amber-500/20 text-amber-500' :
-                  writeStatus === 'Success' ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-400' :
-                  'bg-rose-500/5 border-rose-500/20 text-rose-400'
+                  writeStatus === 'Pending' ? 'bg-accent-amber/5 border-accent-amber/20 text-accent-amber' :
+                  writeStatus === 'Success' ? 'bg-accent-green/5 border-accent-green/20 text-accent-green' :
+                  'bg-accent-red/5 border-accent-red/20 text-accent-red'
                 } space-y-2`}>
                   <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
                     {writeStatus === 'Pending' && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -552,13 +552,13 @@ export const OrangeBeltPlayground: React.FC = () => {
                   </div>
                   
                   {writeTxHash && (
-                    <div className="flex items-center justify-between gap-4 text-xs font-mono pt-1 text-gray-300">
+                    <div className="flex items-center justify-between gap-4 text-xs font-mono pt-1 text-text-secondary">
                       <span className="break-all select-all flex-grow">{writeTxHash}</span>
                       <a
                         href={`https://stellar.expert/explorer/testnet/tx/${writeTxHash}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-300 hover:text-white rounded-lg text-[10px] font-bold transition-all"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle text-text-secondary hover:text-text-primary rounded-lg text-[10px] font-bold transition-all"
                       >
                         <span>View</span>
                         <ExternalLink className="h-3 w-3" />
@@ -567,7 +567,7 @@ export const OrangeBeltPlayground: React.FC = () => {
                   )}
 
                   {writeError && (
-                    <p className="text-[10px] text-rose-400 leading-relaxed font-mono">
+                    <p className="text-[10px] text-accent-red leading-relaxed font-mono">
                       Error: {writeError}
                     </p>
                   )}
@@ -583,52 +583,52 @@ export const OrangeBeltPlayground: React.FC = () => {
           
           {/* Smart Contract Info */}
           <div className="glass-panel p-5 rounded-2xl space-y-4">
-            <h3 className="text-base font-bold text-gray-100 flex items-center gap-2">
+            <h3 className="text-base font-bold text-text-primary flex items-center gap-2">
               <Cpu className="h-4.5 w-4.5 text-accent-cyan" />
               Contract Parameters
             </h3>
-            <div className="text-xs text-gray-400 space-y-3">
+            <div className="text-xs text-text-secondary space-y-3">
               <div>
-                <span className="text-gray-500 block">Deployed Contract ID</span>
-                <span className="font-mono text-gray-300 break-all text-[10px]">{CONTRACT_ID}</span>
+                <span className="text-text-muted block">Deployed Contract ID</span>
+                <span className="font-mono text-text-secondary break-all text-[10px]">{CONTRACT_ID}</span>
               </div>
-              <div className="w-full h-[1px] bg-gray-900"></div>
+              <div className="w-full h-[1px] bg-border-subtle"></div>
               <div>
-                <span className="text-gray-500 block">Network</span>
-                <span className="text-gray-300 font-bold">Stellar Testnet</span>
+                <span className="text-text-muted block">Network</span>
+                <span className="text-text-secondary font-bold">Stellar Testnet</span>
               </div>
-              <div className="w-full h-[1px] bg-gray-900"></div>
+              <div className="w-full h-[1px] bg-border-subtle"></div>
               <div>
-                <span className="text-gray-500 block">Network Passphrase</span>
-                <span className="text-gray-300 font-mono text-[10px]">Test SDF Network ; September 2015</span>
+                <span className="text-text-muted block">Network Passphrase</span>
+                <span className="text-text-secondary font-mono text-[10px]">Test SDF Network ; September 2015</span>
               </div>
             </div>
           </div>
 
           {/* EVENT LISTENER */}
           <div className="glass-panel p-5 rounded-2xl flex flex-col h-[320px]">
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5 mb-3">
+            <h3 className="text-xs font-bold text-text-muted uppercase tracking-widest flex items-center gap-1.5 mb-3">
               <Sparkles className="h-4 w-4 text-accent-cyan" />
               Live Soroban Events
             </h3>
             
-            <div className="flex-grow bg-gray-950/90 rounded-xl p-3 font-mono text-[10px] overflow-y-auto border border-gray-900/60 space-y-3">
+            <div className="flex-grow bg-bg-dark rounded-xl p-3 font-mono text-[10px] overflow-y-auto border border-border-subtle space-y-3">
               {contractEvents.length === 0 ? (
-                <span className="text-gray-600 block italic">Listening for events... Make a contract deposit.</span>
+                <span className="text-text-muted block italic">Listening for events... Make a contract deposit.</span>
               ) : (
                 contractEvents.map((ev, idx) => (
-                  <div key={idx} className="border-b border-gray-900/60 pb-2 space-y-1 leading-relaxed">
-                    <div className="flex justify-between items-center text-gray-500">
+                  <div key={idx} className="border-b border-border-subtle pb-2 space-y-1 leading-relaxed">
+                    <div className="flex justify-between items-center text-text-muted">
                       <span>Ledger: {ev.ledger}</span>
                       <span>ID: {ev.id.substring(0, 8)}...</span>
                     </div>
                     <div>
                       <span className="text-accent-cyan font-bold">Topic:</span>{' '}
-                      <span className="text-gray-300">{ev.topics.join(' ➡️ ')}</span>
+                      <span className="text-text-secondary">{ev.topics.join(' ➡️ ')}</span>
                     </div>
                     <div>
                       <span className="text-indigo-400 font-bold">Data:</span>{' '}
-                      <span className="text-gray-400 break-all">{ev.value}</span>
+                      <span className="text-text-muted break-all">{ev.value}</span>
                     </div>
                   </div>
                 ))
@@ -638,21 +638,21 @@ export const OrangeBeltPlayground: React.FC = () => {
 
           {/* REALTIME SYSTEM TERMINAL */}
           <div className="glass-panel p-5 rounded-2xl flex flex-col h-[280px]">
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5 mb-3">
-              <Terminal className="h-4 w-4 text-emerald-400" />
+            <h3 className="text-xs font-bold text-text-muted uppercase tracking-widest flex items-center gap-1.5 mb-3">
+              <Terminal className="h-4 w-4 text-accent-green" />
               Soroban RPC Console
             </h3>
-            <div className="flex-grow bg-gray-950/90 rounded-xl p-3 font-mono text-[10px] overflow-y-auto border border-gray-900/60 space-y-2">
+            <div className="flex-grow bg-bg-dark rounded-xl p-3 font-mono text-[10px] overflow-y-auto border border-border-subtle space-y-2">
               {logs.length === 0 ? (
-                <span className="text-gray-600 block italic">No logs...</span>
+                <span className="text-text-muted block italic">No logs...</span>
               ) : (
                 logs.map((log, idx) => (
                   <div key={idx} className="leading-relaxed">
-                    <span className="text-gray-600">[{log.timestamp}]</span>{' '}
+                    <span className="text-text-muted">[{log.timestamp}]</span>{' '}
                     <span className={
-                      log.type === 'success' ? 'text-emerald-400 font-bold' :
-                      log.type === 'error' ? 'text-rose-500 font-bold' :
-                      'text-gray-400'
+                      log.type === 'success' ? 'text-accent-green font-bold' :
+                      log.type === 'error' ? 'text-accent-red font-bold' :
+                      'text-text-secondary'
                     }>
                       {log.message}
                     </span>
