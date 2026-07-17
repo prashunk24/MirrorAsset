@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStellar } from '../context/StellarContext';
-import { Wallet, LogOut, Coins, Activity, Menu, X } from 'lucide-react';
+import { Wallet, LogOut, Coins, Menu, X } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
