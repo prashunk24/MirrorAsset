@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { StellarProvider, useStellar } from './StellarContext';
-import { isConnected, getAddress } from '@stellar/freighter-api';
+import { isConnected, getAddress, isAllowed, setAllowed, getPublicKey } from '@stellar/freighter-api';
 
 // Bulletproof localStorage mock
 const localStorageMock = (() => {
@@ -19,6 +19,9 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 vi.mock('@stellar/freighter-api', () => ({
   isConnected: vi.fn(),
   getAddress: vi.fn(),
+  isAllowed: vi.fn(),
+  setAllowed: vi.fn(),
+  getPublicKey: vi.fn(),
 }));
 
 // Mock fetch for Friendbot and Horizon calls
@@ -54,6 +57,16 @@ describe('StellarContext Integration', () => {
     vi.clearAllMocks();
     window.localStorage.clear();
     mockFetch.mockReset();
+    
+    // Define mock window.stellar to make waitForFreighter resolve immediately
+    (window as any).stellar = {};
+
+    // Setup Freighter mock defaults
+    (isConnected as any).mockResolvedValue({ isConnected: true });
+    (isAllowed as any).mockResolvedValue({ isAllowed: true });
+    (setAllowed as any).mockResolvedValue({ isAllowed: true });
+    (getPublicKey as any).mockResolvedValue('GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU');
+    (getAddress as any).mockResolvedValue({ address: 'GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU' });
   });
 
   it('renders with correct default configuration states (zero balances, disconnected)', () => {
@@ -65,16 +78,11 @@ describe('StellarContext Integration', () => {
 
     expect(screen.getByTestId('connected')).toHaveTextContent('No');
     expect(screen.getByTestId('publicKey')).toHaveTextContent('None');
-    // New StellarContext starts with 0 balances (no hardcoded values)
     expect(screen.getByTestId('balanceXLM')).toHaveTextContent('0');
     expect(screen.getByTestId('balanceUSDC')).toHaveTextContent('0');
   });
 
   it('connects successfully to Freighter and sets publicKey', async () => {
-    (isConnected as any).mockResolvedValue({ isConnected: true });
-    (getAddress as any).mockResolvedValue({ address: 'GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU' });
-
-    // Mock the Horizon loadAccount call that fetchBalance makes after connecting
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -95,16 +103,11 @@ describe('StellarContext Integration', () => {
     });
 
     expect(isConnected).toHaveBeenCalled();
-    expect(getAddress).toHaveBeenCalled();
     expect(screen.getByTestId('connected')).toHaveTextContent('Yes');
     expect(screen.getByTestId('publicKey')).toHaveTextContent('GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU');
   });
 
   it('handles faucet request as an async network call', async () => {
-    // The faucet now calls real Friendbot — we mock the fetch
-    (isConnected as any).mockResolvedValue({ isConnected: true });
-    (getAddress as any).mockResolvedValue({ address: 'GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU' });
-    
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -133,14 +136,10 @@ describe('StellarContext Integration', () => {
       fireEvent.click(screen.getByTestId('faucet-btn'));
     });
 
-    // The faucet should have been called (via fetch)
     expect(screen.getByTestId('connected')).toHaveTextContent('Yes');
   });
 
   it('disconnects and resets active session variables', async () => {
-    (isConnected as any).mockResolvedValue({ isConnected: true });
-    (getAddress as any).mockResolvedValue({ address: 'GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU' });
-
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({

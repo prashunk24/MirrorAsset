@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { isConnected, getAddress } from '@stellar/freighter-api';
-import { Horizon } from '@stellar/stellar-sdk';
-import type { Asset, Vault, Transaction, ToastMessage, VaultHealth, TransactionType } from '../types';
+import { isConnected, isAllowed, setAllowed, getPublicKey, signTransaction, getAddress } from '@stellar/freighter-api';
+import { Horizon, TransactionBuilder, Networks, BASE_FEE, Operation, Asset } from '@stellar/stellar-sdk';
+import type { Asset as AppAsset, Vault, Transaction, ToastMessage, VaultHealth, TransactionType } from '../types';
 
 // ---------------------------------------------------------------------------
 // Interface
@@ -13,7 +13,7 @@ interface StellarContextType {
   balanceXLM: number;
   balanceUSDC: number;
   balanceSynths: { [symbol: string]: number };
-  assets: Asset[];
+  assets: AppAsset[];
   vaults: Vault[];
   transactions: Transaction[];
   toasts: ToastMessage[];
@@ -47,7 +47,7 @@ const horizonServer = new Horizon.Server(HORIZON_URL);
 // Initial mock assets
 // ---------------------------------------------------------------------------
 
-const INITIAL_ASSETS: Asset[] = [
+const INITIAL_ASSETS: AppAsset[] = [
   {
     symbol: 'sXAU',
     name: 'Synthetic Gold',
@@ -104,7 +104,6 @@ const INITIAL_ASSETS: Asset[] = [
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Generate a sim-prefixed transaction hash */
 const generateSimHash = (): string =>
   'sim_' + Array.from({ length: 56 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
 
@@ -125,7 +124,7 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     sSLV: 0,
   });
 
-  const [assets, setAssets] = useState<Asset[]>(() => {
+  const [assets, setAssets] = useState<AppAsset[]>(() => {
     const saved = localStorage.getItem('mirror_assets');
     return saved ? JSON.parse(saved) : INITIAL_ASSETS;
   });
@@ -143,15 +142,10 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Keep a ref to publicKey so callbacks & intervals always see the latest value
   const publicKeyRef = useRef<string | null>(null);
   useEffect(() => {
     publicKeyRef.current = publicKey;
   }, [publicKey]);
-
-  // -------------------------------------------------------------------------
-  // localStorage persistence
-  // -------------------------------------------------------------------------
 
   useEffect(() => {
     localStorage.setItem('mirror_assets', JSON.stringify(assets));
@@ -165,14 +159,9 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     localStorage.setItem('mirror_txs', JSON.stringify(transactions));
   }, [transactions]);
 
-  // -------------------------------------------------------------------------
-  // Price tick (oracle simulation — every 12s)
-  // -------------------------------------------------------------------------
-
   const triggerPriceTick = useCallback(() => {
     setAssets(prevAssets => {
-      const updated = prevAssets.map(asset => {
-        // -1.5% to +1.5% random change
+      return prevAssets.map(asset => {
         const changePercent = (Math.random() * 3 - 1.5) / 100;
         const newPrice = Math.max(0.0001, asset.price * (1 + changePercent));
         const updatedSparkline = [...asset.sparklineData.slice(1), newPrice];
@@ -184,7 +173,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
           sparklineData: updatedSparkline,
         };
       });
-      return updated;
     });
   }, []);
 
@@ -195,10 +183,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => clearInterval(interval);
   }, [triggerPriceTick]);
 
-  // -------------------------------------------------------------------------
-  // Recalculate vault health when asset prices change
-  // -------------------------------------------------------------------------
-
   useEffect(() => {
     setVaults(prevVaults => {
       let changed = false;
@@ -206,7 +190,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
         const asset = assets.find(a => a.symbol === vault.syntheticAsset);
         if (!asset) return vault;
 
-        // Mock base collateral prices: XLM = $0.12, USDC = $1.00
         const collateralPrice = vault.collateralAsset === 'XLM' ? 0.12 : 1.00;
         const collVal = vault.collateralAmount * collateralPrice;
         const debtVal = vault.mintedAmount * asset.price;
@@ -222,7 +205,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
           health = 'Safe';
         } else {
           ratio = Math.round((collVal / debtVal) * 100);
-
           if (ratio < asset.minCollateralRatio) {
             health = 'Liquidatable';
           } else if (ratio < asset.minCollateralRatio + 15) {
@@ -245,10 +227,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   }, [assets]);
 
-  // -------------------------------------------------------------------------
-  // Toast utilities
-  // -------------------------------------------------------------------------
-
   const addToast = useCallback((type: 'success' | 'error' | 'info', title: string, description: string) => {
     const id = Math.random().toString(36).substring(2, 9);
     setToasts(prev => [...prev, { id, type, title, description }]);
@@ -258,10 +236,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
-
-  // -------------------------------------------------------------------------
-  // Transaction helpers
-  // -------------------------------------------------------------------------
 
   const addTransaction = useCallback((type: TransactionType, details: string, status: 'success' | 'failed' | 'loading' = 'success') => {
     const hash = generateSimHash();
@@ -281,10 +255,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setTransactions(prev => prev.map(tx => (tx.id === id ? { ...tx, status } : tx)));
   }, []);
 
-  // -------------------------------------------------------------------------
-  // Real Balance Fetching (Horizon Testnet)
-  // -------------------------------------------------------------------------
-
   const fetchBalance = useCallback(async (): Promise<void> => {
     const pk = publicKeyRef.current;
     if (!pk) return;
@@ -298,7 +268,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setBalanceXLM(parseFloat(nativeBalance.balance));
       }
     } catch (err: any) {
-      // 404 means unfunded account — set balance to 0 silently
       if (err?.response?.status === 404 || err?.message?.includes('404')) {
         setBalanceXLM(0);
       } else {
@@ -307,58 +276,146 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
-  // Poll balance every 30 seconds while connected
   useEffect(() => {
     if (!walletConnected || !publicKey) return;
-
-    // Fetch immediately on connection
     fetchBalance();
-
     const interval = setInterval(() => {
       fetchBalance();
     }, 30000);
-
     return () => clearInterval(interval);
   }, [walletConnected, publicKey, fetchBalance]);
 
-  // -------------------------------------------------------------------------
-  // Wallet Actions — Real Freighter
-  // -------------------------------------------------------------------------
+  // Asynchronous Loading check helper for Freighter scripts injection
+  const waitForFreighter = async (timeoutMs = 1500): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if (typeof window === 'undefined') {
+        resolve(false);
+        return;
+      }
+      if ((window as any).stellar || (window as any).freighter) {
+        resolve(true);
+        return;
+      }
+
+      const interval = setInterval(() => {
+        if ((window as any).stellar || (window as any).freighter) {
+          clearInterval(interval);
+          resolve(true);
+        }
+      }, 100);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        resolve(!!((window as any).stellar || (window as any).freighter));
+      }, timeoutMs);
+    });
+  };
+
+  // Helper to trigger Freighter signTransaction prompt for validation
+  const signWithWallet = async (details: string): Promise<boolean> => {
+    const pk = publicKeyRef.current;
+    if (!pk) {
+      addToast('error', 'No Wallet', 'Please connect your wallet first.');
+      return false;
+    }
+
+    try {
+      const account = await horizonServer.loadAccount(pk);
+      const tx = new TransactionBuilder(account, {
+        fee: BASE_FEE,
+        networkPassphrase: Networks.TESTNET,
+      })
+        .addOperation(
+          Operation.payment({
+            destination: pk,
+            asset: Asset.native(),
+            amount: '0.0000000',
+          })
+        )
+        .setTimeout(30)
+        .build();
+
+      const unsignedXdr = tx.toXDR();
+      addToast('info', 'Signature Request', `Please approve wallet transaction for: ${details}`);
+      const signResponse = await signTransaction(unsignedXdr, {
+        networkPassphrase: Networks.TESTNET,
+      });
+
+      if (!signResponse || !signResponse.signedTxXdr) {
+        throw new Error('Transaction confirmation rejected by user.');
+      }
+      return true;
+    } catch (err: any) {
+      console.error('Wallet signing rejected/failed:', err);
+      addToast('error', 'Signature Rejected', err.message || 'The signature request was declined.');
+      return false;
+    }
+  };
 
   const connectWallet = async (): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // 1. Check if Freighter extension is installed & connected
-      const freighterStatus = await isConnected();
-
-      if (!freighterStatus || !freighterStatus.isConnected) {
+      // 1. Wait for Freighter extension scripts to inject asynchronously
+      const freighterLoaded = await waitForFreighter();
+      if (!freighterLoaded) {
         addToast(
           'error',
-          'Freighter Not Found',
-          'Please install the Freighter browser extension to connect your Stellar wallet.'
+          'Freighter Not Detected',
+          'Freighter wallet extension was not found. Please install it from freighter.app.'
         );
         setIsLoading(false);
         return false;
       }
 
-      // 2. Request address from Freighter
-      const addressInfo = await getAddress();
-      const pk = addressInfo.address;
-
-      if (!pk) {
-        addToast('error', 'Connection Refused', 'Could not retrieve address from Freighter. Please check permissions.');
+      // 2. Enforce live execution check
+      const connectionStatus = await isConnected();
+      if (!connectionStatus || !connectionStatus.isConnected) {
+        addToast(
+          'error',
+          'Freighter Disconnected',
+          'Freighter wallet is locked or extension was not detected. Please unlock freighter.'
+        );
         setIsLoading(false);
         return false;
       }
 
-      // 3. Activate connection state
-      setPublicKey(pk);
-      setWalletConnected(true);
+      // 3. Request permissions / authorization popup window
+      const allowed = await isAllowed();
+      if (!allowed || !allowed.isAllowed) {
+        const setAllowedStatus = await setAllowed();
+        if (!setAllowedStatus || !setAllowedStatus.isAllowed) {
+          addToast(
+            'error',
+            'Access Rejected',
+            'Wallet connection rejected. Enable permissions in the Freighter popup.'
+          );
+          setIsLoading(false);
+          return false;
+        }
+      }
 
+      // 4. Retrieve the real active public key
+      let pubKey = '';
+      try {
+        pubKey = await getPublicKey();
+      } catch (err) {
+        // Fallback to getAddress if getPublicKey type wrapper fails
+        const addrInfo = await getAddress();
+        pubKey = addrInfo.address;
+      }
+
+      if (!pubKey) {
+        addToast('error', 'Address Error', 'Could not retrieve public key address from Freighter.');
+        setIsLoading(false);
+        return false;
+      }
+
+      setPublicKey(pubKey);
+      setWalletConnected(true);
       addToast(
         'success',
         'Wallet Connected',
-        `Freighter active — ${pk.substring(0, 6)}…${pk.substring(pk.length - 4)}`
+        `Freighter active — ${pubKey.substring(0, 6)}…${pubKey.substring(pubKey.length - 4)}`
       );
 
       setIsLoading(false);
@@ -379,10 +436,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     addToast('info', 'Wallet Disconnected', 'Logged out of Stellar network session.');
   };
 
-  // -------------------------------------------------------------------------
-  // Real Friendbot Faucet
-  // -------------------------------------------------------------------------
-
   const claimFaucet = async (): Promise<void> => {
     const pk = publicKeyRef.current;
     if (!pk) {
@@ -393,10 +446,8 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setIsLoading(true);
     try {
       const response = await fetch(`https://friendbot.stellar.org/?addr=${pk}`);
-
       if (!response.ok) {
         const body = await response.text();
-        // Friendbot returns 400 if account already funded — still useful info
         if (response.status === 400 && body.includes('createAccountAlreadyExist')) {
           addToast('info', 'Already Funded', 'This account has already been funded by Friendbot. Refreshing balance…');
         } else {
@@ -406,8 +457,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
         addTransaction('Faucet', `Received 10,000 XLM from Stellar Testnet Friendbot`);
         addToast('success', 'Faucet Claimed', 'Friendbot funded your account with 10,000 testnet XLM.');
       }
-
-      // Refresh the real balance from Horizon
       await fetchBalance();
     } catch (err: any) {
       console.error('Faucet claim error:', err);
@@ -417,15 +466,15 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
-  // -------------------------------------------------------------------------
-  // Vault Actions (DeFi simulation — instant, no setTimeout)
-  // -------------------------------------------------------------------------
-
   const createVault = async (collateralAsset: 'XLM' | 'USDC', syntheticAsset: string): Promise<string | null> => {
     if (!walletConnected) {
       addToast('error', 'Auth Error', 'Connect wallet to create a vault.');
       return null;
     }
+
+    // Require real wallet transaction signature prompt
+    const signed = await signWithWallet(`Initialize ${syntheticAsset} Vault`);
+    if (!signed) return null;
 
     setIsLoading(true);
     const txId = addTransaction('Deposit', `Creating new ${syntheticAsset} Vault with ${collateralAsset} collateral`, 'loading');
@@ -475,6 +524,13 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return false;
     }
 
+    // Enforce Freighter transaction signing popup
+    const signed = await signWithWallet(`Deposit ${amount} ${vault.collateralAsset}`);
+    if (!signed) {
+      setIsLoading(false);
+      return false;
+    }
+
     const txId = addTransaction('Deposit', `Deposited ${amount} ${vault.collateralAsset} collateral`, 'loading');
 
     if (isXLM) {
@@ -512,7 +568,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return false;
     }
 
-    // Verify collateralization health after withdrawal
     const asset = assets.find(a => a.symbol === vault.syntheticAsset);
     if (!asset) {
       setIsLoading(false);
@@ -530,6 +585,13 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setIsLoading(false);
         return false;
       }
+    }
+
+    // Enforce Freighter transaction signing popup
+    const signed = await signWithWallet(`Withdraw ${amount} ${vault.collateralAsset}`);
+    if (!signed) {
+      setIsLoading(false);
+      return false;
     }
 
     const txId = addTransaction('Withdraw', `Withdrew ${amount} ${vault.collateralAsset} collateral`, 'loading');
@@ -564,7 +626,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return false;
     }
 
-    // Check if collateralization ratio holds after minting
     const collateralPrice = vault.collateralAsset === 'XLM' ? 0.12 : 1.00;
     const collVal = vault.collateralAmount * collateralPrice;
     const futureDebtVal = (vault.mintedAmount + amount) * asset.price;
@@ -576,6 +637,13 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setIsLoading(false);
         return false;
       }
+    }
+
+    // Enforce Freighter transaction signing popup
+    const signed = await signWithWallet(`Mint ${amount} ${vault.syntheticAsset}`);
+    if (!signed) {
+      setIsLoading(false);
+      return false;
     }
 
     const txId = addTransaction('Mint', `Minted ${amount} ${vault.syntheticAsset}`, 'loading');
@@ -621,6 +689,13 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return false;
     }
 
+    // Enforce Freighter transaction signing popup
+    const signed = await signWithWallet(`Burn ${amount} ${vault.syntheticAsset}`);
+    if (!signed) {
+      setIsLoading(false);
+      return false;
+    }
+
     const txId = addTransaction('Burn', `Burned ${amount} ${vault.syntheticAsset}`, 'loading');
 
     setBalanceSynths(prev => ({
@@ -641,7 +716,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return true;
   };
 
-  // Direct Redemption: Swap synthetic asset directly for collateral at current oracle price
   const redeemSynths = async (symbol: string, amount: number): Promise<boolean> => {
     if (amount <= 0) return false;
     setIsLoading(true);
@@ -659,18 +733,23 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return false;
     }
 
+    // Enforce Freighter transaction signing popup
+    const signed = await signWithWallet(`Redeem ${amount} ${symbol}`);
+    if (!signed) {
+      setIsLoading(false);
+      return false;
+    }
+
     const txId = addTransaction('Redeem', `Redeemed ${amount} ${symbol} for ${asset.collateralAsset}`, 'loading');
 
-    // Calculations
     const synthUSDVal = amount * asset.price;
-    const feePercent = 0.005; // 0.5% fee
+    const feePercent = 0.005;
     const feeVal = synthUSDVal * feePercent;
     const redeemableUSD = synthUSDVal - feeVal;
 
     const collateralPrice = asset.collateralAsset === 'XLM' ? 0.12 : 1.00;
     const collateralOut = Number((redeemableUSD / collateralPrice).toFixed(4));
 
-    // Update balances
     setBalanceSynths(prev => ({
       ...prev,
       [symbol]: prev[symbol] - amount,
@@ -688,7 +767,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return true;
   };
 
-  // Liquidation: Liquidate a vault that fell below minimum collateral ratio
   const liquidateVault = async (vaultId: string, debtToCover: number): Promise<boolean> => {
     if (debtToCover <= 0) return false;
     setIsLoading(true);
@@ -713,25 +791,29 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return false;
     }
 
+    // Enforce Freighter transaction signing popup
+    const signed = await signWithWallet(`Liquidate vault ${vaultId.substring(0, 4)}…`);
+    if (!signed) {
+      setIsLoading(false);
+      return false;
+    }
+
     const limitDebtCover = Math.min(debtToCover, vault.mintedAmount);
     const txId = addTransaction('Liquidate', `Liquidating ${limitDebtCover} debt from vault ${vaultId.substring(0, 4)}…`, 'loading');
 
-    // Calculate value: liquidator covers debt, gets equivalent collateral + 10% bonus
     const debtValUSD = limitDebtCover * asset.price;
-    const bonusMultiplier = 1.10; // 10% bonus
+    const bonusMultiplier = 1.10;
     const collateralValueToGet = debtValUSD * bonusMultiplier;
 
     const collateralPrice = vault.collateralAsset === 'XLM' ? 0.12 : 1.00;
     let collateralToGet = collateralValueToGet / collateralPrice;
 
-    // Cap at vault's actual collateral
     if (collateralToGet > vault.collateralAmount) {
       collateralToGet = vault.collateralAmount;
     }
 
     collateralToGet = Number(collateralToGet.toFixed(4));
 
-    // Execute state changes
     setBalanceSynths(prev => ({
       ...prev,
       [vault.syntheticAsset]: prev[vault.syntheticAsset] - limitDebtCover,
@@ -759,10 +841,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setIsLoading(false);
     return true;
   };
-
-  // -------------------------------------------------------------------------
-  // Provider value
-  // -------------------------------------------------------------------------
 
   return (
     <StellarContext.Provider value={{
