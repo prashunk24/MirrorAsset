@@ -51,12 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
           {/* Logo & Name */}
           <div className="flex items-center cursor-pointer flex-grow md:flex-grow-0" onClick={() => setActiveTab('landing')}>
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-accent-purple to-accent-cyan flex items-center justify-center shadow-lg shadow-accent-purple/25">
-              <Activity className="h-6 w-6 text-white stroke-[2.5]" />
-            </div>
-            <span className="ml-3 text-xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent tracking-tight">
-              Mirror<span className="text-accent-purple">Asset</span>
-            </span>
+            <img src="/mirrorasset-logo.png" alt="MirrorAsset Logo" className="h-8 w-auto object-contain" />
           </div>
 
           {/* Navigation Links (Desktop) */}
