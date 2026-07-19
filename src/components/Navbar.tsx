@@ -51,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
           {/* Logo & Name */}
           <div className="flex items-center cursor-pointer flex-grow md:flex-grow-0" onClick={() => setActiveTab('landing')}>
-            <img src="/mirrorasset-full-logo.png" alt="MirrorAsset Logo" className="h-12 md:h-14 w-auto object-contain" />
+            <img src="/mirrorasset-full-logo.png" alt="MirrorAsset Logo" className="h-11 md:h-12 w-auto object-contain transition-all" />
           </div>
 
           {/* Navigation Links (Desktop) */}
