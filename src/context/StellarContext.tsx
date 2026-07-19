@@ -292,13 +292,13 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
         resolve(false);
         return;
       }
-      if ((window as any).stellar || (window as any).freighter) {
+      if ((window as any).stellar || (window as any).freighter || (window as any).stellarWallet) {
         resolve(true);
         return;
       }
 
       const interval = setInterval(() => {
-        if ((window as any).stellar || (window as any).freighter) {
+        if ((window as any).stellar || (window as any).freighter || (window as any).stellarWallet) {
           clearInterval(interval);
           resolve(true);
         }
@@ -306,10 +306,45 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       setTimeout(() => {
         clearInterval(interval);
-        resolve(!!((window as any).stellar || (window as any).freighter));
+        resolve(!!((window as any).stellar || (window as any).freighter || (window as any).stellarWallet));
       }, timeoutMs);
     });
   };
+
+  // Silent auto-connect on mount (if already authorized)
+  useEffect(() => {
+    const autoConnect = async () => {
+      // 1. Wait for Freighter extension to load with a small delay
+      const freighterLoaded = await waitForFreighter(1000);
+      if (!freighterLoaded) return;
+
+      try {
+        const connectionStatus = await isConnected();
+        if (!connectionStatus || !connectionStatus.isConnected) return;
+
+        const allowed = await isAllowed();
+        if (allowed && allowed.isAllowed) {
+          // Retrieve address and auto-connect
+          let pubKey = '';
+          try {
+            pubKey = await getPublicKey();
+          } catch {
+            const addrInfo = await getAddress();
+            pubKey = addrInfo.address;
+          }
+          if (pubKey) {
+            setPublicKey(pubKey);
+            setWalletConnected(true);
+          }
+        }
+      } catch (err) {
+        console.warn('Silent auto-connect skipped:', err);
+      }
+    };
+
+    autoConnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Helper to trigger Freighter signTransaction prompt for validation
   const signWithWallet = async (details: string): Promise<boolean> => {

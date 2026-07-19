@@ -61,20 +61,22 @@ describe('StellarContext Integration', () => {
     // Define mock window.stellar to make waitForFreighter resolve immediately
     (window as any).stellar = {};
 
-    // Setup Freighter mock defaults
+    // Setup Freighter mock defaults (not allowed by default to prevent auto-connect state pollution)
     (isConnected as any).mockResolvedValue({ isConnected: true });
-    (isAllowed as any).mockResolvedValue({ isAllowed: true });
+    (isAllowed as any).mockResolvedValue({ isAllowed: false });
     (setAllowed as any).mockResolvedValue({ isAllowed: true });
     (getPublicKey as any).mockResolvedValue('GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU');
     (getAddress as any).mockResolvedValue({ address: 'GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU' });
   });
 
-  it('renders with correct default configuration states (zero balances, disconnected)', () => {
-    render(
-      <StellarProvider>
-        <TestConsumer />
-      </StellarProvider>
-    );
+  it('renders with correct default configuration states (zero balances, disconnected)', async () => {
+    await act(async () => {
+      render(
+        <StellarProvider>
+          <TestConsumer />
+        </StellarProvider>
+      );
+    });
 
     expect(screen.getByTestId('connected')).toHaveTextContent('No');
     expect(screen.getByTestId('publicKey')).toHaveTextContent('None');
@@ -83,6 +85,7 @@ describe('StellarContext Integration', () => {
   });
 
   it('connects successfully to Freighter and sets publicKey', async () => {
+    (isAllowed as any).mockResolvedValue({ isAllowed: true });
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -90,11 +93,13 @@ describe('StellarContext Integration', () => {
       })
     });
 
-    render(
-      <StellarProvider>
-        <TestConsumer />
-      </StellarProvider>
-    );
+    await act(async () => {
+      render(
+        <StellarProvider>
+          <TestConsumer />
+        </StellarProvider>
+      );
+    });
 
     const connectButton = screen.getByTestId('connect-btn');
     
@@ -108,6 +113,7 @@ describe('StellarContext Integration', () => {
   });
 
   it('handles faucet request as an async network call', async () => {
+    (isAllowed as any).mockResolvedValue({ isAllowed: true });
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -115,11 +121,13 @@ describe('StellarContext Integration', () => {
       })
     });
 
-    render(
-      <StellarProvider>
-        <TestConsumer />
-      </StellarProvider>
-    );
+    await act(async () => {
+      render(
+        <StellarProvider>
+          <TestConsumer />
+        </StellarProvider>
+      );
+    });
 
     // First connect
     await act(async () => {
@@ -140,6 +148,7 @@ describe('StellarContext Integration', () => {
   });
 
   it('disconnects and resets active session variables', async () => {
+    (isAllowed as any).mockResolvedValue({ isAllowed: true });
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -147,11 +156,13 @@ describe('StellarContext Integration', () => {
       })
     });
 
-    render(
-      <StellarProvider>
-        <TestConsumer />
-      </StellarProvider>
-    );
+    await act(async () => {
+      render(
+        <StellarProvider>
+          <TestConsumer />
+        </StellarProvider>
+      );
+    });
 
     const connectButton = screen.getByTestId('connect-btn');
     const disconnectButton = screen.getByTestId('disconnect-btn');
