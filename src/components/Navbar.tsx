@@ -36,7 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
   return (
     <nav className="bg-bg-dark/90 backdrop-blur-xl border-b border-border-subtle sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 md:h-20 py-2">
           {/* Mobile menu toggle button */}
           {walletConnected && (
             <div className="flex md:hidden mr-2">
@@ -51,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
           {/* Logo & Name */}
           <div className="flex items-center cursor-pointer flex-grow md:flex-grow-0" onClick={() => setActiveTab('landing')}>
-            <img src="/mirrorasset-logo2.jpg" alt="MirrorAsset Logo" className="h-16 md:h-20 w-auto object-contain" />
+            <img src="/mirrorasset-logo2.jpg" alt="MirrorAsset Logo" className="h-10 md:h-12 w-auto object-contain" />
           </div>
 
           {/* Navigation Links (Desktop) */}
