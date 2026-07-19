@@ -128,6 +128,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-violet-600/5 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow flex flex-col justify-center items-center">
+        {/* Premium Full Brand Logo Layout Wrapper */}
+        <div className="mb-6 animate-fade-in flex justify-center">
+          <img src="/mirrorasset-full-logo.png" alt="MirrorAsset Brand Logo" className="h-24 md:h-32 w-auto object-contain mx-auto" />
+        </div>
+
         {/* Banner */}
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent-purple/10 border border-accent-purple/20 text-accent-purple rounded-full text-xs font-semibold mb-8 animate-fade-in backdrop-blur-sm">
           <Award className="h-4 w-4" />
