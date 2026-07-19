@@ -401,9 +401,12 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
       try {
         pubKey = await getPublicKey();
       } catch (err) {
-        // Fallback to getAddress if getPublicKey type wrapper fails
-        const addrInfo = await getAddress();
-        pubKey = addrInfo.address;
+        try {
+          const addrInfo = await getAddress();
+          pubKey = addrInfo && typeof addrInfo === 'object' ? addrInfo.address : (addrInfo as any);
+        } catch (innerErr) {
+          pubKey = '';
+        }
       }
 
       if (!pubKey) {
