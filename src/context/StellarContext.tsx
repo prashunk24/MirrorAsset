@@ -22,6 +22,7 @@ interface StellarContextType {
   disconnectWallet: () => void;
   claimFaucet: () => Promise<void>;
   fetchBalance: () => Promise<void>;
+  sendXLM: (destination: string, amount: string) => Promise<{ success: boolean; hash?: string; error?: string }>;
   depositCollateral: (vaultId: string, amount: number) => Promise<boolean>;
   withdrawCollateral: (vaultId: string, amount: number) => Promise<boolean>;
   mintSynths: (vaultId: string, amount: number) => Promise<boolean>;
@@ -260,19 +261,25 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!pk) return;
 
     try {
-      const account = await horizonServer.loadAccount(pk);
-      const nativeBalance = account.balances.find(
+      // Use direct fetch to Horizon REST API to avoid SDK XMLHttpRequest issues
+      const response = await fetch(`${HORIZON_URL}/accounts/${pk}`);
+      if (response.status === 404) {
+        setBalanceXLM(0);
+        return;
+      }
+      if (!response.ok) {
+        console.error('Horizon balance fetch failed:', response.status);
+        return;
+      }
+      const accountData = await response.json();
+      const nativeBalance = accountData.balances?.find(
         (b: any) => b.asset_type === 'native'
       );
       if (nativeBalance) {
         setBalanceXLM(parseFloat(nativeBalance.balance));
       }
     } catch (err: any) {
-      if (err?.response?.status === 404 || err?.message?.includes('404')) {
-        setBalanceXLM(0);
-      } else {
-        console.error('Failed to fetch balance from Horizon:', err);
-      }
+      console.error('Failed to fetch balance from Horizon:', err);
     }
   }, []);
 
@@ -453,6 +460,110 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setBalanceXLM(0);
     setBalanceUSDC(0);
     addToast('info', 'Wallet Disconnected', 'Logged out of Stellar network session.');
+  };
+
+  // ---------------------------------------------------------------------------
+  // Real XLM Transfer — builds, signs via Freighter, submits to Testnet Horizon
+  // ---------------------------------------------------------------------------
+  const sendXLM = async (
+    destination: string,
+    amount: string
+  ): Promise<{ success: boolean; hash?: string; error?: string }> => {
+    const pk = publicKeyRef.current;
+    if (!pk) {
+      addToast('error', 'No Wallet', 'Connect your wallet before sending XLM.');
+      return { success: false, error: 'Wallet not connected.' };
+    }
+
+    if (!destination || destination.length !== 56 || !destination.startsWith('G')) {
+      addToast('error', 'Invalid Destination', 'Please enter a valid Stellar public key (starts with G).');
+      return { success: false, error: 'Invalid destination address.' };
+    }
+
+    const amountNum = parseFloat(amount);
+    if (isNaN(amountNum) || amountNum <= 0) {
+      addToast('error', 'Invalid Amount', 'Please enter a positive XLM amount.');
+      return { success: false, error: 'Invalid amount.' };
+    }
+
+    if (amountNum > balanceXLM - 1) {
+      addToast('error', 'Insufficient Balance', `You need at least ${amountNum + 1} XLM (including reserve). Current: ${balanceXLM.toFixed(2)} XLM`);
+      return { success: false, error: 'Insufficient balance.' };
+    }
+
+    setIsLoading(true);
+    try {
+      // Load account sequence number from Horizon
+      const accountResponse = await fetch(`${HORIZON_URL}/accounts/${pk}`);
+      if (!accountResponse.ok) {
+        throw new Error(`Failed to load account: ${accountResponse.status}`);
+      }
+      const accountData = await accountResponse.json();
+
+      // Build the transaction using stellar-sdk
+      const account = new (await import('@stellar/stellar-sdk')).Account(pk, accountData.sequence);
+      const tx = new TransactionBuilder(account, {
+        fee: BASE_FEE,
+        networkPassphrase: Networks.TESTNET,
+      })
+        .addOperation(
+          Operation.payment({
+            destination,
+            asset: Asset.native(),
+            amount: amountNum.toFixed(7),
+          })
+        )
+        .setTimeout(180)
+        .build();
+
+      const unsignedXdr = tx.toXDR();
+      addToast('info', 'Approval Required', 'Please approve the transaction in Freighter.');
+
+      // Request Freighter to sign the transaction
+      const signResponse = await signTransaction(unsignedXdr, {
+        networkPassphrase: Networks.TESTNET,
+      });
+
+      if (!signResponse || !signResponse.signedTxXdr) {
+        throw new Error('Transaction signing was rejected or cancelled.');
+      }
+
+      // Submit the signed transaction to Horizon testnet
+      const submitResponse = await fetch(`${HORIZON_URL}/transactions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ tx: signResponse.signedTxXdr }),
+      });
+
+      const submitData = await submitResponse.json();
+
+      if (!submitResponse.ok) {
+        const resultCodes = submitData?.extras?.result_codes;
+        const errMsg = resultCodes
+          ? `Transaction failed: ${JSON.stringify(resultCodes)}`
+          : submitData?.title || 'Transaction submission failed.';
+        throw new Error(errMsg);
+      }
+
+      const txHash: string = submitData.hash;
+      addTransaction('Send', `Sent ${amountNum} XLM to ${destination.substring(0, 6)}...${destination.substring(destination.length - 4)}`);
+      addToast(
+        'success',
+        'Transaction Sent! ✓',
+        `${amountNum} XLM sent successfully. Hash: ${txHash.substring(0, 12)}...`
+      );
+
+      // Refresh balance after successful send
+      await fetchBalance();
+      return { success: true, hash: txHash };
+    } catch (err: any) {
+      console.error('sendXLM error:', err);
+      const errMsg = err?.message || 'Transaction failed. Please try again.';
+      addToast('error', 'Transaction Failed', errMsg);
+      return { success: false, error: errMsg };
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const claimFaucet = async (): Promise<void> => {
@@ -877,6 +988,7 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
       disconnectWallet,
       claimFaucet,
       fetchBalance,
+      sendXLM,
       depositCollateral,
       withdrawCollateral,
       mintSynths,
