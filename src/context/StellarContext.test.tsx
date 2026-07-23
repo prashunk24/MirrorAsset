@@ -59,9 +59,6 @@ describe('StellarContext Integration', () => {
     window.localStorage.clear();
     mockFetch.mockReset();
     
-    // Define mock window.stellar to make waitForFreighter resolve immediately
-    (window as any).stellar = {};
-
     // Setup Freighter mock defaults (not allowed by default to prevent auto-connect state pollution)
     (isConnected as any).mockResolvedValue({ isConnected: true });
     (isAllowed as any).mockResolvedValue({ isAllowed: false });
@@ -109,7 +106,7 @@ describe('StellarContext Integration', () => {
       fireEvent.click(connectButton);
     });
 
-    expect(isConnected).toHaveBeenCalled();
+    expect(requestAccess).toHaveBeenCalled();
     expect(screen.getByTestId('connected')).toHaveTextContent('Yes');
     expect(screen.getByTestId('publicKey')).toHaveTextContent('GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU');
   });

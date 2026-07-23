@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { isConnected, isAllowed, setAllowed, getPublicKey, signTransaction, getAddress, requestAccess } from '@stellar/freighter-api';
+import { getPublicKey, signTransaction, getAddress, requestAccess } from '@stellar/freighter-api';
 import { Horizon, TransactionBuilder, Networks, BASE_FEE, Operation, Asset } from '@stellar/stellar-sdk';
 import type { Asset as AppAsset, Vault, Transaction, ToastMessage, VaultHealth, TransactionType } from '../types';
 
@@ -292,31 +292,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => clearInterval(interval);
   }, [walletConnected, publicKey, fetchBalance]);
 
-  // Asynchronous Loading check helper for Freighter scripts injection
-  const waitForFreighter = async (timeoutMs = 1500): Promise<boolean> => {
-    return new Promise((resolve) => {
-      if (typeof window === 'undefined') {
-        resolve(false);
-        return;
-      }
-      if ((window as any).stellar || (window as any).freighter || (window as any).stellarWallet) {
-        resolve(true);
-        return;
-      }
-
-      const interval = setInterval(() => {
-        if ((window as any).stellar || (window as any).freighter || (window as any).stellarWallet) {
-          clearInterval(interval);
-          resolve(true);
-        }
-      }, 100);
-
-      setTimeout(() => {
-        clearInterval(interval);
-        resolve(!!((window as any).stellar || (window as any).freighter || (window as any).stellarWallet));
-      }, timeoutMs);
-    });
-  };
 
 
 
@@ -364,71 +339,30 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const connectWallet = async (): Promise<boolean> => {
     setIsLoading(true);
     try {
-      const freighterLoaded = await waitForFreighter();
-      if (!freighterLoaded) {
-        addToast(
-          'error',
-          'Freighter Not Detected',
-          'Freighter wallet extension was not found. Please install it from freighter.app.'
-        );
-        return false;
-      }
-
-      const connection = await isConnected();
-      if (!connection.isConnected) {
-        addToast(
-          'error',
-          'Wallet Missing',
-          'Please make sure the Freighter extension is enabled.'
-        );
-        return false;
-      }
-
-      // Check current authorization permissions
-      let allowedStatus = false;
-      try {
-        const allowed = await isAllowed();
-        allowedStatus = allowed.isAllowed;
-      } catch (e) {
-        console.warn("isAllowed check error:", e);
-      }
-
-      if (!allowedStatus) {
-        try {
-          const setAllowedStatus = await setAllowed();
-          allowedStatus = setAllowedStatus.isAllowed;
-        } catch (e) {
-          console.warn("setAllowed authorization error:", e);
-        }
-      }
-
-      // Retrieve public address key
+      // Direct access request — immediately triggers the Freighter extension popup.
+      // Skips waitForFreighter / isConnected pre-checks to avoid injection timing races.
       let pubKey = '';
-      if (allowedStatus) {
+
+      try {
+        const access = await requestAccess();
+        pubKey = typeof access === 'string' ? access : access?.address ?? '';
+      } catch (accessErr) {
+        console.warn('requestAccess failed, trying getPublicKey:', accessErr);
+        // Fallback 1: getPublicKey (plain string return)
         try {
           pubKey = await getPublicKey();
-        } catch (e) {
-          console.warn("getPublicKey error:", e);
+        } catch (pkErr) {
+          console.warn('getPublicKey failed, trying getAddress:', pkErr);
         }
       }
 
-      // Fallback 1: requestAccess
-      if (!pubKey) {
-        try {
-          const access = await requestAccess();
-          pubKey = typeof access === 'string' ? access : access?.address;
-        } catch (e) {
-          console.warn("requestAccess error:", e);
-        }
-      }
-
-      // Fallback 2: getAddress
+      // Fallback 2: getAddress (object return)
       if (!pubKey) {
         try {
           const addrInfo = await getAddress();
-          pubKey = addrInfo && typeof addrInfo === 'object' ? addrInfo.address : (addrInfo as any);
-        } catch (e) {
-          console.warn("getAddress error:", e);
+          pubKey = addrInfo?.address ?? (typeof addrInfo === 'string' ? addrInfo : '');
+        } catch (addrErr) {
+          console.warn('getAddress fallback failed:', addrErr);
         }
       }
 
@@ -437,17 +371,21 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setWalletConnected(true);
         addToast(
           'success',
-          'Connected',
-          `Wallet: ${pubKey.substring(0, 6)}...${pubKey.substring(pubKey.length - 4)}`
+          'Wallet Connected',
+          `Connected: ${pubKey.substring(0, 6)}...${pubKey.substring(pubKey.length - 4)}`
         );
         return true;
       } else {
-        addToast('error', 'Address Error', 'Could not retrieve public key address from Freighter.');
+        addToast('error', 'Connection Rejected', 'Could not retrieve public key from Freighter.');
         return false;
       }
     } catch (error: any) {
-      console.error("Freighter Connection Error:", error);
-      addToast('error', 'Connection Failed', error?.message || 'Unable to connect to Freighter.');
+      console.error('Freighter Connect Error:', error);
+      addToast(
+        'error',
+        'Freighter Not Detected',
+        'Please ensure the Freighter extension is unlocked and enabled on freighter.app.'
+      );
       return false;
     } finally {
       setIsLoading(false);
