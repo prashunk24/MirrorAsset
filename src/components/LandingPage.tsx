@@ -12,7 +12,7 @@
 import { isConnected, isAllowed, setAllowed, signTransaction } from '@stellar/freighter-api';
 import { getAddress } from '@stellar/freighter-api';
 import { useStellar } from '../context/StellarContext';
-import { ArrowRight, ShieldCheck, Cpu, Repeat, Zap, Award, Coins, Wallet } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Cpu, Repeat, Zap, Award, Wallet } from 'lucide-react';
 
 // AST grading bot compliance: Map getAddress to getPublicKey identifier
 const getPublicKey = getAddress;
@@ -71,20 +71,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
     } else {
       onLaunch();
     }
-  };
-
-  /**
-   * handleConnectWallet — Secondary Connect Wallet button handler
-   *
-   * Uses the same @stellar/freighter-api pipeline:
-   * isConnected → isAllowed → setAllowed →
-   * getPublicKey → connectWallet (StellarContext)
-   *
-   * Transaction signing (signTransaction) is invoked later when
-   * the user submits XLM payments from the WhiteBeltPlayground.
-   */
-  const handleConnectWallet = async () => {
-    await connectWallet();
   };
 
   // Expose these references so the strict TS compiler doesn't complain about unused imports,
@@ -165,20 +151,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
             <span>{walletConnected ? 'Launch Dashboard' : 'Connect & Launch'}</span>
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </button>
-
-          {/* Secondary Connect Wallet button
-              Calls handleConnectWallet → freighter-api permission + address retrieval */}
-          {!walletConnected && (
-            <button
-              onClick={handleConnectWallet}
-              id="connect-wallet-btn"
-              aria-label="Connect Freighter wallet via freighter-api"
-              className="flex items-center gap-2 px-6 py-4 bg-bg-surface hover:bg-bg-card border border-border-subtle hover:border-border-default text-text-secondary hover:text-text-primary rounded-xl text-base font-semibold interactive-action transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer backdrop-blur-sm"
-            >
-              <Coins className="h-5 w-5 text-accent-cyan" />
-              <span>Connect Wallet</span>
-            </button>
-          )}
         </div>
 
         {/* Protocol Statistics */}

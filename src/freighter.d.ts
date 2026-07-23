@@ -4,6 +4,7 @@ declare module "@stellar/freighter-api" {
   export function setAllowed(): Promise<{ isAllowed: boolean }>;
   export function getPublicKey(): Promise<string>;
   export function getAddress(): Promise<{ address: string }>;
+  export function requestAccess(): Promise<{ address: string; error?: string }>;
   export function signTransaction(
     transactionXdr: string,
     opts?: {

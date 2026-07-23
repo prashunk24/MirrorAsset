@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { StellarProvider, useStellar } from './StellarContext';
-import { isConnected, getAddress, isAllowed, setAllowed, getPublicKey } from '@stellar/freighter-api';
+import { isConnected, getAddress, isAllowed, setAllowed, getPublicKey, requestAccess } from '@stellar/freighter-api';
 
 // Bulletproof localStorage mock
 const localStorageMock = (() => {
@@ -22,6 +22,7 @@ vi.mock('@stellar/freighter-api', () => ({
   isAllowed: vi.fn(),
   setAllowed: vi.fn(),
   getPublicKey: vi.fn(),
+  requestAccess: vi.fn(),
 }));
 
 // Mock fetch for Friendbot and Horizon calls
@@ -67,6 +68,7 @@ describe('StellarContext Integration', () => {
     (setAllowed as any).mockResolvedValue({ isAllowed: true });
     (getPublicKey as any).mockResolvedValue('GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU');
     (getAddress as any).mockResolvedValue({ address: 'GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU' });
+    (requestAccess as any).mockResolvedValue({ address: 'GDKRGVN3VY7BCBXGXVFJODSMBC4LE7HHQQTYV3EYJLLQKUKPWLIJJRKU' });
   });
 
   it('renders with correct default configuration states (zero balances, disconnected)', async () => {

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { isConnected, isAllowed, setAllowed, getPublicKey, signTransaction, getAddress } from '@stellar/freighter-api';
+import { isConnected, isAllowed, setAllowed, getPublicKey, signTransaction, getAddress, requestAccess } from '@stellar/freighter-api';
 import { Horizon, TransactionBuilder, Networks, BASE_FEE, Operation, Asset } from '@stellar/stellar-sdk';
 import type { Asset as AppAsset, Vault, Transaction, ToastMessage, VaultHealth, TransactionType } from '../types';
 
@@ -357,7 +357,6 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const connectWallet = async (): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // 1. Wait for Freighter extension scripts to inject asynchronously
       const freighterLoaded = await waitForFreighter();
       if (!freighterLoaded) {
         addToast(
@@ -365,71 +364,46 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
           'Freighter Not Detected',
           'Freighter wallet extension was not found. Please install it from freighter.app.'
         );
-        setIsLoading(false);
         return false;
       }
 
-      // 2. Enforce live execution check
-      const connectionStatus = await isConnected();
-      if (!connectionStatus || !connectionStatus.isConnected) {
+      const connection = await isConnected();
+      if (!connection.isConnected) {
         addToast(
           'error',
-          'Freighter Disconnected',
-          'Freighter wallet is locked or extension was not detected. Please unlock freighter.'
+          'Wallet Missing',
+          'Please make sure the Freighter extension is enabled.'
         );
-        setIsLoading(false);
         return false;
       }
 
-      // 3. Request permissions / authorization popup window
-      const allowed = await isAllowed();
-      if (!allowed || !allowed.isAllowed) {
-        const setAllowedStatus = await setAllowed();
-        if (!setAllowedStatus || !setAllowedStatus.isAllowed) {
-          addToast(
-            'error',
-            'Access Rejected',
-            'Wallet connection rejected. Enable permissions in the Freighter popup.'
-          );
-          setIsLoading(false);
-          return false;
-        }
-      }
-
-      // 4. Retrieve the real active public key
-      let pubKey = '';
-      try {
-        pubKey = await getPublicKey();
-      } catch (err) {
-        try {
-          const addrInfo = await getAddress();
-          pubKey = addrInfo && typeof addrInfo === 'object' ? addrInfo.address : (addrInfo as any);
-        } catch (innerErr) {
-          pubKey = '';
-        }
-      }
+      const access = await requestAccess();
+      let pubKey = access.address;
 
       if (!pubKey) {
-        addToast('error', 'Address Error', 'Could not retrieve public key address from Freighter.');
-        setIsLoading(false);
-        return false;
+        const addrInfo = await getAddress();
+        pubKey = addrInfo.address;
       }
 
-      setPublicKey(pubKey);
-      setWalletConnected(true);
-      addToast(
-        'success',
-        'Wallet Connected',
-        `Freighter active — ${pubKey.substring(0, 6)}…${pubKey.substring(pubKey.length - 4)}`
-      );
-
-      setIsLoading(false);
-      return true;
+      if (pubKey) {
+        setPublicKey(pubKey);
+        setWalletConnected(true);
+        addToast(
+          'success',
+          'Connected',
+          `Wallet: ${pubKey.substring(0, 6)}...${pubKey.substring(pubKey.length - 4)}`
+        );
+        return true;
+      } else {
+        addToast('error', 'Address Error', 'Could not retrieve public key address from Freighter.');
+        return false;
+      }
     } catch (error: any) {
-      console.error('Wallet connection error:', error);
-      addToast('error', 'Connection Failed', error.message || 'Unknown error connecting to Freighter.');
-      setIsLoading(false);
+      console.error("Freighter Connection Error:", error);
+      addToast('error', 'Connection Failed', error?.message || 'Unable to connect to Freighter.');
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
