@@ -377,12 +377,52 @@ export const StellarProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return false;
       }
 
-      const access = await requestAccess();
-      let pubKey = access.address;
+      // Check current authorization permissions
+      let allowedStatus = false;
+      try {
+        const allowed = await isAllowed();
+        allowedStatus = allowed.isAllowed;
+      } catch (e) {
+        console.warn("isAllowed check error:", e);
+      }
 
+      if (!allowedStatus) {
+        try {
+          const setAllowedStatus = await setAllowed();
+          allowedStatus = setAllowedStatus.isAllowed;
+        } catch (e) {
+          console.warn("setAllowed authorization error:", e);
+        }
+      }
+
+      // Retrieve public address key
+      let pubKey = '';
+      if (allowedStatus) {
+        try {
+          pubKey = await getPublicKey();
+        } catch (e) {
+          console.warn("getPublicKey error:", e);
+        }
+      }
+
+      // Fallback 1: requestAccess
       if (!pubKey) {
-        const addrInfo = await getAddress();
-        pubKey = addrInfo.address;
+        try {
+          const access = await requestAccess();
+          pubKey = typeof access === 'string' ? access : access?.address;
+        } catch (e) {
+          console.warn("requestAccess error:", e);
+        }
+      }
+
+      // Fallback 2: getAddress
+      if (!pubKey) {
+        try {
+          const addrInfo = await getAddress();
+          pubKey = addrInfo && typeof addrInfo === 'object' ? addrInfo.address : (addrInfo as any);
+        } catch (e) {
+          console.warn("getAddress error:", e);
+        }
       }
 
       if (pubKey) {

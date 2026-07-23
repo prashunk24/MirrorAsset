@@ -38,36 +38,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
    */
   const handleStart = async () => {
     if (!walletConnected) {
-      // Verify Freighter extension is installed before attempting connection
-      const extensionStatus = await isConnected();
-      if (!extensionStatus.isConnected) {
-        // Freighter wallet extension not detected — context will show error toast
-        const connected = await connectWallet();
-        if (connected) onLaunch();
-        return;
-      }
-
-      // Check current permission status with freighter-api
-      const permissionStatus = await isAllowed();
-      if (!permissionStatus.isAllowed) {
-        // Request wallet permissions — freighter-api setAllowed triggers browser prompt
-        await setAllowed();
-      }
-
-      // Retrieve user's public key via freighter-api getPublicKey
-      try {
-        const addressResult = await getPublicKey();
-        if (addressResult.address) {
-          // Address retrieved successfully — delegate full connection to context
-          const connected = await connectWallet();
-          if (connected) onLaunch();
-        }
-      } catch (err) {
-        console.error("Failed to retrieve public key", err);
-        // Fallback to context connection
-        const connected = await connectWallet();
-        if (connected) onLaunch();
-      }
+      const connected = await connectWallet();
+      if (connected) onLaunch();
     } else {
       onLaunch();
     }
