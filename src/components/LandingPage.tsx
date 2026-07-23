@@ -9,7 +9,7 @@
  * - All operations target the Stellar Testnet
  */
 
-import { isConnected, isAllowed, setAllowed, signTransaction } from '@stellar/freighter-api';
+import { isAllowed, setAllowed, signTransaction } from '@stellar/freighter-api';
 import { getAddress } from '@stellar/freighter-api';
 import { useStellar } from '../context/StellarContext';
 import { ArrowRight, ShieldCheck, Cpu, Repeat, Zap, Award, Wallet } from 'lucide-react';

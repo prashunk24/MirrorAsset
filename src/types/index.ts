@@ -31,7 +31,8 @@ export type TransactionType =
   | 'Burn' 
   | 'Redeem' 
   | 'Liquidate'
-  | 'Faucet';
+  | 'Faucet'
+  | 'Send';
 
 export interface Transaction {
   id: string;
