@@ -125,14 +125,20 @@ node scripts/deploy.js
 
 ---
 
-## 📸 Screenshots Placeholders
+## 📸 Screenshots & Proof of Submission
 
-*   **[Placeholder] Wallet Connected**: `docs/screenshots/wallet_connected.png`
-*   **[Placeholder] Balance Retrieval**: `docs/screenshots/balance_retrieval.png`
-*   **[Placeholder] Payment Transaction Success**: `docs/screenshots/transaction_success.png`
-*   **[Placeholder] Multi-Wallet Kit Selection**: `docs/screenshots/multi_wallet_kit.png`
-*   **[Placeholder] Soroban Deposit Call**: `docs/screenshots/contract_deposit.png`
-*   **[Placeholder] Live Soroban Events**: `docs/screenshots/event_listener.png`
+### 1. Wallet Connected State
+<img width="1470" height="882" alt="Wallet Connected" src="https://github.com/user-attachments/assets/cf7f20c4-95f3-4d89-84b8-b2d297f86634" />
+
+---
+
+### 2. Balance Displayed
+<img width="1262" height="372" alt="Balance Displayed" src="https://github.com/user-attachments/assets/07b64758-1410-442b-923c-ae5d2deb4059" />
+
+---
+
+### 3. Successful Testnet Transaction
+<img width="1470" height="956" alt="Successful Testnet Transaction" src="https://github.com/user-attachments/assets/1e4aa2ed-2b45-438b-a301-348fd8702ddd" />
 
 ---
 
