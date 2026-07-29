@@ -49,17 +49,17 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             </div>
           )}
 
-          {/* Logo & Name — transparent container with neon glow */}
-          <div className="flex items-center gap-2.5 cursor-pointer flex-grow md:flex-grow-0" onClick={() => setActiveTab('landing')}>
+          {/* Logo — flex-shrink-0 prevents mobile squishing; wordmark is embedded in the image */}
+          <div
+            className="flex items-center flex-shrink-0 cursor-pointer"
+            onClick={() => setActiveTab('landing')}
+          >
             <img
               src="/mirrorasset-logo2.jpg"
               alt="MirrorAsset Logo"
-              className="h-10 md:h-12 w-auto object-contain"
+              className="h-10 md:h-12 w-auto object-contain flex-shrink-0"
               style={{ filter: 'drop-shadow(0 0 10px rgba(139, 92, 246, 0.4))' }}
             />
-            <span className="hidden sm:block text-base font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent select-none">
-              MirrorAsset
-            </span>
           </div>
 
           {/* Navigation Links (Desktop) */}
@@ -98,20 +98,20 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                   </div>
                 </div>
 
-                {/* Claim Faucet */}
+                {/* Claim Faucet — icon only on mobile, full label on sm+ */}
                 <button
                   onClick={claimFaucet}
                   title="Claim test tokens from Stellar Faucet"
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan hover:text-white rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer"
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan hover:text-white rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer"
                 >
                   <Coins className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Faucet</span>
+                  <span>Faucet</span>
                 </button>
 
-                {/* Testnet Badge */}
+                {/* Testnet Badge — hidden on mobile to save header space */}
                 <div
                   title="Connected to Stellar Testnet"
-                  className="flex items-center gap-1.5 px-2.5 py-1 bg-accent-green/10 border border-accent-green/20 text-accent-green rounded-full text-[10px] font-bold uppercase tracking-wider"
+                  className="hidden md:flex items-center gap-1.5 px-2.5 py-1 bg-accent-green/10 border border-accent-green/20 text-accent-green rounded-full text-[10px] font-bold uppercase tracking-wider"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse"></span>
                   <span>Testnet</span>
