@@ -57,24 +57,40 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
 
   const featureCards = [
     {
-      icon: <ShieldCheck className="h-6 w-6 text-accent-purple" />,
+      icon: <ShieldCheck className="h-6 w-6" />,
+      iconGradient: 'from-violet-500/25 via-purple-500/20 to-fuchsia-500/10',
+      iconBorder: 'border-violet-500/30',
+      iconColor: 'text-violet-400',
+      iconGlow: 'rgba(139,92,246,0.25)',
       title: "Over-Collateralized Vaults",
-      desc: "Mint digital tokens backed by solid assets like USDC and XLM. Smart contracts enforce safety ratios (130%-180%) to prevent default."
+      desc: "Mint digital tokens backed by solid assets like USDC and XLM. Smart contracts enforce safety ratios (130%–180%) to prevent default."
     },
     {
-      icon: <Cpu className="h-6 w-6 text-accent-cyan" />,
+      icon: <Cpu className="h-6 w-6" />,
+      iconGradient: 'from-cyan-500/25 via-teal-500/20 to-indigo-500/10',
+      iconBorder: 'border-cyan-500/30',
+      iconColor: 'text-cyan-400',
+      iconGlow: 'rgba(6,182,212,0.25)',
       title: "Decentralized Oracles",
       desc: "Get real-time off-chain price feeds for stocks, commodities, and fiat, securely piped onto Stellar using oracle contract adapters."
     },
     {
-      icon: <Repeat className="h-6 w-6 text-indigo-400" />,
+      icon: <Repeat className="h-6 w-6" />,
+      iconGradient: 'from-indigo-500/25 via-blue-500/20 to-cyan-500/10',
+      iconBorder: 'border-indigo-500/30',
+      iconColor: 'text-indigo-400',
+      iconGlow: 'rgba(99,102,241,0.25)',
       title: "Redemption Peg Mechanism",
       desc: "Buy synthetic assets below peg and redeem them directly for underlying collateral at oracle prices, creating a solid arbitrage anchor."
     },
     {
-      icon: <Zap className="h-6 w-6 text-pink-400" />,
+      icon: <Zap className="h-6 w-6" />,
+      iconGradient: 'from-fuchsia-500/25 via-pink-500/20 to-rose-500/10',
+      iconBorder: 'border-fuchsia-500/30',
+      iconColor: 'text-fuchsia-400',
+      iconGlow: 'rgba(217,70,239,0.25)',
       title: "Fast, Low-Cost Settlement",
-      desc: "Benefit from the Stellar ledger's sub-second finality and near-zero transaction fees, maximizing trading and arbitrage margins."
+      desc: "Benefit from the Stellar ledger's sub-second finality and near-zero transaction fees, maximising trading and arbitrage margins."
     }
   ];
 
@@ -224,15 +240,52 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
           </div>
         </div>
 
-        {/* Live Asset Ticker */}
-        <div className="w-full max-w-4xl mt-12 rounded-xl p-4 overflow-hidden" style={{ background: 'rgba(15,16,26,0.45)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.07)' }}>
-          <h3 className="text-xs font-semibold text-text-muted uppercase tracking-widest text-center mb-3">Live Oracle Feeds</h3>
-          <div className="flex flex-wrap justify-center gap-6">
+        {/* ── Live Oracle Feeds Ticker ── */}
+        <div
+          className="w-full max-w-4xl mt-12 mb-4 rounded-2xl p-6 overflow-hidden"
+          style={{
+            background: 'rgba(15,18,30,0.55)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(139,92,246,0.20)',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.50)',
+          }}
+        >
+          {/* Header with pulsing live dot */}
+          <div className="flex items-center justify-center gap-2 mb-5">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
+            <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
+              Live Soroban Oracle Feeds
+            </span>
+          </div>
+
+          {/* Asset pills */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
             {assets.slice(0, 4).map(asset => (
-              <div key={asset.symbol} className="flex items-center gap-3 bg-bg-card/60 px-4 py-2 rounded-xl border border-border-subtle hover:border-border-default transition-colors">
-                <span className="text-sm font-bold text-text-primary">{asset.symbol}</span>
-                <span className="text-sm font-semibold text-text-secondary">${asset.price.toLocaleString()}</span>
-                <span className={`text-xs font-bold ${asset.change24h >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
+              <div
+                key={asset.symbol}
+                className="flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-200 cursor-default"
+                style={{
+                  background: 'rgba(30,35,55,0.65)',
+                  border: '1px solid rgba(255,255,255,0.09)',
+                  backdropFilter: 'blur(12px)',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.border = '1px solid rgba(6,182,212,0.40)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 0 12px rgba(6,182,212,0.12)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.09)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                }}
+              >
+                <span className="text-sm font-bold text-white">{asset.symbol}</span>
+                <span className="text-sm font-semibold text-slate-300">${asset.price.toLocaleString()}</span>
+                <span className={`text-xs font-bold ${
+                  asset.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'
+                }`}>
                   {asset.change24h >= 0 ? '+' : ''}{asset.change24h.toFixed(2)}%
                 </span>
               </div>
@@ -240,56 +293,63 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
           </div>
         </div>
 
-        {/* Feature section */}
-        <div className="mt-32 max-w-6xl w-full">
-          <h2 className="text-center text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+        {/* ── Feature Grid ── */}
+        <div className="mt-24 w-full max-w-5xl">
+          {/* Section heading */}
+          <h2 className="text-center text-3xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent mb-3">
             Built for Stability and Scalability
           </h2>
-          <p className="text-center text-text-secondary mt-2 max-w-xl mx-auto text-sm">
-            MirrorAsset relies on decentralized price feeds and protocol-enforced liquidations to ensure synthetic tokens always mirror real-world prices.
+          <p className="text-center text-slate-400 max-w-2xl mx-auto text-sm md:text-base mt-2">
+            MirrorAsset relies on decentralised price feeds and protocol-enforced liquidations to ensure synthetic tokens always mirror real-world prices.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-6 mt-12">
+          {/* Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
             {featureCards.map((feat, idx) => (
               <div
                 key={idx}
-                className="group p-6 rounded-2xl flex gap-4 items-start transition-all duration-300"
+                className="group p-8 rounded-2xl transition-all duration-300 cursor-default"
                 style={{
-                  background: 'rgba(15,16,26,0.50)',
+                  background: 'rgba(13,17,25,0.60)',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                  boxShadow: '0 8px 32px 0 rgba(0,0,0,0.30)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.border = '1px solid rgba(6,182,212,0.30)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px -8px rgba(6,182,212,0.14), 0 8px 32px 0 rgba(0,0,0,0.40)';
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.border = '1px solid rgba(6,182,212,0.30)';
+                  el.style.boxShadow = '0 0 25px rgba(6,182,212,0.15), 0 8px 24px rgba(0,0,0,0.40)';
+                  el.style.transform = 'translateY(-3px)';
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.07)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px 0 rgba(0,0,0,0.30)';
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.border = '1px solid rgba(255,255,255,0.08)';
+                  el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)';
+                  el.style.transform = 'translateY(0)';
                 }}
               >
-                <div className="p-3 rounded-xl border border-white/8 flex-shrink-0" style={{ background: 'rgba(30,30,48,0.70)' }}>
+                {/* Glowing icon badge */}
+                <div
+                  className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feat.iconGradient} border ${feat.iconBorder} flex items-center justify-center ${feat.iconColor} mb-5 group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}
+                  style={{ boxShadow: `0 0 15px ${feat.iconGlow}` }}
+                >
                   {feat.icon}
                 </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-text-primary">{feat.title}</h4>
-                  <p className="text-sm text-text-secondary mt-2 leading-relaxed">{feat.desc}</p>
-                </div>
+                <h3 className={`text-lg font-bold text-white mb-2 transition-colors duration-200 group-hover:${feat.iconColor}`}>
+                  {feat.title}
+                </h3>
+                <p className="text-sm text-slate-400 leading-relaxed">{feat.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="w-full border-t border-border-subtle py-8 bg-bg-surface/40 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 text-center text-xs text-text-muted">
-          <p>© 2026 MirrorAsset Protocol. Built on Stellar using Soroban Smart Contracts. For demonstration purposes only.</p>
-        </div>
+      {/* ── Footer ── */}
+      <footer className="w-full border-t border-white/5 py-8">
+        <p className="text-xs text-slate-500 text-center">
+          © 2026 MirrorAsset Protocol. Built on Stellar using Soroban Smart Contracts. For demonstration purposes only.
+        </p>
       </footer>
     </div>
   );
