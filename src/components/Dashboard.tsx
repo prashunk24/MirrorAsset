@@ -138,46 +138,62 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
       {/* ── Wallet Overview Row ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {/* XLM Balance */}
-        <div className="glass-panel p-5 rounded-2xl flex items-center gap-4 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-accent-cyan/5 to-transparent pointer-events-none" />
-          <div className="p-2.5 bg-accent-cyan/10 rounded-xl border border-accent-cyan/20 shrink-0">
-            <Wallet className="h-5 w-5 text-accent-cyan" />
+        <div
+          className="p-5 rounded-2xl flex items-center gap-4 relative overflow-hidden transition-all duration-300 group"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(6,182,212,0.30)'; el.style.boxShadow = '0 0 20px rgba(6,182,212,0.12)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.boxShadow = 'none'; }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent pointer-events-none" />
+          <div className="p-2.5 rounded-xl shrink-0" style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.25)' }}>
+            <Wallet className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider block">XLM Balance</span>
-            <span className="text-2xl font-extrabold text-text-primary">
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">XLM Balance</span>
+            <span className="text-2xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
               {balanceXLM.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
             </span>
-            <span className="text-xs text-text-muted ml-1">XLM</span>
+            <span className="text-xs text-slate-500 ml-1">XLM</span>
           </div>
         </div>
 
         {/* USDC Balance */}
-        <div className="glass-panel p-5 rounded-2xl flex items-center gap-4 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-accent-purple/5 to-transparent pointer-events-none" />
-          <div className="p-2.5 bg-accent-purple/10 rounded-xl border border-accent-purple/20 shrink-0">
-            <Coins className="h-5 w-5 text-accent-purple" />
+        <div
+          className="p-5 rounded-2xl flex items-center gap-4 relative overflow-hidden transition-all duration-300"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(139,92,246,0.30)'; el.style.boxShadow = '0 0 20px rgba(139,92,246,0.12)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.boxShadow = 'none'; }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent pointer-events-none" />
+          <div className="p-2.5 rounded-xl shrink-0" style={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)' }}>
+            <Coins className="h-5 w-5 text-violet-400" />
           </div>
           <div>
-            <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider block">USDC Balance</span>
-            <span className="text-2xl font-extrabold text-text-primary">
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">USDC Balance</span>
+            <span className="text-2xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
               {balanceUSDC.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
-            <span className="text-xs text-text-muted ml-1">USDC</span>
+            <span className="text-xs text-slate-500 ml-1">USDC</span>
           </div>
         </div>
 
         {/* Faucet */}
-        <div className="glass-panel p-5 rounded-2xl flex items-center justify-between relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-accent-green/5 to-transparent pointer-events-none" />
+        <div
+          className="p-5 rounded-2xl flex items-center justify-between relative overflow-hidden"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)' }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />
           <div>
-            <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider block">Testnet Faucet</span>
-            <span className="text-sm text-text-secondary mt-1 block">Need test XLM?</span>
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Testnet Faucet</span>
+            <span className="text-sm text-slate-400 mt-1 block">Need test XLM?</span>
           </div>
           <button
             onClick={claimFaucet}
             disabled={isLoading}
-            className="flex items-center gap-2 px-4 py-2 bg-accent-green/10 hover:bg-accent-green/20 border border-accent-green/30 text-accent-green rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none cursor-pointer text-emerald-400 hover:text-white"
+            style={{ background: 'rgba(16,185,129,0.10)', border: '1px solid rgba(16,185,129,0.25)' }}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(16,185,129,0.20)'}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'rgba(16,185,129,0.10)'}
           >
             <Coins className="h-4 w-4" />
             Claim
@@ -188,38 +204,56 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
       {/* ── Upper overview cards ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* Total Collateral Card */}
-        <div className="glass-panel p-6 rounded-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-accent-cyan/5 rounded-full blur-2xl"></div>
-          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">Deposited Collateral</span>
-          <h2 className="text-3xl font-extrabold text-text-primary mt-2">
+        <div
+          className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(6,182,212,0.28)'; el.style.boxShadow = '0 0 20px rgba(6,182,212,0.12), 0 8px 24px rgba(0,0,0,0.40)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)'; }}
+        >
+          <div className="absolute top-0 right-0 w-28 h-28 bg-cyan-500/6 rounded-full blur-2xl" />
+          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Deposited Collateral</span>
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent mt-2">
             ${totalCollateralUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
-          <p className="text-xs text-text-muted mt-2">Combined value of XLM and USDC locked in vaults</p>
+          <p className="text-xs text-slate-500 mt-2">Combined value of XLM and USDC locked in vaults</p>
         </div>
 
         {/* Total Minted Debt Card */}
-        <div className="glass-panel p-6 rounded-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-accent-purple/5 rounded-full blur-2xl"></div>
-          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">Minted Synthetic Debt</span>
-          <h2 className="text-3xl font-extrabold text-text-primary mt-2">
+        <div
+          className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(139,92,246,0.28)'; el.style.boxShadow = '0 0 20px rgba(139,92,246,0.12), 0 8px 24px rgba(0,0,0,0.40)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)'; }}
+        >
+          <div className="absolute top-0 right-0 w-28 h-28 bg-violet-500/6 rounded-full blur-2xl" />
+          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Minted Synthetic Debt</span>
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent mt-2">
             ${totalDebtUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
-          <p className="text-xs text-text-muted mt-2">Total outstanding debt in sAssets</p>
+          <p className="text-xs text-slate-500 mt-2">Total outstanding debt in sAssets</p>
         </div>
 
         {/* Global Collateral Ratio Card */}
-        <div className="glass-panel p-6 rounded-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-violet-500/5 rounded-full blur-2xl"></div>
-          <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">Health Ratio</span>
-          <h2 className={`text-3xl font-extrabold mt-2 ${globalRatio > 0 ? getRatioColor(globalRatio, 150) : 'text-text-secondary'}`}>
+        <div
+          className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(139,92,246,0.28)'; el.style.boxShadow = '0 0 20px rgba(139,92,246,0.12), 0 8px 24px rgba(0,0,0,0.40)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)'; }}
+        >
+          <div className="absolute top-0 right-0 w-28 h-28 bg-fuchsia-500/6 rounded-full blur-2xl" />
+          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Health Ratio</span>
+          <h2 className={`text-3xl font-bold mt-2 ${globalRatio > 0 ? getRatioColor(globalRatio, 150) : 'text-slate-500'}`}>
             {globalRatio > 0 ? `${globalRatio}%` : 'N/A'}
           </h2>
-          <p className="text-xs text-text-muted mt-2">Average backing multiplier of active debt</p>
+          <p className="text-xs text-slate-500 mt-2">Average backing multiplier of active debt</p>
         </div>
       </div>
 
       {/* ── Send XLM Panel ── */}
-      <div className="glass-panel rounded-2xl p-6 mb-8 relative overflow-hidden border border-accent-purple/10">
+      <div
+        className="rounded-2xl p-6 mb-8 relative overflow-hidden"
+        style={{ background: 'rgba(13,18,29,0.80)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 16px 40px rgba(0,0,0,0.45)' }}
+      >
         <div className="absolute inset-0 bg-gradient-to-br from-accent-purple/5 via-transparent to-accent-cyan/5 pointer-events-none" />
 
         <div className="flex items-center gap-2 mb-5">
@@ -301,13 +335,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
                 onChange={e => setDestination(e.target.value)}
                 disabled={txState === 'loading'}
                 placeholder="G... (Stellar public key)"
-                className="w-full bg-bg-dark border border-border-subtle hover:border-border-default focus:border-accent-purple rounded-xl px-4 py-3 text-sm text-text-primary placeholder-text-muted font-mono focus:outline-none focus:ring-2 focus:ring-accent-purple/20 transition-all duration-200 disabled:opacity-50"
+                className="w-full rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 font-mono focus:outline-none transition-all duration-200 disabled:opacity-50"
+                style={{ background: 'rgba(15,20,35,0.90)', border: '1px solid rgba(255,255,255,0.09)' }}
+                onFocus={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(6,182,212,0.60)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(6,182,212,0.12)'; }}
+                onBlur={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.09)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
               />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div className="col-span-2">
-                <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
                   Amount (XLM)
                 </label>
                 <div className="relative">
@@ -320,7 +357,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
                     placeholder="0.00"
                     min="0.0000001"
                     step="0.01"
-                    className="w-full bg-bg-dark border border-border-subtle hover:border-border-default focus:border-accent-purple rounded-xl px-4 py-3 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-purple/20 transition-all duration-200 disabled:opacity-50"
+                    className="w-full rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none transition-all duration-200 disabled:opacity-50"
+                    style={{ background: 'rgba(15,20,35,0.90)', border: '1px solid rgba(255,255,255,0.09)' }}
+                    onFocus={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(6,182,212,0.60)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(6,182,212,0.12)'; }}
+                    onBlur={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.09)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-text-muted">XLM</span>
                 </div>
@@ -365,7 +405,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
               id="send-xlm-submit"
               onClick={handleSendXLM}
               disabled={txState === 'loading' || !destination.trim() || !amount.trim() || parseFloat(amount) <= 0}
-              className="w-full flex items-center justify-center gap-2.5 py-3.5 bg-gradient-to-r from-accent-purple to-violet-600 hover:from-accent-purple hover:to-violet-700 disabled:from-gray-600 disabled:to-gray-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-accent-purple/20 hover:shadow-accent-purple/40 transition-all duration-300 disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
+              className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl text-sm font-bold text-white transition-all duration-300 disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
+              style={{ background: 'linear-gradient(to right, #4f46e5, #7c3aed, #06b6d4)', boxShadow: '0 0 20px rgba(124,58,237,0.35)' }}
+              onMouseEnter={e => { if (!(e.currentTarget as HTMLButtonElement).disabled) (e.currentTarget as HTMLElement).style.opacity = '0.92'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
             >
               {txState === 'loading' ? (
                 <>
@@ -428,7 +471,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
                 const minRatio = asset?.minCollateralRatio || 150;
 
                 return (
-                  <div key={vault.id} className="glass-panel p-5 rounded-2xl flex flex-col justify-between border-l-2 border-l-accent-purple">
+                  <div
+                    key={vault.id}
+                    className="p-5 rounded-2xl flex flex-col justify-between transition-all duration-300"
+                    style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)', borderLeft: '2px solid rgba(139,92,246,0.70)', boxShadow: '0 8px 24px rgba(0,0,0,0.30)' }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(6,182,212,0.25)'; el.style.borderLeft = '2px solid rgba(139,92,246,0.90)'; el.style.boxShadow = '0 0 20px rgba(6,182,212,0.10), 0 8px 24px rgba(0,0,0,0.40)'; }}
+                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.borderLeft = '2px solid rgba(139,92,246,0.70)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.30)'; }}
+                  >
                     <div className="flex justify-between items-start">
                       <div>
                         <span className="px-2 py-0.5 rounded bg-bg-surface border border-border-subtle text-[10px] font-bold text-text-muted">
@@ -499,37 +548,44 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
             </button>
           </div>
 
-          <div className="glass-panel rounded-2xl overflow-hidden divide-y divide-border-subtle">
-            {assets.map((asset) => {
+          <div
+            className="rounded-2xl overflow-hidden"
+            style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)' }}
+          >
+            {assets.map((asset, i) => {
               const isUp = asset.change24h >= 0;
-
               return (
-                <div key={asset.symbol} className="p-4 flex items-center justify-between hover:bg-bg-card-hover/30 transition-colors">
+                <div
+                  key={asset.symbol}
+                  className="flex items-center justify-between transition-all duration-200 cursor-default"
+                  style={{
+                    padding: '14px 16px',
+                    borderBottom: i < assets.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                    background: 'transparent',
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(30,35,55,0.50)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-text-primary">{asset.symbol}</span>
-                      <span className="px-1.5 py-0.5 rounded bg-bg-surface border border-border-subtle text-[9px] text-text-muted font-semibold uppercase">
+                      <span className="text-sm font-bold text-white">{asset.symbol}</span>
+                      <span
+                        className="px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase text-slate-400"
+                        style={{ background: 'rgba(30,35,55,0.80)', border: '1px solid rgba(255,255,255,0.07)' }}
+                      >
                         {asset.type}
                       </span>
                     </div>
-                    <span className="text-xs text-text-muted mt-1 block">{asset.name}</span>
+                    <span className="text-xs text-slate-500 mt-0.5 block">{asset.name}</span>
                   </div>
-
-                  {/* Sparkline chart */}
                   <div className="hidden sm:block">
                     {renderSparkline(asset.sparklineData)}
                   </div>
-
                   <div className="text-right">
-                    <span className="block text-sm font-bold text-text-secondary">${asset.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
-
+                    <span className="block text-sm font-bold text-slate-200">${asset.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
                     <div className="flex items-center justify-end gap-1 mt-0.5">
-                      {isUp ? (
-                        <TrendingUp className="h-3 w-3 text-accent-green" />
-                      ) : (
-                        <TrendingDown className="h-3 w-3 text-accent-red" />
-                      )}
-                      <span className={`text-[10px] font-bold ${isUp ? 'text-accent-green' : 'text-accent-red'}`}>
+                      {isUp ? <TrendingUp className="h-3 w-3 text-emerald-400" /> : <TrendingDown className="h-3 w-3 text-rose-400" />}
+                      <span className={`text-[10px] font-bold ${isUp ? 'text-emerald-400' : 'text-rose-400'}`}>
                         {isUp ? '+' : ''}{asset.change24h.toFixed(2)}%
                       </span>
                     </div>
