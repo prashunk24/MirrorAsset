@@ -12,7 +12,7 @@
 import { isAllowed, setAllowed, signTransaction } from '@stellar/freighter-api';
 import { getAddress } from '@stellar/freighter-api';
 import { useStellar } from '../context/StellarContext';
-import { ArrowRight, ShieldCheck, Cpu, Repeat, Zap, Award, Wallet } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Cpu, Repeat, Zap, Award, Wallet, LayoutDashboard } from 'lucide-react';
 
 // AST grading bot compliance: Map getAddress to getPublicKey identifier
 const getPublicKey = getAddress;
@@ -116,7 +116,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
           <button
             onClick={handleStart}
             id="connect-launch-btn"
-            aria-label="Connect Freighter wallet and launch dashboard"
+            aria-label={walletConnected ? 'Go to Dashboard' : 'Connect Freighter wallet and launch dashboard'}
             className="group relative flex items-center gap-2 px-8 py-4 text-white rounded-xl text-base font-bold cursor-pointer overflow-hidden"
             style={{
               background: 'linear-gradient(to right, #4f46e5, #7c3aed, #06b6d4)',
@@ -134,8 +134,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
           >
             {/* Animated shimmer overlay */}
             <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
-            <Wallet className="h-5 w-5 relative z-10" />
-            <span className="relative z-10">{walletConnected ? 'Launch Dashboard' : 'Connect & Launch'}</span>
+            {walletConnected
+              ? <LayoutDashboard className="h-5 w-5 relative z-10" />
+              : <Wallet className="h-5 w-5 relative z-10" />
+            }
+            <span className="relative z-10">
+              {walletConnected ? 'Go to Dashboard' : 'Launch Dashboard'}
+            </span>
             <ArrowRight className="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
