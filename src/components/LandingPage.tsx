@@ -79,26 +79,50 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
   ];
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center justify-between overflow-hidden" style={{ background: '#090C10' }}>
-      {/* Background glow effects */}
-      <div className="absolute top-20 left-1/4 w-[500px] h-[500px] bg-accent-purple/8 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-20 right-1/4 w-[500px] h-[500px] bg-accent-cyan/8 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-violet-600/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center justify-between overflow-hidden" style={{ background: '#0B0E14' }}>
+
+      {/* ── Ambient backlight glows ── */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[380px] bg-gradient-to-tr from-cyan-500/18 via-purple-600/18 to-fuchsia-600/10 blur-[130px] pointer-events-none rounded-full" />
+      <div className="absolute bottom-0 left-1/4 w-[450px] h-[300px] bg-cyan-500/8 blur-[110px] pointer-events-none rounded-full" />
+      <div className="absolute bottom-0 right-1/4 w-[450px] h-[300px] bg-fuchsia-600/8 blur-[110px] pointer-events-none rounded-full" />
+
+      {/* ── Subtle mesh grid overlay ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: 'linear-gradient(to right,rgba(31,41,55,0.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(31,41,55,0.07) 1px,transparent 1px)',
+          backgroundSize: '4rem 4rem',
+          maskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%,#000 70%,transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%,#000 70%,transparent 100%)',
+        }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow flex flex-col justify-center items-center">
-        {/* Banner */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent-purple/10 border border-accent-purple/20 text-accent-purple rounded-full text-xs font-semibold mb-8 animate-fade-in backdrop-blur-sm">
-          <Award className="h-4 w-4" />
-          <span>Stellar Soroban Synthetic Asset Protocol</span>
+        {/* ── Premium pill badge ── */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 animate-fade-in"
+          style={{
+            background: 'rgba(15,16,26,0.85)',
+            border: '1px solid rgba(139,92,246,0.30)',
+            boxShadow: '0 0 15px rgba(139,92,246,0.2)',
+            backdropFilter: 'blur(16px)',
+          }}
+        >
+          <Award className="h-3.5 w-3.5 text-violet-400" />
+          <span className="text-[11px] font-medium text-violet-300 tracking-wide">Stellar Soroban Synthetic Asset Protocol</span>
         </div>
 
-        {/* Hero Headline */}
-        <h1 className="text-center text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight max-w-4xl">
-          <span className="bg-gradient-to-r from-white via-gray-100 to-gray-400 bg-clip-text text-transparent">
-            Mint & Trade Real-World Assets on
+        {/* ── Hero Headline ── */}
+        <h1 className="text-center text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] max-w-4xl"
+          style={{ textShadow: '0 10px 20px rgba(0,0,0,0.8)' }}
+        >
+          <span className="bg-gradient-to-b from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+            Mint &amp; Trade Real-World Assets on
           </span>
           <br />
-          <span className="bg-gradient-to-r from-accent-purple via-violet-400 to-accent-cyan bg-clip-text text-transparent">
+          <span
+            className="bg-gradient-to-r from-cyan-300 via-teal-400 to-indigo-400 bg-clip-text text-transparent"
+            style={{ filter: 'drop-shadow(0 0 25px rgba(6,182,212,0.40))' }}
+          >
             Stellar Blockchain
           </span>
         </h1>
@@ -145,23 +169,58 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
           </button>
         </div>
 
-        {/* Protocol Statistics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl w-full mt-20 rounded-2xl p-6" style={{ background: 'rgba(15,16,26,0.55)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)' }}>
-          <div className="text-center p-3">
-            <span className="block text-2xl sm:text-3xl font-extrabold text-text-primary">$14.2M</span>
-            <span className="block text-xs sm:text-sm text-text-muted mt-1 uppercase font-semibold tracking-wider">Total Value Locked</span>
-          </div>
-          <div className="text-center p-3 border-l border-border-subtle">
-            <span className="block text-2xl sm:text-3xl font-extrabold text-text-primary">$8.6M</span>
-            <span className="block text-xs sm:text-sm text-text-muted mt-1 uppercase font-semibold tracking-wider">Synthetic Debt Minted</span>
-          </div>
-          <div className="text-center p-3 border-l border-border-subtle">
-            <span className="block text-2xl sm:text-3xl font-extrabold text-text-primary">164.8%</span>
-            <span className="block text-xs sm:text-sm text-text-muted mt-1 uppercase font-semibold tracking-wider">Avg Collateral Ratio</span>
-          </div>
-          <div className="text-center p-3 border-l border-border-subtle">
-            <span className="block text-2xl sm:text-3xl font-extrabold text-text-primary">5 Assets</span>
-            <span className="block text-xs sm:text-sm text-text-muted mt-1 uppercase font-semibold tracking-wider">Oracle Price Feeds</span>
+        {/* ── Frosted-glass gradient-border stats bar ── */}
+        <div className="w-full max-w-5xl mt-16">
+          {/* 1-px gradient border wrapper */}
+          <div
+            className="p-px rounded-2xl"
+            style={{
+              background: 'linear-gradient(to right, rgba(6,182,212,0.25), rgba(139,92,246,0.25), rgba(217,70,239,0.20))',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.55)',
+            }}
+          >
+            <div className="grid grid-cols-2 md:grid-cols-4 rounded-2xl overflow-hidden">
+              {/* Stat 1 */}
+              <div
+                className="group text-center px-6 py-7 transition-all duration-300 cursor-default"
+                style={{ background: 'rgba(13,17,25,0.92)', backdropFilter: 'blur(20px)' }}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(19,25,36,0.95)'}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'rgba(13,17,25,0.92)'}
+              >
+                <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">$14.2M</div>
+                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1.5">Total Value Locked</div>
+              </div>
+              {/* Stat 2 */}
+              <div
+                className="group text-center px-6 py-7 transition-all duration-300 cursor-default"
+                style={{ background: 'rgba(13,17,25,0.92)', backdropFilter: 'blur(20px)', borderLeft: '1px solid rgba(255,255,255,0.05)' }}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(19,25,36,0.95)'}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'rgba(13,17,25,0.92)'}
+              >
+                <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">$8.6M</div>
+                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1.5">Synthetic Debt Minted</div>
+              </div>
+              {/* Stat 3 */}
+              <div
+                className="group text-center px-6 py-7 transition-all duration-300 cursor-default"
+                style={{ background: 'rgba(13,17,25,0.92)', backdropFilter: 'blur(20px)', borderLeft: '1px solid rgba(255,255,255,0.05)', borderTop: 'none' }}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(19,25,36,0.95)'}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'rgba(13,17,25,0.92)'}
+              >
+                <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-300 to-teal-400 bg-clip-text text-transparent">164.8%</div>
+                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1.5">Avg Collateral Ratio</div>
+              </div>
+              {/* Stat 4 */}
+              <div
+                className="group text-center px-6 py-7 transition-all duration-300 cursor-default"
+                style={{ background: 'rgba(13,17,25,0.92)', backdropFilter: 'blur(20px)', borderLeft: '1px solid rgba(255,255,255,0.05)' }}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(19,25,36,0.95)'}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'rgba(13,17,25,0.92)'}
+              >
+                <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-300 to-fuchsia-400 bg-clip-text text-transparent">5 Assets</div>
+                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1.5">Oracle Price Feeds</div>
+              </div>
+            </div>
           </div>
         </div>
 
