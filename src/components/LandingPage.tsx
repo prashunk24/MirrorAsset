@@ -79,7 +79,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
   ];
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center justify-between overflow-hidden bg-bg-dark">
+    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center justify-between overflow-hidden" style={{ background: '#090C10' }}>
       {/* Background glow effects */}
       <div className="absolute top-20 left-1/4 w-[500px] h-[500px] bg-accent-purple/8 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-20 right-1/4 w-[500px] h-[500px] bg-accent-cyan/8 rounded-full blur-[120px] pointer-events-none"></div>
@@ -117,16 +117,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
             onClick={handleStart}
             id="connect-launch-btn"
             aria-label="Connect Freighter wallet and launch dashboard"
-            className="group flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-accent-purple to-indigo-600 hover:from-accent-purple hover:to-indigo-700 text-white rounded-xl text-base font-bold shadow-2xl shadow-accent-purple/30 interactive-action transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+            className="group relative flex items-center gap-2 px-8 py-4 text-white rounded-xl text-base font-bold cursor-pointer overflow-hidden"
+            style={{
+              background: 'linear-gradient(to right, #4f46e5, #7c3aed, #06b6d4)',
+              boxShadow: '0 0 20px rgba(124, 58, 237, 0.4), 0 4px 24px rgba(0,0,0,0.4)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 0 32px rgba(124,58,237,0.65), 0 4px 32px rgba(0,0,0,0.5)';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 0 20px rgba(124, 58, 237, 0.4), 0 4px 24px rgba(0,0,0,0.4)';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+            }}
           >
-            <Wallet className="h-5 w-5" />
-            <span>{walletConnected ? 'Launch Dashboard' : 'Connect & Launch'}</span>
-            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            {/* Animated shimmer overlay */}
+            <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
+            <Wallet className="h-5 w-5 relative z-10" />
+            <span className="relative z-10">{walletConnected ? 'Launch Dashboard' : 'Connect & Launch'}</span>
+            <ArrowRight className="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
 
         {/* Protocol Statistics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl w-full mt-20 border border-border-subtle rounded-2xl p-6 bg-bg-surface/40 backdrop-blur-sm">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl w-full mt-20 rounded-2xl p-6" style={{ background: 'rgba(15,16,26,0.55)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)' }}>
           <div className="text-center p-3">
             <span className="block text-2xl sm:text-3xl font-extrabold text-text-primary">$14.2M</span>
             <span className="block text-xs sm:text-sm text-text-muted mt-1 uppercase font-semibold tracking-wider">Total Value Locked</span>
@@ -146,7 +161,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
         </div>
 
         {/* Live Asset Ticker */}
-        <div className="w-full max-w-4xl mt-12 bg-bg-surface/30 rounded-xl border border-border-subtle p-4 overflow-hidden backdrop-blur-sm">
+        <div className="w-full max-w-4xl mt-12 rounded-xl p-4 overflow-hidden" style={{ background: 'rgba(15,16,26,0.45)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.07)' }}>
           <h3 className="text-xs font-semibold text-text-muted uppercase tracking-widest text-center mb-3">Live Oracle Feeds</h3>
           <div className="flex flex-wrap justify-center gap-6">
             {assets.slice(0, 4).map(asset => (
@@ -174,9 +189,26 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunch }) => {
             {featureCards.map((feat, idx) => (
               <div
                 key={idx}
-                className="group p-6 rounded-2xl bg-bg-card/50 border border-border-subtle hover:border-border-accent backdrop-blur-sm flex gap-4 items-start transition-all duration-300 hover:bg-bg-card-hover/50 hover:shadow-lg hover:shadow-accent-purple/5"
+                className="group p-6 rounded-2xl flex gap-4 items-start transition-all duration-300"
+                style={{
+                  background: 'rgba(15,16,26,0.50)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  boxShadow: '0 8px 32px 0 rgba(0,0,0,0.30)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.border = '1px solid rgba(6,182,212,0.30)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px -8px rgba(6,182,212,0.14), 0 8px 32px 0 rgba(0,0,0,0.40)';
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.07)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px 0 rgba(0,0,0,0.30)';
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                }}
               >
-                <div className="p-3 bg-bg-elevated rounded-xl border border-border-subtle flex-shrink-0 group-hover:border-border-default transition-colors">
+                <div className="p-3 rounded-xl border border-white/8 flex-shrink-0" style={{ background: 'rgba(30,30,48,0.70)' }}>
                   {feat.icon}
                 </div>
                 <div>

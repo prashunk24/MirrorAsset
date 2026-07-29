@@ -34,7 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
   ];
 
   return (
-    <nav className="bg-bg-dark/90 backdrop-blur-xl border-b border-border-subtle sticky top-0 z-40">
+    <nav className="bg-[#090C10]/90 backdrop-blur-xl border-b border-violet-500/10 sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20 py-2">
           {/* Mobile menu toggle button */}
@@ -49,9 +49,17 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             </div>
           )}
 
-          {/* Logo & Name */}
-          <div className="flex items-center cursor-pointer flex-grow md:flex-grow-0" onClick={() => setActiveTab('landing')}>
-            <img src="/mirrorasset-logo2.jpg" alt="MirrorAsset Logo" className="h-10 md:h-12 w-auto object-contain" />
+          {/* Logo & Name — transparent container with neon glow */}
+          <div className="flex items-center gap-2.5 cursor-pointer flex-grow md:flex-grow-0" onClick={() => setActiveTab('landing')}>
+            <img
+              src="/mirrorasset-logo2.jpg"
+              alt="MirrorAsset Logo"
+              className="h-10 md:h-12 w-auto object-contain"
+              style={{ filter: 'drop-shadow(0 0 10px rgba(139, 92, 246, 0.4))' }}
+            />
+            <span className="hidden sm:block text-base font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent select-none">
+              MirrorAsset
+            </span>
           </div>
 
           {/* Navigation Links (Desktop) */}
