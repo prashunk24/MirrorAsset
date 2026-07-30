@@ -37,7 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
     <header className="sticky top-4 z-50 px-4 max-w-7xl mx-auto w-full transition-all duration-300">
       {/* ── Floating pill nav ── */}
       <nav
-        className="flex items-center justify-between px-5 py-3 rounded-full"
+        className="flex items-center justify-between px-3 sm:px-5 py-2.5 sm:py-3 rounded-full w-full overflow-hidden"
         style={{
           background: 'rgba(13,18,29,0.80)',
           backdropFilter: 'blur(24px)',
@@ -47,14 +47,14 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
         }}
       >
         {/* ── LEFT: mobile hamburger + logo ── */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           {/* Hamburger — renders first in DOM so getAllByRole('button')[0] still finds it */}
           {walletConnected && (
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden inline-flex items-center justify-center p-2 rounded-full text-slate-400 hover:text-white hover:bg-white/5 focus:outline-none transition-colors cursor-pointer"
+              className="lg:hidden inline-flex items-center justify-center p-1.5 sm:p-2 rounded-full text-slate-400 hover:text-white hover:bg-white/5 focus:outline-none transition-colors cursor-pointer"
             >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {mobileMenuOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
             </button>
           )}
 
@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             <img
               src="/mirrorasset-logo2.jpg"
               alt="MirrorAsset Logo"
-              className="h-9 w-auto object-contain flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
+              className="h-7 sm:h-9 w-auto object-contain flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
               style={{ filter: 'drop-shadow(0 0 10px rgba(139,92,246,0.50))' }}
             />
           </div>
@@ -107,10 +107,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
         )}
 
         {/* ── RIGHT: balances, faucet, wallet ── */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           {walletConnected ? (
             <>
-              {/* Balance pill */}
+              {/* Balance pill — md+ only */}
               <div
                 className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium text-slate-300"
                 style={{
@@ -127,11 +127,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                 </span>
               </div>
 
-              {/* Faucet */}
+              {/* Faucet — hidden until md to avoid mobile crush */}
               <button
                 onClick={claimFaucet}
                 title="Claim test tokens from Stellar Faucet"
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-cyan-400 text-xs font-semibold transition-all duration-200 cursor-pointer hover:text-white"
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-cyan-400 text-xs font-semibold transition-all duration-200 cursor-pointer hover:text-white"
                 style={{
                   background: 'rgba(6,182,212,0.10)',
                   border: '1px solid rgba(6,182,212,0.30)',
@@ -160,19 +160,20 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                 <span>Testnet</span>
               </div>
 
-              {/* Wallet address + disconnect */}
+              {/* Wallet address + disconnect — compact on mobile */}
               <div
-                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs text-slate-200"
+                className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs text-slate-200"
                 style={{
                   background: 'rgba(15,20,35,0.85)',
                   border: '1px solid rgba(255,255,255,0.09)',
                 }}
               >
                 <Wallet className="h-3.5 w-3.5 text-violet-400 flex-shrink-0" />
+                {/* sm+: 6-char truncation; mobile: 4-char ultra-compact */}
                 <span className="font-mono hidden sm:inline">
                   {publicKey ? truncateAddress(publicKey) : ''}
                 </span>
-                <span className="font-mono sm:hidden">
+                <span className="font-mono sm:hidden text-[10px]">
                   {publicKey
                     ? `${publicKey.substring(0, 4)}...${publicKey.substring(publicKey.length - 3)}`
                     : ''}
@@ -187,11 +188,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
               </div>
             </>
           ) : (
-            /* Connect Wallet button */
+            /* Connect Wallet button — shorter label on mobile */
             <button
               onClick={connectWallet}
               disabled={isLoading}
-              className="flex items-center gap-2 px-5 py-2 rounded-full text-white text-xs font-semibold transition-all duration-300 cursor-pointer disabled:opacity-60 disabled:pointer-events-none"
+              className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 rounded-full text-white text-[11px] sm:text-xs font-semibold transition-all duration-300 cursor-pointer disabled:opacity-60 disabled:pointer-events-none whitespace-nowrap"
               style={{
                 background: 'linear-gradient(to right, #4f46e5, #7c3aed, #06b6d4)',
                 boxShadow: '0 0 15px rgba(124,58,237,0.35)',
@@ -209,7 +210,9 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                 ? <div className="h-3.5 w-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 : <Wallet className="h-3.5 w-3.5" />
               }
-              <span>Connect Wallet</span>
+              {/* Full label sm+, short on xs */}
+              <span className="hidden sm:inline">Connect Wallet</span>
+              <span className="sm:hidden">Connect</span>
             </button>
           )}
         </div>
