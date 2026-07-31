@@ -133,66 +133,83 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+    <div className="relative min-h-screen py-10 px-4 md:px-8 overflow-hidden" style={{ background: '#0B0E14' }}>
+      {/* ── Ambient backlights ── */}
+      <div className="absolute top-10 left-1/4 w-[500px] h-[300px] bg-cyan-500/10 blur-[130px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/3 right-1/4 w-[400px] h-[300px] bg-violet-600/15 blur-[140px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-1/4 left-1/3 w-[350px] h-[250px] bg-fuchsia-600/8 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10 space-y-6 animate-fade-in">
 
       {/* ── Wallet Overview Row ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* XLM Balance */}
         <div
-          className="p-5 rounded-2xl flex items-center gap-4 relative overflow-hidden transition-all duration-300 group"
-          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)' }}
-          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(6,182,212,0.30)'; el.style.boxShadow = '0 0 20px rgba(6,182,212,0.12)'; }}
-          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.boxShadow = 'none'; }}
+          className="p-5 rounded-2xl relative overflow-hidden transition-all duration-300 group"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.10)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(6,182,212,0.30)'; el.style.boxShadow = '0 0 25px rgba(6,182,212,0.15)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.10)'; el.style.boxShadow = 'none'; }}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent pointer-events-none" />
-          <div className="p-2.5 rounded-xl shrink-0" style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.25)' }}>
+          {/* Icon badge */}
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform duration-300 shrink-0"
+            style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(139,92,246,0.15))', border: '1px solid rgba(6,182,212,0.30)', boxShadow: '0 0 15px rgba(6,182,212,0.20)' }}
+          >
             <Wallet className="h-5 w-5 text-cyan-400" />
           </div>
-          <div>
-            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">XLM Balance</span>
-            <span className="text-2xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
-              {balanceXLM.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
-            </span>
-            <span className="text-xs text-slate-500 ml-1">XLM</span>
-          </div>
+          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">XLM Balance</span>
+          <span className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+            {balanceXLM.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+          </span>
+          <span className="text-xs text-slate-500 ml-1">XLM</span>
         </div>
 
         {/* USDC Balance */}
         <div
-          className="p-5 rounded-2xl flex items-center gap-4 relative overflow-hidden transition-all duration-300"
-          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)' }}
-          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(139,92,246,0.30)'; el.style.boxShadow = '0 0 20px rgba(139,92,246,0.12)'; }}
-          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.boxShadow = 'none'; }}
+          className="p-5 rounded-2xl relative overflow-hidden transition-all duration-300 group"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.10)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(139,92,246,0.30)'; el.style.boxShadow = '0 0 25px rgba(139,92,246,0.15)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.10)'; el.style.boxShadow = 'none'; }}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent pointer-events-none" />
-          <div className="p-2.5 rounded-xl shrink-0" style={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)' }}>
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform duration-300 shrink-0"
+            style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.15), rgba(217,70,239,0.15))', border: '1px solid rgba(139,92,246,0.30)', boxShadow: '0 0 15px rgba(139,92,246,0.20)' }}
+          >
             <Coins className="h-5 w-5 text-violet-400" />
           </div>
-          <div>
-            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">USDC Balance</span>
-            <span className="text-2xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
-              {balanceUSDC.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </span>
-            <span className="text-xs text-slate-500 ml-1">USDC</span>
-          </div>
+          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">USDC Balance</span>
+          <span className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+            {balanceUSDC.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </span>
+          <span className="text-xs text-slate-500 ml-1">USDC</span>
         </div>
 
         {/* Faucet */}
         <div
-          className="p-5 rounded-2xl flex items-center justify-between relative overflow-hidden"
-          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)' }}
+          className="p-5 rounded-2xl flex items-center justify-between relative overflow-hidden transition-all duration-300 group"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.10)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(16,185,129,0.30)'; el.style.boxShadow = '0 0 25px rgba(16,185,129,0.12)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.10)'; el.style.boxShadow = 'none'; }}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />
           <div>
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform duration-300"
+              style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(6,182,212,0.10))', border: '1px solid rgba(16,185,129,0.30)', boxShadow: '0 0 15px rgba(16,185,129,0.15)' }}
+            >
+              <Coins className="h-5 w-5 text-emerald-400" />
+            </div>
             <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Testnet Faucet</span>
-            <span className="text-sm text-slate-400 mt-1 block">Need test XLM?</span>
+            <span className="text-sm text-slate-400 mt-0.5 block">Need test XLM?</span>
           </div>
           <button
             onClick={claimFaucet}
             disabled={isLoading}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none cursor-pointer text-emerald-400 hover:text-white"
             style={{ background: 'rgba(16,185,129,0.10)', border: '1px solid rgba(16,185,129,0.25)' }}
-            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(16,185,129,0.20)'}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(16,185,129,0.22)'}
             onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'rgba(16,185,129,0.10)'}
           >
             <Coins className="h-4 w-4" />
@@ -202,17 +219,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
       </div>
 
       {/* ── Upper overview cards ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Collateral Card */}
         <div
-          className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300"
-          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
-          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(6,182,212,0.28)'; el.style.boxShadow = '0 0 20px rgba(6,182,212,0.12), 0 8px 24px rgba(0,0,0,0.40)'; }}
-          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)'; }}
+          className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300 group"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(6,182,212,0.30)'; el.style.boxShadow = '0 0 25px rgba(6,182,212,0.15), 0 8px 24px rgba(0,0,0,0.40)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.10)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)'; }}
         >
-          <div className="absolute top-0 right-0 w-28 h-28 bg-cyan-500/6 rounded-full blur-2xl" />
+          <div className="absolute top-0 right-0 w-36 h-36 bg-cyan-500/8 rounded-full blur-2xl" />
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300"
+            style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(139,92,246,0.15))', border: '1px solid rgba(6,182,212,0.30)', boxShadow: '0 0 15px rgba(6,182,212,0.20)' }}
+          >
+            <Layers className="h-5 w-5 text-cyan-400" />
+          </div>
           <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Deposited Collateral</span>
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent mt-2">
+          <h2 className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent mt-1">
             ${totalCollateralUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
           <p className="text-xs text-slate-500 mt-2">Combined value of XLM and USDC locked in vaults</p>
@@ -220,14 +243,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
 
         {/* Total Minted Debt Card */}
         <div
-          className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300"
-          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
-          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(139,92,246,0.28)'; el.style.boxShadow = '0 0 20px rgba(139,92,246,0.12), 0 8px 24px rgba(0,0,0,0.40)'; }}
-          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)'; }}
+          className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300 group"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(139,92,246,0.30)'; el.style.boxShadow = '0 0 25px rgba(139,92,246,0.15), 0 8px 24px rgba(0,0,0,0.40)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.10)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)'; }}
         >
-          <div className="absolute top-0 right-0 w-28 h-28 bg-violet-500/6 rounded-full blur-2xl" />
+          <div className="absolute top-0 right-0 w-36 h-36 bg-violet-500/8 rounded-full blur-2xl" />
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300"
+            style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.15), rgba(217,70,239,0.15))', border: '1px solid rgba(139,92,246,0.30)', boxShadow: '0 0 15px rgba(139,92,246,0.20)' }}
+          >
+            <Sparkles className="h-5 w-5 text-violet-400" />
+          </div>
           <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Minted Synthetic Debt</span>
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent mt-2">
+          <h2 className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent mt-1">
             ${totalDebtUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
           <p className="text-xs text-slate-500 mt-2">Total outstanding debt in sAssets</p>
@@ -235,14 +264,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
 
         {/* Global Collateral Ratio Card */}
         <div
-          className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300"
-          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
-          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(139,92,246,0.28)'; el.style.boxShadow = '0 0 20px rgba(139,92,246,0.12), 0 8px 24px rgba(0,0,0,0.40)'; }}
-          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)'; }}
+          className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300 group"
+          style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(217,70,239,0.28)'; el.style.boxShadow = '0 0 25px rgba(217,70,239,0.12), 0 8px 24px rgba(0,0,0,0.40)'; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.10)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)'; }}
         >
-          <div className="absolute top-0 right-0 w-28 h-28 bg-fuchsia-500/6 rounded-full blur-2xl" />
+          <div className="absolute top-0 right-0 w-36 h-36 bg-fuchsia-500/8 rounded-full blur-2xl" />
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300"
+            style={{ background: 'linear-gradient(135deg, rgba(217,70,239,0.15), rgba(139,92,246,0.15))', border: '1px solid rgba(217,70,239,0.30)', boxShadow: '0 0 15px rgba(217,70,239,0.20)' }}
+          >
+            <TrendingUp className="h-5 w-5 text-fuchsia-400" />
+          </div>
           <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Health Ratio</span>
-          <h2 className={`text-3xl font-bold mt-2 ${globalRatio > 0 ? getRatioColor(globalRatio, 150) : 'text-slate-500'}`}>
+          <h2 className={`text-2xl md:text-3xl font-extrabold mt-1 ${globalRatio > 0 ? getRatioColor(globalRatio, 150) : 'text-slate-500'}`}>
             {globalRatio > 0 ? `${globalRatio}%` : 'N/A'}
           </h2>
           <p className="text-xs text-slate-500 mt-2">Average backing multiplier of active debt</p>
@@ -251,10 +286,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
 
       {/* ── Send XLM Panel ── */}
       <div
-        className="rounded-2xl p-6 mb-8 relative overflow-hidden"
-        style={{ background: 'rgba(13,18,29,0.80)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 16px 40px rgba(0,0,0,0.45)' }}
+        className="rounded-2xl p-6 md:p-8 relative overflow-hidden"
+        style={{ background: 'rgba(13,18,29,0.80)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 10px 40px rgba(0,0,0,0.60)' }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-accent-purple/5 via-transparent to-accent-cyan/5 pointer-events-none" />
+        {/* Cyan→violet→fuchsia top accent bar */}
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500" />
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/4 via-transparent to-cyan-500/4 pointer-events-none" />
 
         <div className="flex items-center gap-2 mb-5">
           <div className="p-2 bg-accent-purple/10 rounded-lg border border-accent-purple/20">
@@ -386,7 +423,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
                     key={pct}
                     onClick={() => setAmount(Math.max(0, (balanceXLM - 1) * pct / 100).toFixed(7))}
                     disabled={txState === 'loading'}
-                    className="text-xs px-2.5 py-1 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle hover:border-border-default text-text-muted hover:text-text-secondary rounded-lg transition-all duration-200 cursor-pointer disabled:opacity-50"
+                    className="text-xs px-3 py-1.5 rounded-lg text-slate-300 font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50"
+                    style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.10)' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(139,92,246,0.50)'; (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.10)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.10)'; (e.currentTarget as HTMLElement).style.background = 'rgba(15,20,35,0.80)'; }}
                   >
                     {pct}%
                   </button>
@@ -394,7 +434,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
                 <button
                   onClick={() => setAmount(Math.max(0, balanceXLM - 1).toFixed(7))}
                   disabled={txState === 'loading'}
-                  className="text-xs px-2.5 py-1 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle hover:border-border-default text-text-muted hover:text-text-secondary rounded-lg transition-all duration-200 cursor-pointer disabled:opacity-50"
+                  className="text-xs px-3 py-1.5 rounded-lg text-slate-300 font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50"
+                  style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.10)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(139,92,246,0.50)'; (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.10)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.10)'; (e.currentTarget as HTMLElement).style.background = 'rgba(15,20,35,0.80)'; }}
                 >
                   Max
                 </button>
@@ -405,10 +448,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
               id="send-xlm-submit"
               onClick={handleSendXLM}
               disabled={txState === 'loading' || !destination.trim() || !amount.trim() || parseFloat(amount) <= 0}
-              className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl text-sm font-bold text-white transition-all duration-300 disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
-              style={{ background: 'linear-gradient(to right, #4f46e5, #7c3aed, #06b6d4)', boxShadow: '0 0 20px rgba(124,58,237,0.35)' }}
-              onMouseEnter={e => { if (!(e.currentTarget as HTMLButtonElement).disabled) (e.currentTarget as HTMLElement).style.opacity = '0.92'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
+              className="w-full flex items-center justify-center gap-2.5 py-4 rounded-xl text-sm font-bold text-white tracking-wide transition-all duration-300 disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
+              style={{ background: 'linear-gradient(to right, #4f46e5, #7c3aed, #06b6d4)', boxShadow: '0 0 25px rgba(124,58,237,0.40)' }}
+              onMouseEnter={e => { if (!(e.currentTarget as HTMLButtonElement).disabled) { (e.currentTarget as HTMLElement).style.opacity = '0.93'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 35px rgba(6,182,212,0.50)'; } }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 25px rgba(124,58,237,0.40)'; }}
             >
               {txState === 'loading' ? (
                 <>
@@ -596,6 +639,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
           </div>
         </div>
 
+      </div>
+      {/* ── end inner max-w-7xl content wrapper ── */}
       </div>
     </div>
   );
