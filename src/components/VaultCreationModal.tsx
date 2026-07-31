@@ -39,9 +39,9 @@ export const VaultCreationModal: React.FC<VaultCreationModalProps> = ({ onClose,
       <div
         className="w-full max-w-lg rounded-2xl relative overflow-hidden flex flex-col"
         style={{
-          background: '#0f1522',
+          background: '#0c1017',
           border: '1px solid rgba(255,255,255,0.10)',
-          boxShadow: '0 0 50px rgba(124,58,237,0.20), 0 24px 64px rgba(0,0,0,0.70)',
+          boxShadow: '0 0 60px rgba(124,58,237,0.25), 0 24px 64px rgba(0,0,0,0.75)',
         }}
       >
         {/* ── Gradient accent top bar ── */}
@@ -86,26 +86,26 @@ export const VaultCreationModal: React.FC<VaultCreationModalProps> = ({ onClose,
                     key={opt.id}
                     type="button"
                     onClick={() => setCollateralAsset(opt.id)}
-                    className="py-3 px-4 rounded-xl text-sm font-bold transition-all duration-200 flex flex-col items-center gap-1 cursor-pointer"
+                    className="py-4 px-4 rounded-xl text-sm font-bold transition-all duration-200 flex flex-col items-center gap-1 cursor-pointer"
                     style={
                       active
                         ? {
-                            background: 'rgba(6,182,212,0.10)',
-                            border: '1px solid rgba(6,182,212,0.55)',
-                            boxShadow: '0 0 12px rgba(6,182,212,0.20)',
+                            background: 'linear-gradient(to bottom, rgba(6,182,212,0.15), rgba(139,92,246,0.15))',
+                            border: '2px solid rgba(6,182,212,0.80)',
+                            boxShadow: '0 0 20px rgba(6,182,212,0.25)',
                             color: '#fff',
                           }
                         : {
-                            background: 'rgba(15,20,35,0.80)',
-                            border: '1px solid rgba(255,255,255,0.09)',
+                            background: 'rgba(15,20,35,0.60)',
+                            border: '1px solid rgba(255,255,255,0.10)',
                             color: 'rgba(148,163,184,1)',
                           }
                     }
                     onMouseEnter={e => {
-                      if (!active) (e.currentTarget as HTMLElement).style.border = '1px solid rgba(139,92,246,0.45)';
+                      if (!active) (e.currentTarget as HTMLElement).style.border = '1px solid rgba(100,116,139,0.60)';
                     }}
                     onMouseLeave={e => {
-                      if (!active) (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.09)';
+                      if (!active) (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.10)';
                     }}
                   >
                     <span className="text-base">{opt.label}</span>
@@ -167,12 +167,12 @@ export const VaultCreationModal: React.FC<VaultCreationModalProps> = ({ onClose,
             </div>
           )}
 
-          {/* Info alert */}
+          {/* Info callout — violet */}
           <div
-            className="flex items-start gap-2.5 rounded-xl p-3 text-[11px] leading-relaxed text-indigo-300"
-            style={{ background: 'rgba(99,102,241,0.10)', border: '1px solid rgba(99,102,241,0.20)' }}
+            className="flex items-start gap-3 rounded-xl p-4 text-xs leading-relaxed text-violet-300"
+            style={{ background: 'rgba(91,33,182,0.12)', border: '1px solid rgba(139,92,246,0.22)', backdropFilter: 'blur(8px)' }}
           >
-            <AlertCircle className="h-4 w-4 text-indigo-400 flex-shrink-0 mt-px" />
+            <AlertCircle className="h-4 w-4 text-violet-400 flex-shrink-0 mt-px" />
             <span>
               Each vault isolates collateral and synthetic debt. You can create one vault per synthetic
               asset backed by each collateral type.
@@ -183,18 +183,18 @@ export const VaultCreationModal: React.FC<VaultCreationModalProps> = ({ onClose,
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3.5 rounded-xl text-sm font-bold text-white transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none cursor-pointer flex items-center justify-center gap-2"
+            className="w-full py-4 rounded-xl text-sm font-bold text-white tracking-wide transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none cursor-pointer flex items-center justify-center gap-2"
             style={{
               background: 'linear-gradient(to right, #4f46e5, #7c3aed, #06b6d4)',
-              boxShadow: '0 0 20px rgba(124,58,237,0.35)',
+              boxShadow: '0 0 25px rgba(124,58,237,0.40)',
             }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.opacity = '0.90';
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+              (e.currentTarget as HTMLElement).style.opacity = '0.93';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 0 35px rgba(6,182,212,0.50)';
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.opacity = '1';
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 0 25px rgba(124,58,237,0.40)';
             }}
           >
             {isLoading

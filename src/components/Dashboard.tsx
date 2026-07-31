@@ -475,16 +475,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
       {/* ── Main sections: Vaults and Markets ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {/* Left Side: Vaults Panel */}
-        <div className="lg:col-span-2 space-y-6">
+        {/* ── Left Side: Vaults Panel ── */}
+        <div className="lg:col-span-2 space-y-5">
+          {/* Section header */}
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Layers className="h-5 w-5 text-accent-purple" />
-              <h3 className="text-lg font-bold text-text-primary">My Synthetic Vaults</h3>
+            <div className="flex items-center gap-2.5">
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.20), rgba(6,182,212,0.15))', border: '1px solid rgba(139,92,246,0.35)', boxShadow: '0 0 12px rgba(139,92,246,0.20)' }}
+              >
+                <Layers className="h-4 w-4 text-violet-400" />
+              </div>
+              <h3 className="text-lg font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">My Synthetic Vaults</h3>
             </div>
             <button
               onClick={onCreateVaultClick}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-purple hover:bg-accent-purple/90 text-white rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white transition-all duration-200 cursor-pointer"
+              style={{ background: 'linear-gradient(to right, #7c3aed, #4f46e5)', boxShadow: '0 0 12px rgba(124,58,237,0.35)' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.88'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
             >
               <Plus className="h-3.5 w-3.5" />
               <span>New Vault</span>
@@ -492,17 +501,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
           </div>
 
           {userVaults.length === 0 ? (
-            <div className="glass-panel rounded-2xl p-10 text-center border-dashed border-border-subtle flex flex-col items-center">
-              <div className="p-4 bg-bg-surface rounded-full border border-border-subtle mb-4">
-                <Settings2 className="h-8 w-8 text-text-muted" />
+            /* Empty state */
+            <div
+              className="rounded-2xl p-10 text-center flex flex-col items-center"
+              style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.10)', borderStyle: 'dashed' }}
+            >
+              {/* Glowing icon badge */}
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.20), rgba(6,182,212,0.20), rgba(217,70,239,0.10))', border: '1px solid rgba(6,182,212,0.30)', boxShadow: '0 0 20px rgba(6,182,212,0.25)' }}
+              >
+                <Settings2 className="h-8 w-8 text-cyan-400" />
               </div>
-              <h4 className="font-semibold text-text-secondary text-base">No Vaults Found</h4>
-              <p className="text-text-muted text-xs mt-2 max-w-sm">
+              <h4 className="font-semibold text-slate-200 text-base">No Vaults Found</h4>
+              <p className="text-slate-500 text-xs mt-2 max-w-sm">
                 Create a vault, deposit collateral, and mint synthetic assets tracking real-world values.
               </p>
               <button
                 onClick={onCreateVaultClick}
-                className="mt-5 px-4 py-2 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle hover:border-border-default text-text-secondary hover:text-text-primary rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer"
+                className="mt-5 text-cyan-300 font-semibold text-xs transition-all duration-200 cursor-pointer"
+                style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.10)', padding: '10px 20px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.30)' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(6,182,212,0.50)'; (e.currentTarget as HTMLElement).style.background = 'rgba(6,182,212,0.10)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.10)'; (e.currentTarget as HTMLElement).style.background = 'rgba(15,20,35,0.80)'; }}
               >
                 Create Your First Vault
               </button>
@@ -516,19 +536,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
                 return (
                   <div
                     key={vault.id}
-                    className="p-5 rounded-2xl flex flex-col justify-between transition-all duration-300"
-                    style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)', borderLeft: '2px solid rgba(139,92,246,0.70)', boxShadow: '0 8px 24px rgba(0,0,0,0.30)' }}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(6,182,212,0.25)'; el.style.borderLeft = '2px solid rgba(139,92,246,0.90)'; el.style.boxShadow = '0 0 20px rgba(6,182,212,0.10), 0 8px 24px rgba(0,0,0,0.40)'; }}
+                    className="p-5 rounded-2xl flex flex-col justify-between transition-all duration-300 group"
+                    style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.09)', borderLeft: '2px solid rgba(139,92,246,0.70)', boxShadow: '0 8px 24px rgba(0,0,0,0.30)' }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(6,182,212,0.28)'; el.style.borderLeft = '2px solid rgba(6,182,212,0.80)'; el.style.boxShadow = '0 0 24px rgba(6,182,212,0.12), 0 8px 24px rgba(0,0,0,0.40)'; }}
                     onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.09)'; el.style.borderLeft = '2px solid rgba(139,92,246,0.70)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.30)'; }}
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="px-2 py-0.5 rounded bg-bg-surface border border-border-subtle text-[10px] font-bold text-text-muted">
+                        <span
+                          className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-2 py-0.5 rounded"
+                          style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.07)' }}
+                        >
                           ID: {vault.id.toUpperCase()}
                         </span>
-                        <h4 className="text-base font-bold text-text-primary mt-2 flex items-center gap-1.5">
+                        <h4 className="text-base font-bold text-white mt-2 flex items-center gap-1.5">
                           {vault.syntheticAsset} Vault
-                          <span className="text-xs font-medium text-text-muted">({asset?.name})</span>
+                          <span className="text-xs font-medium text-slate-500">({asset?.name})</span>
                         </h4>
                       </div>
                       {getHealthBadge(vault.health)}
@@ -536,31 +559,33 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
 
                     <div className="my-5 grid grid-cols-2 gap-4">
                       <div>
-                        <span className="block text-[10px] uppercase font-semibold text-text-muted tracking-wider">Collateral Locked</span>
-                        <span className="block text-sm font-bold text-text-secondary mt-1">
+                        <span className="block text-[10px] uppercase font-semibold text-slate-500 tracking-wider">Collateral Locked</span>
+                        <span className="block text-sm font-bold text-slate-300 mt-1">
                           {vault.collateralAmount.toLocaleString()} {vault.collateralAsset}
                         </span>
                       </div>
                       <div>
-                        <span className="block text-[10px] uppercase font-semibold text-text-muted tracking-wider">Minted Debt</span>
-                        <span className="block text-sm font-bold text-text-secondary mt-1">
+                        <span className="block text-[10px] uppercase font-semibold text-slate-500 tracking-wider">Minted Debt</span>
+                        <span className="block text-sm font-bold text-slate-300 mt-1">
                           {vault.mintedAmount.toLocaleString()} {vault.syntheticAsset}
                         </span>
                       </div>
                     </div>
 
-                    <div className="border-t border-border-subtle pt-4 flex items-center justify-between">
+                    <div className="pt-4 flex items-center justify-between" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
                       <div>
-                        <span className="block text-[10px] text-text-muted font-medium">Collateral Ratio</span>
+                        <span className="block text-[10px] text-slate-500 font-medium">Collateral Ratio</span>
                         <span className={`text-sm font-bold ${getRatioColor(vault.collateralRatio, minRatio)}`}>
                           {vault.collateralRatio === Infinity ? '∞' : `${vault.collateralRatio}%`}
                         </span>
-                        <span className="text-[10px] text-text-muted ml-1">(min {minRatio}%)</span>
+                        <span className="text-[10px] text-slate-500 ml-1">(min {minRatio}%)</span>
                       </div>
-
                       <button
                         onClick={() => onManageVault(vault.id)}
-                        className="flex items-center gap-1.5 px-3.5 py-2 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle hover:border-border-default text-text-secondary hover:text-text-primary rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer"
+                        className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer text-slate-300 hover:text-white"
+                        style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.09)' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(6,182,212,0.45)'; (e.currentTarget as HTMLElement).style.background = 'rgba(6,182,212,0.08)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.09)'; (e.currentTarget as HTMLElement).style.background = 'rgba(15,20,35,0.80)'; }}
                       >
                         <Settings2 className="h-3.5 w-3.5" />
                         <span>Manage</span>
@@ -573,59 +598,68 @@ export const Dashboard: React.FC<DashboardProps> = ({ onManageVault, onCreateVau
           )}
         </div>
 
-        {/* Right Side: Markets panel */}
-        <div className="space-y-6">
+        {/* ── Right Side: Markets panel ── */}
+        <div className="space-y-5">
+          {/* Section header */}
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-accent-cyan" />
-              <h3 className="text-lg font-bold text-text-primary">Synth Asset Markets</h3>
+            <div className="flex items-center gap-2.5">
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.20), rgba(139,92,246,0.15))', border: '1px solid rgba(6,182,212,0.35)', boxShadow: '0 0 12px rgba(6,182,212,0.20)' }}
+              >
+                <Sparkles className="h-4 w-4 text-cyan-400" />
+              </div>
+              <h3 className="text-lg font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">Synth Asset Markets</h3>
             </div>
-
-            {/* Oracle Ticker Manual Tick */}
+            {/* Refresh button */}
             <button
               onClick={handlePriceRefresh}
-              className="p-1.5 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle hover:border-border-default rounded-xl text-text-muted hover:text-text-secondary transition-all duration-200 cursor-pointer"
+              className="p-2 rounded-xl text-slate-400 hover:text-cyan-400 transition-all duration-200 cursor-pointer"
+              style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.09)' }}
               title="Force oracle price update"
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(6,182,212,0.40)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.09)'; }}
             >
               <RefreshCw className={`h-4 w-4 ${tickerLoading ? 'animate-spin' : ''}`} />
             </button>
           </div>
 
+          {/* Market rows container */}
           <div
-            className="rounded-2xl overflow-hidden"
-            style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)' }}
+            className="rounded-2xl p-3 space-y-2"
+            style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.10)' }}
           >
-            {assets.map((asset, i) => {
+            {assets.map((asset) => {
               const isUp = asset.change24h >= 0;
               return (
                 <div
                   key={asset.symbol}
-                  className="flex items-center justify-between transition-all duration-200 cursor-default"
-                  style={{
-                    padding: '14px 16px',
-                    borderBottom: i < assets.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
-                    background: 'transparent',
-                  }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(30,35,55,0.50)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                  className="flex items-center justify-between rounded-xl px-3.5 py-3 transition-all duration-200 cursor-default group"
+                  style={{ background: 'rgba(15,20,35,0.50)', border: '1px solid rgba(255,255,255,0.05)' }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(6,182,212,0.30)'; el.style.background = 'rgba(30,40,60,0.60)'; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.border = '1px solid rgba(255,255,255,0.05)'; el.style.background = 'rgba(15,20,35,0.50)'; }}
                 >
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-bold text-white">{asset.symbol}</span>
+                      {/* Violet ticker badge */}
                       <span
-                        className="px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase text-slate-400"
-                        style={{ background: 'rgba(30,35,55,0.80)', border: '1px solid rgba(255,255,255,0.07)' }}
+                        className="px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider text-violet-300"
+                        style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.30)' }}
                       >
                         {asset.type}
                       </span>
                     </div>
                     <span className="text-xs text-slate-500 mt-0.5 block">{asset.name}</span>
                   </div>
-                  <div className="hidden sm:block">
+
+                  {/* Glowing sparkline */}
+                  <div className="hidden sm:block" style={{ filter: `drop-shadow(0 0 4px ${isUp ? '#34d399' : '#f87171'})` }}>
                     {renderSparkline(asset.sparklineData)}
                   </div>
+
                   <div className="text-right">
-                    <span className="block text-sm font-bold text-slate-200">${asset.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
+                    <span className="block text-sm font-bold text-slate-100">${asset.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
                     <div className="flex items-center justify-end gap-1 mt-0.5">
                       {isUp ? <TrendingUp className="h-3 w-3 text-emerald-400" /> : <TrendingDown className="h-3 w-3 text-rose-400" />}
                       <span className={`text-[10px] font-bold ${isUp ? 'text-emerald-400' : 'text-rose-400'}`}>
