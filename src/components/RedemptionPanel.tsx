@@ -12,161 +12,206 @@ export const RedemptionPanel: React.FC = () => {
 
   if (!activeAsset) return null;
 
-  // Pricing
   const collateralPrice = activeAsset.collateralAsset === 'XLM' ? 0.12 : 1.00;
   const synthUSDValue = (parseFloat(redeemAmountStr) || 0) * activeAsset.price;
-  const feePercent = 0.005; // 0.5% fee
+  const feePercent = 0.005;
   const protocolFeeUSD = synthUSDValue * feePercent;
   const netUSDValue = Math.max(0, synthUSDValue - protocolFeeUSD);
   const collateralOutput = netUSDValue / collateralPrice;
 
-  const handleMaxClick = () => {
-    setRedeemAmountStr(synthBalance.toString());
-  };
+  const handleMaxClick = () => setRedeemAmountStr(synthBalance.toString());
 
   const handleRedeem = async (e: React.FormEvent) => {
     e.preventDefault();
     const amount = parseFloat(redeemAmountStr);
     if (!amount || amount <= 0) return;
-
     const success = await redeemSynths(selectedSymbol, amount);
-    if (success) {
-      setRedeemAmountStr('');
-    }
+    if (success) setRedeemAmountStr('');
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="h-10 w-10 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center rounded-xl">
-          <Repeat className="h-5 w-5" />
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-gray-100">Direct Peg Redemptions</h2>
-          <p className="text-xs text-gray-400 mt-1">Swap synthetic assets directly with the collateral pool at standard oracle rates.</p>
-        </div>
-      </div>
+    <div className="relative min-h-screen px-4 sm:px-6 lg:px-8 py-10 overflow-hidden">
+      {/* Ambient backlights */}
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 -left-24 w-80 h-80 bg-indigo-600/8 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        {/* Left Form Panel */}
-        <div className="md:col-span-2 space-y-6">
-          <div className="glass-panel p-6 rounded-2xl">
-            <form onSubmit={handleRedeem} className="space-y-5">
-              {/* Asset Selector */}
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Synthetic Asset to Swap</label>
-                <select
-                  value={selectedSymbol}
-                  onChange={(e) => { setSelectedSymbol(e.target.value); setRedeemAmountStr(''); }}
-                  className="w-full bg-gray-950/60 border border-gray-800 rounded-xl py-3 px-4 text-white text-sm focus:border-accent-purple focus:outline-none transition-all cursor-pointer font-semibold"
-                >
-                  {assets.map(a => (
-                    <option key={a.symbol} value={a.symbol}>
-                      {a.symbol} ({a.name}) - Balance: {balanceSynths[a.symbol] || 0}
-                    </option>
-                  ))}
-                </select>
-              </div>
+      <div className="max-w-3xl mx-auto relative z-10 animate-fade-in space-y-8">
 
-              {/* Amount Input */}
-              <div className="space-y-2">
-                <div className="flex justify-between items-center text-xs">
-                  <label className="text-gray-400 font-semibold uppercase">Amount to Redeem</label>
-                  <span className="text-gray-500 font-medium">
-                    Wallet Balance: <strong className="text-gray-300">{synthBalance.toLocaleString()} {selectedSymbol}</strong>
-                  </span>
-                </div>
-                <div className="relative">
-                  <input
-                    type="number"
-                    step="any"
-                    min="0"
-                    required
-                    value={redeemAmountStr}
-                    onChange={(e) => setRedeemAmountStr(e.target.value)}
-                    placeholder="0.00"
-                    className="w-full bg-gray-950/60 border border-gray-800 rounded-xl py-3 px-4 text-white text-base focus:border-accent-purple focus:outline-none transition-all font-mono"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleMaxClick}
-                    className="absolute right-3 top-2.5 px-2.5 py-1 bg-gray-900 border border-gray-800 hover:border-gray-700 text-gray-400 hover:text-gray-200 text-xs font-bold rounded-lg transition-all"
+        {/* ── Page Header ── */}
+        <div className="flex items-center gap-4">
+          <div
+            className="h-11 w-11 flex items-center justify-center rounded-xl flex-shrink-0"
+            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.20), rgba(139,92,246,0.15))', border: '1px solid rgba(99,102,241,0.35)', boxShadow: '0 0 18px rgba(99,102,241,0.20)' }}
+          >
+            <Repeat className="h-5 w-5 text-indigo-400" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+              Direct Peg Redemptions
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">Swap synthetic assets directly with the collateral pool at standard oracle rates.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          {/* ── Left Form Panel ── */}
+          <div className="md:col-span-2">
+            <div
+              className="rounded-2xl relative overflow-hidden"
+              style={{ background: 'rgba(13,18,29,0.80)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 10px 40px rgba(0,0,0,0.55)' }}
+            >
+              {/* Top accent bar */}
+              <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-indigo-500 via-violet-500 to-cyan-400" />
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/4 via-transparent to-cyan-500/3 pointer-events-none" />
+
+              <form onSubmit={handleRedeem} className="p-6 space-y-5">
+                {/* Asset selector */}
+                <div className="space-y-2">
+                  <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
+                    Synthetic Asset to Swap
+                  </label>
+                  <select
+                    value={selectedSymbol}
+                    onChange={(e) => { setSelectedSymbol(e.target.value); setRedeemAmountStr(''); }}
+                    className="w-full rounded-xl py-3 px-4 text-white text-sm focus:outline-none transition-all cursor-pointer font-semibold"
+                    style={{ background: 'rgba(15,20,35,0.90)', border: '1px solid rgba(255,255,255,0.09)' }}
+                    onFocus={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(139,92,246,0.60)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(139,92,246,0.12)'; }}
+                    onBlur={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.09)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
                   >
-                    MAX
-                  </button>
-                </div>
-              </div>
-
-              {/* Calculation Summary */}
-              <div className="bg-gray-950/40 border border-gray-900 rounded-xl p-4.5 space-y-3.5 text-xs font-medium">
-                <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest border-b border-gray-900/60 pb-2">Redemption Calculation</h4>
-                
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Asset Oracle Price</span>
-                  <span className="text-gray-300 font-mono">${activeAsset.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                </div>
-                
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Redeemable USD Value</span>
-                  <span className="text-gray-300 font-mono">${synthUSDValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                    {assets.map(a => (
+                      <option key={a.symbol} value={a.symbol} style={{ background: '#0c1017' }}>
+                        {a.symbol} ({a.name}) — Balance: {balanceSynths[a.symbol] || 0}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Protocol Fee (0.50%)</span>
-                  <span className="text-gray-400 font-mono">-${protocolFeeUSD.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                {/* Amount input */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Amount to Redeem</label>
+                    <span className="text-[11px] text-slate-500 font-medium">
+                      Balance: <strong className="text-slate-300">{synthBalance.toLocaleString()} {selectedSymbol}</strong>
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      step="any"
+                      min="0"
+                      required
+                      value={redeemAmountStr}
+                      onChange={(e) => setRedeemAmountStr(e.target.value)}
+                      placeholder="0.00"
+                      className="w-full rounded-xl py-3 px-4 pr-16 text-white text-base focus:outline-none transition-all font-mono"
+                      style={{ background: 'rgba(15,20,35,0.90)', border: '1px solid rgba(255,255,255,0.09)' }}
+                      onFocus={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(6,182,212,0.60)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(6,182,212,0.12)'; }}
+                      onBlur={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.09)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleMaxClick}
+                      className="absolute right-3 top-2.5 px-2.5 py-1 text-cyan-400 text-xs font-bold rounded-lg transition-all cursor-pointer hover:text-white"
+                      style={{ background: 'rgba(6,182,212,0.10)', border: '1px solid rgba(6,182,212,0.30)' }}
+                      onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(6,182,212,0.22)'}
+                      onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'rgba(6,182,212,0.10)'}
+                    >
+                      MAX
+                    </button>
+                  </div>
                 </div>
 
-                <div className="w-full h-[1px] bg-gray-900"></div>
-
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-200 font-bold">Estimated Output</span>
-                  <span className="text-accent-cyan font-bold font-mono">
-                    {collateralOutput.toLocaleString(undefined, { maximumFractionDigits: 4 })} {activeAsset.collateralAsset}
-                  </span>
+                {/* Calculation summary */}
+                <div
+                  className="rounded-xl p-4 space-y-3 text-xs font-medium"
+                  style={{ background: 'rgba(15,20,35,0.70)', border: '1px solid rgba(255,255,255,0.07)' }}
+                >
+                  <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest pb-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                    Redemption Calculation
+                  </h4>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Asset Oracle Price</span>
+                    <span className="text-slate-300 font-mono">${activeAsset.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Redeemable USD Value</span>
+                    <span className="text-slate-300 font-mono">${synthUSDValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Protocol Fee (0.50%)</span>
+                    <span className="text-rose-400 font-mono">−${protocolFeeUSD.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                  </div>
+                  <div className="h-px bg-white/5" />
+                  <div className="flex justify-between">
+                    <span className="text-slate-200 font-bold text-sm">Estimated Output</span>
+                    <span className="text-cyan-400 font-bold font-mono text-sm">
+                      {collateralOutput.toLocaleString(undefined, { maximumFractionDigits: 4 })} {activeAsset.collateralAsset}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <button
-                type="submit"
-                disabled={isLoading || !redeemAmountStr || parseFloat(redeemAmountStr) <= 0 || parseFloat(redeemAmountStr) > synthBalance}
-                className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-accent-purple hover:from-indigo-700 hover:to-accent-purple/90 shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none cursor-pointer flex items-center justify-center gap-2"
-              >
-                {isLoading ? (
-                  <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                ) : (
-                  <span>Submit Redemption Request</span>
-                )}
-              </button>
-            </form>
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={isLoading || !redeemAmountStr || parseFloat(redeemAmountStr) <= 0 || parseFloat(redeemAmountStr) > synthBalance}
+                  className="w-full py-4 rounded-xl text-sm font-bold text-white tracking-wide transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none cursor-pointer flex items-center justify-center gap-2 active:scale-[0.99]"
+                  style={{ background: 'linear-gradient(to right, #4f46e5, #7c3aed, #06b6d4)', boxShadow: '0 0 25px rgba(124,58,237,0.35)' }}
+                  onMouseEnter={e => { if (!(e.currentTarget as HTMLButtonElement).disabled) { (e.currentTarget as HTMLElement).style.opacity = '0.92'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 35px rgba(6,182,212,0.45)'; } }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 25px rgba(124,58,237,0.35)'; }}
+                >
+                  {isLoading
+                    ? <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    : <span>Submit Redemption Request</span>
+                  }
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
 
-        {/* Right Info Panel */}
-        <div className="space-y-6">
-          <div className="glass-panel p-5 rounded-2xl space-y-4">
-            <h4 className="text-sm font-bold text-gray-200">How redemption works</h4>
-            
-            <div className="flex gap-3">
-              <div className="p-1.5 bg-gray-900 border border-gray-800 rounded-lg flex-shrink-0 mt-0.5">
-                <ShieldCheck className="h-4 w-4 text-emerald-400" />
+          {/* ── Right Info Panel ── */}
+          <div
+            className="rounded-2xl p-5 space-y-5"
+            style={{ background: 'rgba(13,18,29,0.70)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.09)' }}
+          >
+            <h4 className="text-sm font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">How redemption works</h4>
+
+            <div className="space-y-4">
+              <div className="flex gap-3">
+                <div
+                  className="p-1.5 rounded-lg flex-shrink-0 mt-0.5"
+                  style={{ background: 'rgba(16,185,129,0.10)', border: '1px solid rgba(16,185,129,0.25)' }}
+                >
+                  <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  <strong className="text-slate-200">Price Anchoring:</strong> Direct redemption ensures the synthetic asset cannot trade below peg on secondary markets. Arbitrageurs can buy and redeem for full collateral value, driving the price back up.
+                </p>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                <strong>Price Anchoring:</strong> Direct redemption ensures the synthetic asset cannot trade below peg on secondary markets. If it does, anyone can buy it and redeem it here for full collateral value, making an instant profit and driving the price back up.
-              </p>
+
+              <div className="flex gap-3">
+                <div
+                  className="p-1.5 rounded-lg flex-shrink-0 mt-0.5"
+                  style={{ background: 'rgba(245,158,11,0.10)', border: '1px solid rgba(245,158,11,0.25)' }}
+                >
+                  <AlertTriangle className="h-4 w-4 text-amber-400" />
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  <strong className="text-slate-200">Front-Running Fee:</strong> A small 0.5% fee protects vault depositors from oracle latency exploitation, deterring high-frequency front-running.
+                </p>
+              </div>
             </div>
 
-            <div className="flex gap-3">
-              <div className="p-1.5 bg-gray-900 border border-gray-800 rounded-lg flex-shrink-0 mt-0.5">
-                <AlertTriangle className="h-4 w-4 text-amber-400" />
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                <strong>Front-Running Fee:</strong> A small 0.5% fee is applied to protect vault depositors from oracle latency exploitation. This ensures arbitrageurs pay for the service and deters high-frequency front-running.
-              </p>
+            {/* Testnet badge */}
+            <div
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider text-emerald-400"
+              style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.18)' }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Live on Stellar Testnet
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
