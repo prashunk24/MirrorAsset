@@ -43,12 +43,47 @@
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* Glassmorphism Utility                                              */
-/* ------------------------------------------------------------------ */
+/* ================================================================== */
+/* Premium Glassmorphism Cards & Components                           */
+/* ================================================================== */
 
+/* Master glass card — aligns with navbar pill aesthetic */
+.glass-card {
+  background: linear-gradient(135deg, rgba(18, 18, 30, 0.75) 0%, rgba(10, 10, 18, 0.90) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 16px;
+  padding: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .glass-card {
+    border-radius: 20px;
+    padding: 1.5rem;
+  }
+}
+
+.glass-card:hover {
+  border-color: rgba(139, 92, 246, 0.35);
+  box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.20);
+}
+
+/* Icon glow box — radial purple badge */
+.icon-glow-box {
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(18, 18, 30, 0.50) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.30);
+  padding: 0.625rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Existing glass-panel */
 .glass-panel {
-  background: rgba(15, 16, 26, 0.45); /* slate-900/40 tinted */
+  background: rgba(15, 16, 26, 0.45);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -124,8 +159,12 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Custom Scrollbar                                                   */
+/* Scrollbar Utilities                                                */
 /* ------------------------------------------------------------------ */
+
+/* Hide scrollbar visually but keep scroll functionality */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 ::-webkit-scrollbar {
   width: 6px;
@@ -195,10 +234,25 @@
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes scale-up {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ------------------------------------------------------------------ */
+/* Animation Utilities                                                */
+/* ------------------------------------------------------------------ */
+
+.animate-fade-in  { animation: fadeIn 0.4s ease-out both; }
+.animate-slide-up { animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-scale-up { animation: scale-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* Touch-friendly minimum tap target for mobile */
+.touch-target {
+  min-height: 48px;
+  min-width: 48px;
 }

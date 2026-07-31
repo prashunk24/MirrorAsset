@@ -296,48 +296,56 @@ export const WhiteBeltPlayground: React.FC = () => {
   const progressPercent = (task1Done ? 33 : 0) + (task2Done ? 33 : 0) + (task3Done ? 34 : 0);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 animate-fade-in space-y-6">
       {/* Upper header with challenge status */}
-      <div className="glass-panel p-6 rounded-2xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-accent-purple/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="glass-card relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-violet-600/8 rounded-full blur-3xl pointer-events-none" />
         <div className="space-y-2 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent-purple/10 border border-accent-purple/20 text-accent-purple rounded-full text-xs font-semibold">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold text-violet-400"
+            style={{ background: 'rgba(139,92,246,0.10)', border: '1px solid rgba(139,92,246,0.25)' }}
+          >
             <Zap className="h-3.5 w-3.5" />
             <span>Journey to Mastery</span>
           </div>
-          <h2 className="text-3xl font-extrabold text-text-primary">Stellar White Belt Challenge</h2>
-          <p className="text-sm text-text-secondary">
+          <h2 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+            Stellar White Belt Challenge
+          </h2>
+          <p className="text-sm text-slate-400">
             Learn the basics of Stellar development: wallet creation, balance checks, and submitting transaction signatures directly on the Testnet network.
           </p>
         </div>
 
         {/* Progress Tracker */}
-        <div className="flex-shrink-0 bg-bg-surface border border-border-subtle rounded-xl p-4 min-w-[240px] space-y-3">
+        <div
+          className="flex-shrink-0 rounded-xl p-4 min-w-[220px] sm:min-w-[240px] space-y-3"
+          style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.09)' }}
+        >
           <div className="flex justify-between items-center text-xs">
-            <span className="font-semibold text-text-muted">Completion Status</span>
-            <span className={`font-bold ${progressPercent === 100 ? 'text-accent-green' : 'text-accent-purple'}`}>
+            <span className="font-semibold text-slate-500">Completion Status</span>
+            <span className={`font-bold ${progressPercent === 100 ? 'text-emerald-400' : 'text-violet-400'}`}>
               {progressPercent}%
             </span>
           </div>
-          <div className="w-full h-2.5 bg-bg-dark rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-accent-purple to-accent-cyan rounded-full transition-all duration-500"
-              style={{ width: `${progressPercent}%` }}
-            ></div>
+          <div className="w-full h-2.5 rounded-full overflow-hidden" style={{ background: 'rgba(15,20,35,1)' }}>
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${progressPercent}%`, background: 'linear-gradient(to right, #8b5cf6, #06b6d4)' }}
+            />
           </div>
-          <div className="flex justify-between items-center text-[10px] text-text-muted font-medium">
-            <span className={task1Done ? 'text-accent-green font-bold' : ''}>Wallet Create</span>
-            <span className={task2Done ? 'text-accent-green font-bold' : ''}>Balance Check</span>
-            <span className={task3Done ? 'text-accent-green font-bold' : ''}>Tx Sent</span>
+          <div className="flex justify-between items-center text-[10px] text-slate-600 font-medium">
+            <span className={task1Done ? 'text-emerald-400 font-bold' : ''}>Wallet Create</span>
+            <span className={task2Done ? 'text-emerald-400 font-bold' : ''}>Balance Check</span>
+            <span className={task3Done ? 'text-emerald-400 font-bold' : ''}>Tx Sent</span>
           </div>
         </div>
       </div>
 
       {/* Main Layout: Challenge cards & Info panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         
         {/* Left column (2 cols span): Tasks implementation */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           
           {/* TASK 1: WALLET CREATION */}
           <div className={`glass-panel p-6 rounded-2xl border-l-4 transition-all duration-300 ${
@@ -624,90 +632,98 @@ export const WhiteBeltPlayground: React.FC = () => {
 
         </div>
 
-        {/* Right column: Stellar White Belt Info & Realtime Terminal */}
-        <div className="space-y-6">
-          
-          {/* Challenge Reference Panel */}
-          <div className="glass-panel p-5 rounded-2xl space-y-4">
-            <h3 className="text-base font-bold text-text-primary flex items-center gap-2">
-              <BookOpen className="h-4.5 w-4.5 text-accent-purple" />
-              White Belt Quick Study
-            </h3>
-            
-            <div className="text-xs text-text-secondary space-y-3.5">
-              <div>
-                <h4 className="font-bold text-text-primary flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-accent-green" />
-                  What is a Stellar Wallet?
-                </h4>
-                <p className="mt-1 leading-relaxed">
-                  A Stellar wallet is a cryptographic keypair consisting of a **Public Key** (which starts with 'G' and acts as your account address/ID) and a **Secret Key** (which starts with 'S' and acts as your password to authorize operations).
-                </p>
-              </div>
+          {/* Right column: Stellar White Belt Info & Realtime Terminal */}
+          <div className="space-y-4 sm:space-y-6">
 
-              <div className="w-full h-[1px] bg-border-subtle"></div>
-
-              <div>
-                <h4 className="font-bold text-text-primary flex items-center gap-1.5">
-                  <Info className="h-3.5 w-3.5 text-accent-cyan" />
-                  Public vs Secret Key
-                </h4>
-                <ul className="mt-1.5 list-disc pl-4 space-y-1">
-                  <li><strong>Public Key:</strong> Shared freely. Used to send funds or lookup account balances on the public ledger.</li>
-                  <li><strong>Secret Key:</strong> Kept strictly private. Used to generate digital signatures for signing transactions.</li>
-                </ul>
-              </div>
-
-              <div className="w-full h-[1px] bg-border-subtle"></div>
-
-              <div>
-                <h4 className="font-bold text-text-primary flex items-center gap-1.5">
-                  <Terminal className="h-3.5 w-3.5 text-indigo-400" />
-                  Understanding Friendbot & Horizon
-                </h4>
-                <p className="mt-1 leading-relaxed">
-                  <strong>Horizon</strong> is Stellar's client-facing REST API server. <strong>Friendbot</strong> is a free testnet faucet that funds new accounts with 10,000 testnet XLM.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Real-time Ledger Logs Console */}
-          <div className="glass-panel p-5 rounded-2xl flex flex-col h-[320px]">
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-xs font-bold text-text-muted uppercase tracking-widest flex items-center gap-1.5">
-                <Terminal className="h-4 w-4 text-accent-green" />
-                Horizon Ledger Console
+            {/* Challenge Reference Panel */}
+            <div className="glass-card">
+              <h3 className="text-base font-bold text-white flex items-center gap-2 mb-4">
+                <div className="icon-glow-box flex-shrink-0">
+                  <BookOpen className="h-4 w-4 text-violet-400" style={{ filter: 'drop-shadow(0 0 8px rgba(139,92,246,0.6))' }} />
+                </div>
+                White Belt Quick Study
               </h3>
-              <button 
-                onClick={clearPlayground}
-                className="text-[10px] text-text-muted hover:text-accent-red font-bold transition-all cursor-pointer"
-              >
-                Clear Wallet & Logs
-              </button>
-            </div>
-            
-            <div className="flex-grow bg-bg-dark rounded-xl p-3 font-mono text-[10px] overflow-y-auto border border-border-subtle space-y-2">
-              {logs.length === 0 ? (
-                <span className="text-text-muted block italic">System idle. Actions will log here...</span>
-              ) : (
-                logs.map((log, idx) => (
-                  <div key={idx} className="leading-relaxed">
-                    <span className="text-text-muted">[{log.timestamp}]</span>{' '}
-                    <span className={
-                      log.type === 'success' ? 'text-accent-green font-bold' :
-                      log.type === 'error' ? 'text-accent-red font-bold' :
-                      'text-text-secondary'
-                    }>
-                      {log.message}
-                    </span>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
 
-        </div>
+              <div className="text-xs text-slate-400 space-y-4">
+                <div>
+                  <h4 className="font-bold text-white flex items-center gap-1.5 mb-1">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                    What is a Stellar Wallet?
+                  </h4>
+                  <p className="leading-relaxed">
+                    A Stellar wallet is a cryptographic keypair consisting of a <strong className="text-slate-200">Public Key</strong> (starts with 'G', acts as your address) and a <strong className="text-slate-200">Secret Key</strong> (starts with 'S', authorizes operations).
+                  </p>
+                </div>
+
+                <div className="h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
+
+                <div>
+                  <h4 className="font-bold text-white flex items-center gap-1.5 mb-1">
+                    <Info className="h-3.5 w-3.5 text-cyan-400" />
+                    Public vs Secret Key
+                  </h4>
+                  <ul className="list-disc pl-4 space-y-1">
+                    <li><strong className="text-slate-200">Public Key:</strong> Shared freely. Used to send funds or lookup account balances.</li>
+                    <li><strong className="text-slate-200">Secret Key:</strong> Strictly private. Used to sign transactions.</li>
+                  </ul>
+                </div>
+
+                <div className="h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
+
+                <div>
+                  <h4 className="font-bold text-white flex items-center gap-1.5 mb-1">
+                    <Terminal className="h-3.5 w-3.5 text-indigo-400" />
+                    Understanding Friendbot & Horizon
+                  </h4>
+                  <p className="leading-relaxed">
+                    <strong className="text-slate-200">Horizon</strong> is Stellar's REST API. <strong className="text-slate-200">Friendbot</strong> is a free testnet faucet that funds new accounts with 10,000 testnet XLM.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Real-time Ledger Logs Console */}
+            <div
+              className="rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col"
+              style={{ background: '#06060a', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 8px 32px rgba(0,0,0,0.50)', minHeight: '300px' }}
+            >
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+                  <Terminal className="h-4 w-4 text-emerald-400" style={{ filter: 'drop-shadow(0 0 6px rgba(52,211,153,0.5))' }} />
+                  Horizon Ledger Console
+                </h3>
+                <button
+                  onClick={clearPlayground}
+                  className="text-[10px] text-slate-600 hover:text-rose-400 font-bold transition-all cursor-pointer"
+                >
+                  Clear Wallet & Logs
+                </button>
+              </div>
+
+              <div
+                className="flex-grow rounded-xl p-3 font-mono text-[10px] overflow-y-auto overflow-x-auto space-y-2"
+                style={{ background: 'rgba(0,0,0,0.60)', border: '1px solid rgba(255,255,255,0.05)' }}
+              >
+                {logs.length === 0 ? (
+                  <span className="text-slate-600 block italic">System idle. Actions will log here…</span>
+                ) : (
+                  logs.map((log, idx) => (
+                    <div key={idx} className="leading-relaxed whitespace-pre-wrap break-all">
+                      <span className="text-slate-600">[{log.timestamp}]</span>{' '}
+                      <span className={
+                        log.type === 'success' ? 'text-emerald-400 font-bold' :
+                        log.type === 'error'   ? 'text-rose-400 font-bold' :
+                        'text-slate-300'
+                      }>
+                        {log.message}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+          </div>
 
       </div>
     </div>

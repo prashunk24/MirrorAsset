@@ -7,32 +7,46 @@ export const MasteryPlayground: React.FC = () => {
   const [level, setLevel] = useState<'white' | 'orange'>('white');
 
   return (
-    <div className="min-h-screen bg-bg-dark">
-      {/* Level sub-selector navigation */}
-      <div className="bg-bg-surface/60 border-b border-border-subtle sticky top-16 z-30 backdrop-blur-xl">
+    <div className="min-h-screen bg-[#090A0F]">
+      {/* Level sub-selector navigation
+          sticky top-[80px] because App.tsx <main> has pt-20 (80px) which
+          already compensates for the 64px pill navbar + 16px gap. */}
+      <div
+        className="sticky top-[80px] z-30 backdrop-blur-xl"
+        style={{ background: 'rgba(9,10,15,0.85)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-start h-12 gap-1">
+          {/* overflow-x-auto + no-scrollbar so tabs scroll on 320px screens */}
+          <div className="flex items-center overflow-x-auto no-scrollbar gap-1 py-1">
             <button
               onClick={() => setLevel('white')}
-              className={`flex items-center gap-2 px-5 h-full text-xs font-bold transition-all duration-200 border-b-2 cursor-pointer ${
+              className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 text-xs font-bold rounded-full whitespace-nowrap flex-shrink-0 transition-all duration-200 cursor-pointer ${
                 level === 'white'
-                  ? 'border-accent-purple text-text-primary bg-accent-purple/5 shadow-[0_2px_8px_-2px] shadow-accent-purple/30'
-                  : 'border-transparent text-text-muted hover:text-text-secondary hover:bg-bg-card-hover'
+                  ? 'text-white'
+                  : 'text-slate-500 hover:text-slate-300'
               }`}
+              style={level === 'white'
+                ? { background: 'rgba(139,92,246,0.18)', border: '1px solid rgba(139,92,246,0.40)', boxShadow: '0 0 12px rgba(139,92,246,0.20)' }
+                : { background: 'transparent', border: '1px solid transparent' }
+              }
             >
-              <Award className={`h-4 w-4 ${level === 'white' ? 'text-accent-purple' : 'text-text-muted'}`} />
+              <Award className={`h-4 w-4 flex-shrink-0 ${ level === 'white' ? 'text-violet-400' : 'text-slate-600'}`} />
               <span>🥋 LEVEL 1: WHITE BELT</span>
             </button>
-            
+
             <button
               onClick={() => setLevel('orange')}
-              className={`flex items-center gap-2 px-5 h-full text-xs font-bold transition-all duration-200 border-b-2 cursor-pointer ${
+              className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 text-xs font-bold rounded-full whitespace-nowrap flex-shrink-0 transition-all duration-200 cursor-pointer ${
                 level === 'orange'
-                  ? 'border-accent-cyan text-text-primary bg-accent-cyan/5 shadow-[0_2px_8px_-2px] shadow-accent-cyan/30'
-                  : 'border-transparent text-text-muted hover:text-text-secondary hover:bg-bg-card-hover'
+                  ? 'text-white'
+                  : 'text-slate-500 hover:text-slate-300'
               }`}
+              style={level === 'orange'
+                ? { background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.38)', boxShadow: '0 0 12px rgba(6,182,212,0.18)' }
+                : { background: 'transparent', border: '1px solid transparent' }
+              }
             >
-              <Cpu className={`h-4 w-4 ${level === 'orange' ? 'text-accent-cyan' : 'text-text-muted'}`} />
+              <Cpu className={`h-4 w-4 flex-shrink-0 ${ level === 'orange' ? 'text-cyan-400' : 'text-slate-600'}`} />
               <span>🍊 LEVEL 2: ORANGE BELT</span>
             </button>
           </div>
