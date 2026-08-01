@@ -1,78 +1,143 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline — MirrorAsset
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
+# Cancel any in-progress run for the same branch/PR to save CI minutes
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  frontend-check:
-    name: Frontend TypeScript & Lint Check
+  # ────────────────────────────────────────────────────────────
+  # JOB 1 – Frontend: TypeScript + Tests + Production Build
+  # ────────────────────────────────────────────────────────────
+  frontend:
+    name: Frontend — TypeScript, Unit Tests & Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps --cache .npm_cache
 
-      - name: TypeScript Compile Check
+      - name: TypeScript Type Check
         run: npx tsc -b
 
-      - name: Run Frontend Unit & Integration Tests
+      - name: Run Frontend Unit & Integration Tests (vitest)
         run: npm run test
 
+      - name: Production Build (vite)
+        run: npm run build
+
+  # ────────────────────────────────────────────────────────────
+  # JOB 2 – Smart Contract: cargo test (9 unit tests)
+  # ────────────────────────────────────────────────────────────
   contract-test:
-    name: Soroban Contract Unit Tests
+    name: Soroban Contract — cargo test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts/mirror_vault
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Ubuntu System Dependencies
+      - name: Install System Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libssl-dev pkg-config build-essential
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libssl-dev pkg-config build-essential
 
-      - name: Set up Rust Toolchain
+      - name: Set up Stable Rust + wasm32v1-none target
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
           target: wasm32v1-none
           components: rust-src
+
+      - name: Cache Cargo Registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            contracts/mirror_vault/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('contracts/mirror_vault/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
 
       - name: Run Unit Tests
-        run: cargo test
-        working-directory: contracts/mirror_vault
+        # Tests run in the `test` profile (debug), NOT wasm32 target
+        run: cargo test --verbose
 
+      - name: Confirm Test Count (minimum 9)
+        run: |
+          COUNT=$(cargo test 2>&1 | grep -c "test test::" || true)
+          echo "Detected ${COUNT} test functions"
+          if [ "${COUNT}" -lt 9 ]; then
+            echo "ERROR: Expected at least 9 tests, found ${COUNT}"
+            exit 1
+          fi
+
+  # ────────────────────────────────────────────────────────────
+  # JOB 3 – Smart Contract: optimized WASM build
+  # ────────────────────────────────────────────────────────────
   contract-build:
-    name: Soroban Contract Compilation
+    name: Soroban Contract — stellar contract build
     runs-on: ubuntu-latest
+    needs: contract-test          # only build if tests pass
+    defaults:
+      run:
+        working-directory: contracts/mirror_vault
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Ubuntu System Dependencies
+      - name: Install System Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libssl-dev pkg-config build-essential
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libssl-dev pkg-config build-essential
 
-      - name: Set up Rust Toolchain
+      - name: Set up Stable Rust + wasm32v1-none target
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
           target: wasm32v1-none
           components: rust-src
 
-      - name: Install Prebuilt Stellar CLI
+      - name: Cache Cargo Registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            contracts/mirror_vault/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('contracts/mirror_vault/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Install Stellar CLI
         uses: stellar/stellar-cli@v27.0.0
 
-      - name: Build Optimized WASM Contract
+      - name: Build Optimised WASM Contract
         run: stellar contract build
-        working-directory: contracts/mirror_vault
+
+      - name: Verify WASM Artifact Exists
+        run: |
+          WASM="target/wasm32v1-none/release/mirror_vault.wasm"
+          if [ ! -f "${WASM}" ]; then
+            echo "ERROR: WASM artifact not found at ${WASM}"
+            exit 1
+          fi
+          SIZE=$(du -sh "${WASM}" | cut -f1)
+          echo "WASM build success — size: ${SIZE}"
