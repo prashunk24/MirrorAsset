@@ -364,45 +364,68 @@ export const OrangeBeltPlayground: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 animate-fade-in space-y-6">
       {/* Upper header */}
-      <div className="glass-panel p-6 rounded-2xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-accent-cyan/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="glass-card relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/8 rounded-full blur-3xl pointer-events-none" />
         <div className="space-y-2 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan rounded-full text-xs font-semibold">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold text-cyan-400"
+            style={{ background: 'rgba(6,182,212,0.10)', border: '1px solid rgba(6,182,212,0.25)' }}
+          >
             <Cpu className="h-3.5 w-3.5 animate-spin" />
             <span>Stellar Orange Belt Challenge</span>
           </div>
-          <h2 className="text-3xl font-extrabold text-text-primary">Soroban Smart Contract Playground</h2>
-          <p className="text-sm text-text-secondary">
-            Interact with our deployed contract on Testnet using **StellarWalletsKit** to support multiple wallet extensions, perform read/write contract calls, and listen for live network events.
+          <h2 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+            Soroban Smart Contract Playground
+          </h2>
+          <p className="text-sm text-slate-400">
+            Interact with our deployed contract on Testnet using <strong className="text-slate-200">StellarWalletsKit</strong> to support multiple wallet extensions, perform read/write contract calls, and listen for live network events.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         
         {/* Left Column (2 cols): Multi-wallet connect and Write Contract */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           
           {/* MULTI-WALLET CONNECT */}
-          <div className={`glass-panel p-6 rounded-2xl border-l-4 ${walletConnected ? 'border-l-accent-green' : 'border-l-accent-purple'}`}>
-            <h3 className="text-lg font-bold text-text-primary mb-4 flex items-center justify-between">
+          <div
+            className={`glass-card transition-all duration-300 ${
+              walletConnected
+                ? 'border-l-4'
+                : ''
+            }`}
+            style={walletConnected ? { borderLeftColor: 'rgba(52,211,153,0.80)', borderLeftWidth: '4px' } : {}}
+          >
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center justify-between">
               <span>Multi-Wallet Connection</span>
               {walletConnected && (
-                <span className="px-2 py-0.5 rounded bg-accent-green/10 text-accent-green border border-accent-green/20 text-xs font-medium">Connected</span>
+                <span
+                  className="px-2.5 py-0.5 rounded-full text-xs font-bold text-emerald-400"
+                  style={{ background: 'rgba(52,211,153,0.10)', border: '1px solid rgba(52,211,153,0.25)' }}
+                >
+                  Connected
+                </span>
               )}
             </h3>
 
             {walletConnected && publicKey ? (
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-bg-surface border border-border-subtle space-y-2">
-                  <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold block">Connected Wallet Address</span>
+                <div
+                  className="p-4 rounded-xl space-y-2"
+                  style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.09)' }}
+                >
+                  <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">Connected Wallet Address</span>
                   <div className="flex items-center justify-between gap-4">
-                    <span className="font-mono text-xs text-text-secondary break-all select-all">{publicKey}</span>
+                    <span className="font-mono text-xs text-slate-300 break-all select-all truncate">{publicKey}</span>
                     <button
                       onClick={disconnectWallet}
-                      className="px-3 py-1.5 bg-accent-red/10 hover:bg-accent-red/20 text-accent-red rounded-lg text-xs font-bold transition-all cursor-pointer"
+                      className="flex-shrink-0 px-3 py-1.5 text-rose-400 rounded-lg text-xs font-bold transition-all cursor-pointer hover:text-white"
+                      style={{ background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.25)' }}
+                      onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(239,68,68,0.22)'}
+                      onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'rgba(239,68,68,0.10)'}
                     >
                       Disconnect
                     </button>
@@ -410,38 +433,34 @@ export const OrangeBeltPlayground: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-xl bg-bg-surface/60 border border-border-subtle">
-                    <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold block">Connected Status</span>
-                    <span className="text-sm font-bold text-text-primary mt-1 block capitalize">Wallet Connected</span>
+                  <div className="p-4 rounded-xl" style={{ background: 'rgba(15,20,35,0.70)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">Connected Status</span>
+                    <span className="text-sm font-bold text-white mt-1 block">Wallet Connected</span>
                   </div>
-                  <div className="p-4 rounded-xl bg-bg-surface/60 border border-border-subtle">
-                    <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold block">Horizon Wallet Balance</span>
-                    <span className="text-sm font-bold text-text-primary mt-1 block">{balance ? `${balance} XLM` : 'Loading...'}</span>
+                  <div className="p-4 rounded-xl" style={{ background: 'rgba(15,20,35,0.70)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">Horizon Balance</span>
+                    <span className="text-sm font-bold text-cyan-400 mt-1 block">{balance ? `${balance} XLM` : 'Loading...'}</span>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="space-y-4">
-                <p className="text-xs text-text-secondary">
+                <p className="text-xs text-slate-400">
                   Select your preferred browser wallet extension to connect. The kit supports multiple providers out-of-the-box.
                 </p>
-                
                 <div className="flex justify-start">
                   <button
                     onClick={connectWallet}
                     disabled={isConnecting}
-                    className="flex items-center gap-2 px-6 py-3.5 bg-gradient-to-r from-accent-purple to-indigo-600 hover:from-accent-purple hover:to-indigo-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all shadow-lg cursor-pointer"
+                    className="touch-target flex items-center gap-2 px-6 rounded-xl text-xs font-bold transition-all shadow-lg cursor-pointer disabled:opacity-50 text-white"
+                    style={{ background: 'linear-gradient(to right, #4f46e5, #7c3aed)', boxShadow: '0 0 18px rgba(124,58,237,0.35)' }}
+                    onMouseEnter={e => { if (!(e.currentTarget as HTMLButtonElement).disabled) (e.currentTarget as HTMLElement).style.opacity = '0.90'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
                   >
                     {isConnecting ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Connecting...</span>
-                      </>
+                      <><Loader2 className="h-4 w-4 animate-spin" /><span>Connecting...</span></>
                     ) : (
-                      <>
-                        <Wallet className="h-4 w-4" />
-                        <span>Connect via StellarWalletsKit</span>
-                      </>
+                      <><Wallet className="h-4 w-4" /><span>Connect via StellarWalletsKit</span></>
                     )}
                   </button>
                 </div>
@@ -450,16 +469,22 @@ export const OrangeBeltPlayground: React.FC = () => {
           </div>
 
           {/* READ CONTRACT DATA */}
-          <div className="glass-panel p-6 rounded-2xl border-l-4 border-l-accent-cyan space-y-4">
+          <div
+            className="glass-card space-y-4 transition-all duration-300"
+            style={{ borderLeft: '4px solid rgba(6,182,212,0.70)' }}
+          >
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
-                <Layers className="h-5 w-5 text-accent-cyan" />
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <div className="icon-glow-box" style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.15) 0%, rgba(18,18,30,0.50) 100%)', border: '1px solid rgba(6,182,212,0.30)' }}>
+                  <Layers className="h-4 w-4 text-cyan-400" style={{ filter: 'drop-shadow(0 0 8px rgba(6,182,212,0.6))' }} />
+                </div>
                 Read Contract: Vault Health
               </h3>
               <button
                 onClick={readContractVault}
                 disabled={!walletConnected || isReadingContract}
-                className="p-1.5 bg-bg-surface hover:bg-bg-card-hover border border-border-subtle rounded-lg text-text-muted hover:text-text-primary transition-all cursor-pointer"
+                className="p-2 rounded-lg text-slate-500 hover:text-slate-200 transition-all cursor-pointer disabled:opacity-40"
+                style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.09)' }}
                 title="Refresh contract state"
               >
                 <RefreshCw className={`h-4 w-4 ${isReadingContract ? 'animate-spin' : ''}`} />
@@ -467,48 +492,72 @@ export const OrangeBeltPlayground: React.FC = () => {
             </div>
 
             {!walletConnected ? (
-              <div className="p-4 bg-bg-surface/40 border border-border-subtle rounded-xl text-center text-xs text-text-muted">
+              <div
+                className="p-4 rounded-xl text-center text-xs text-slate-500"
+                style={{ background: 'rgba(15,20,35,0.60)', border: '1px solid rgba(255,255,255,0.07)' }}
+              >
                 Connect your wallet to fetch your live on-chain vault data.
               </div>
             ) : vaultData ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-bg-surface border border-border-subtle flex justify-between items-center">
+                <div
+                  className="p-4 rounded-xl flex justify-between items-center"
+                  style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.09)' }}
+                >
                   <div>
-                    <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold block">On-Chain Collateral</span>
-                    <span className="text-xl font-black text-text-primary mt-1 block">{vaultData.collateral.toLocaleString()} XLM</span>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">On-Chain Collateral</span>
+                    <span className="text-xl font-black text-white mt-1 block">{vaultData.collateral.toLocaleString()} XLM</span>
                   </div>
-                  <CheckCircle2 className="h-5 w-5 text-accent-green" />
+                  <div className="icon-glow-box">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400" style={{ filter: 'drop-shadow(0 0 8px rgba(52,211,153,0.6))' }} />
+                  </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-bg-surface border border-border-subtle flex justify-between items-center">
+                <div
+                  className="p-4 rounded-xl flex justify-between items-center"
+                  style={{ background: 'rgba(15,20,35,0.80)', border: '1px solid rgba(255,255,255,0.09)' }}
+                >
                   <div>
-                    <span className="text-[10px] text-text-muted uppercase tracking-widest font-semibold block">On-Chain Minted Debt</span>
-                    <span className="text-xl font-black text-text-primary mt-1 block">{vaultData.debt.toLocaleString()} sXAU</span>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">On-Chain Minted Debt</span>
+                    <span className="text-xl font-black text-cyan-400 mt-1 block">{vaultData.debt.toLocaleString()} sXAU</span>
                   </div>
-                  <Sparkles className="h-5 w-5 text-accent-cyan" />
+                  <div
+                    className="icon-glow-box"
+                    style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.15) 0%, rgba(18,18,30,0.50) 100%)', border: '1px solid rgba(6,182,212,0.30)' }}
+                  >
+                    <Sparkles className="h-5 w-5 text-cyan-400" style={{ filter: 'drop-shadow(0 0 8px rgba(6,182,212,0.6))' }} />
+                  </div>
                 </div>
               </div>
             ) : (
-              <div className="p-4 bg-bg-surface/40 border border-border-subtle rounded-xl text-center text-xs text-text-muted">
+              <div
+                className="p-4 rounded-xl text-center text-xs text-slate-500"
+                style={{ background: 'rgba(15,20,35,0.60)', border: '1px solid rgba(255,255,255,0.07)' }}
+              >
                 Loading vault data from Soroban ledger...
               </div>
             )}
           </div>
 
           {/* WRITE CONTRACT TRANSACTION */}
-          <div className="glass-panel p-6 rounded-2xl border-l-4 border-l-indigo-500 space-y-4">
-            <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
-              <Send className="h-5 w-5 text-indigo-400" />
+          <div
+            className="glass-card space-y-4 transition-all duration-300"
+            style={{ borderLeft: '4px solid rgba(99,102,241,0.70)' }}
+          >
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <div className="icon-glow-box" style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(18,18,30,0.50) 100%)', border: '1px solid rgba(99,102,241,0.30)' }}>
+                <Send className="h-4 w-4 text-indigo-400" style={{ filter: 'drop-shadow(0 0 8px rgba(99,102,241,0.6))' }} />
+              </div>
               Write Contract: Deposit Collateral
             </h3>
 
             <div className="space-y-4">
-              <p className="text-xs text-text-secondary">
+              <p className="text-xs text-slate-400">
                 Lock XLM collateral directly inside our deployed Testnet Soroban contract. This builds a Soroban contract invocation transaction, simulates footprint assembly, requests user wallet signature, and broadcasts it to the ledger.
               </p>
 
               <div>
-                <label className="block text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5">
+                <label className="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">
                   Amount to Deposit (XLM)
                 </label>
                 <div className="flex gap-2">
@@ -518,12 +567,18 @@ export const OrangeBeltPlayground: React.FC = () => {
                     onChange={(e) => setDepositAmount(e.target.value)}
                     placeholder="10"
                     disabled={!walletConnected || writeStatus === 'Pending'}
-                    className="flex-grow bg-bg-dark border border-border-subtle rounded-xl px-4 py-2.5 text-sm font-bold text-text-secondary focus:outline-none focus:border-accent-purple transition-colors"
+                    className="touch-target flex-grow rounded-xl px-4 h-12 text-base sm:text-sm font-bold text-white focus:outline-none transition-all"
+                    style={{ background: 'rgba(15,20,35,0.90)', border: '1px solid rgba(255,255,255,0.09)' }}
+                    onFocus={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(139,92,246,0.60)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(139,92,246,0.12)'; }}
+                    onBlur={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.09)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
                   />
                   <button
                     onClick={writeDepositContract}
                     disabled={!walletConnected || writeStatus === 'Pending' || parseFloat(depositAmount) <= 0}
-                    className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-accent-purple hover:from-indigo-600 hover:to-accent-purple/90 disabled:opacity-40 disabled:pointer-events-none text-white rounded-xl text-xs font-bold interactive-action shadow-lg flex items-center gap-2 cursor-pointer"
+                    className="touch-target h-12 px-6 text-white rounded-xl text-xs font-bold transition-all shadow-lg flex items-center gap-2 cursor-pointer disabled:opacity-40 disabled:pointer-events-none flex-shrink-0"
+                    style={{ background: 'linear-gradient(to right, #4f46e5, #7c3aed)', boxShadow: '0 0 15px rgba(124,58,237,0.25)' }}
+                    onMouseEnter={e => { if (!(e.currentTarget as HTMLButtonElement).disabled) (e.currentTarget as HTMLElement).style.opacity = '0.90'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
                   >
                     {writeStatus === 'Pending' ? (
                       <>
@@ -579,56 +634,64 @@ export const OrangeBeltPlayground: React.FC = () => {
         </div>
 
         {/* Right Column: Event list & Logs terminal */}
-        <div className="space-y-6">
-          
+        <div className="space-y-4 sm:space-y-6">
+
           {/* Smart Contract Info */}
-          <div className="glass-panel p-5 rounded-2xl space-y-4">
-            <h3 className="text-base font-bold text-text-primary flex items-center gap-2">
-              <Cpu className="h-4.5 w-4.5 text-accent-cyan" />
+          <div className="glass-card">
+            <h3 className="text-base font-bold text-white flex items-center gap-2 mb-4">
+              <div className="icon-glow-box" style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.15) 0%, rgba(18,18,30,0.50) 100%)', border: '1px solid rgba(6,182,212,0.30)' }}>
+                <Cpu className="h-4 w-4 text-cyan-400" style={{ filter: 'drop-shadow(0 0 8px rgba(6,182,212,0.6))' }} />
+              </div>
               Contract Parameters
             </h3>
-            <div className="text-xs text-text-secondary space-y-3">
+            <div className="text-xs text-slate-400 space-y-3">
               <div>
-                <span className="text-text-muted block">Deployed Contract ID</span>
-                <span className="font-mono text-text-secondary break-all text-[10px]">{CONTRACT_ID}</span>
+                <span className="text-slate-500 block text-[10px] font-semibold uppercase tracking-wider mb-0.5">Deployed Contract ID</span>
+                <span className="font-mono text-slate-300 break-all text-[10px]">{CONTRACT_ID}</span>
               </div>
-              <div className="w-full h-[1px] bg-border-subtle"></div>
+              <div className="h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
               <div>
-                <span className="text-text-muted block">Network</span>
-                <span className="text-text-secondary font-bold">Stellar Testnet</span>
+                <span className="text-slate-500 block text-[10px] font-semibold uppercase tracking-wider mb-0.5">Network</span>
+                <span className="text-white font-bold text-xs">Stellar Testnet</span>
               </div>
-              <div className="w-full h-[1px] bg-border-subtle"></div>
+              <div className="h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
               <div>
-                <span className="text-text-muted block">Network Passphrase</span>
-                <span className="text-text-secondary font-mono text-[10px]">Test SDF Network ; September 2015</span>
+                <span className="text-slate-500 block text-[10px] font-semibold uppercase tracking-wider mb-0.5">Network Passphrase</span>
+                <span className="text-slate-400 font-mono text-[10px]">Test SDF Network ; September 2015</span>
               </div>
             </div>
           </div>
 
           {/* EVENT LISTENER */}
-          <div className="glass-panel p-5 rounded-2xl flex flex-col h-[320px]">
-            <h3 className="text-xs font-bold text-text-muted uppercase tracking-widest flex items-center gap-1.5 mb-3">
-              <Sparkles className="h-4 w-4 text-accent-cyan" />
+          <div
+            className="rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col"
+            style={{ background: '#06060a', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 8px 32px rgba(0,0,0,0.50)', minHeight: '300px' }}
+          >
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1.5 mb-3">
+              <Sparkles className="h-4 w-4 text-cyan-400" style={{ filter: 'drop-shadow(0 0 6px rgba(6,182,212,0.5))' }} />
               Live Soroban Events
             </h3>
-            
-            <div className="flex-grow bg-bg-dark rounded-xl p-3 font-mono text-[10px] overflow-y-auto border border-border-subtle space-y-3">
+
+            <div
+              className="flex-grow rounded-xl p-3 font-mono text-[10px] overflow-y-auto overflow-x-auto space-y-3"
+              style={{ background: 'rgba(0,0,0,0.60)', border: '1px solid rgba(255,255,255,0.05)' }}
+            >
               {contractEvents.length === 0 ? (
-                <span className="text-text-muted block italic">Listening for events... Make a contract deposit.</span>
+                <span className="text-slate-600 block italic">Listening for events… Make a contract deposit.</span>
               ) : (
                 contractEvents.map((ev, idx) => (
-                  <div key={idx} className="border-b border-border-subtle pb-2 space-y-1 leading-relaxed">
-                    <div className="flex justify-between items-center text-text-muted">
+                  <div key={idx} className="pb-2 space-y-1 leading-relaxed whitespace-pre-wrap break-all" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div className="flex justify-between items-center text-slate-600">
                       <span>Ledger: {ev.ledger}</span>
-                      <span>ID: {ev.id.substring(0, 8)}...</span>
+                      <span>ID: {ev.id.substring(0, 8)}…</span>
                     </div>
                     <div>
-                      <span className="text-accent-cyan font-bold">Topic:</span>{' '}
-                      <span className="text-text-secondary">{ev.topics.join(' ➡️ ')}</span>
+                      <span className="text-cyan-400 font-bold">Topic:</span>{' '}
+                      <span className="text-slate-300">{ev.topics.join(' ➡️ ')}</span>
                     </div>
                     <div>
                       <span className="text-indigo-400 font-bold">Data:</span>{' '}
-                      <span className="text-text-muted break-all">{ev.value}</span>
+                      <span className="text-slate-500">{ev.value}</span>
                     </div>
                   </div>
                 ))
@@ -637,22 +700,28 @@ export const OrangeBeltPlayground: React.FC = () => {
           </div>
 
           {/* REALTIME SYSTEM TERMINAL */}
-          <div className="glass-panel p-5 rounded-2xl flex flex-col h-[280px]">
-            <h3 className="text-xs font-bold text-text-muted uppercase tracking-widest flex items-center gap-1.5 mb-3">
-              <Terminal className="h-4 w-4 text-accent-green" />
+          <div
+            className="rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col"
+            style={{ background: '#06060a', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 8px 32px rgba(0,0,0,0.50)', minHeight: '240px' }}
+          >
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1.5 mb-3">
+              <Terminal className="h-4 w-4 text-emerald-400" style={{ filter: 'drop-shadow(0 0 6px rgba(52,211,153,0.5))' }} />
               Soroban RPC Console
             </h3>
-            <div className="flex-grow bg-bg-dark rounded-xl p-3 font-mono text-[10px] overflow-y-auto border border-border-subtle space-y-2">
+            <div
+              className="flex-grow rounded-xl p-3 font-mono text-[10px] overflow-y-auto overflow-x-auto space-y-2"
+              style={{ background: 'rgba(0,0,0,0.60)', border: '1px solid rgba(255,255,255,0.05)' }}
+            >
               {logs.length === 0 ? (
-                <span className="text-text-muted block italic">No logs...</span>
+                <span className="text-slate-600 block italic">No logs…</span>
               ) : (
                 logs.map((log, idx) => (
-                  <div key={idx} className="leading-relaxed">
-                    <span className="text-text-muted">[{log.timestamp}]</span>{' '}
+                  <div key={idx} className="leading-relaxed whitespace-pre-wrap break-all">
+                    <span className="text-slate-600">[{log.timestamp}]</span>{' '}
                     <span className={
-                      log.type === 'success' ? 'text-accent-green font-bold' :
-                      log.type === 'error' ? 'text-accent-red font-bold' :
-                      'text-text-secondary'
+                      log.type === 'success' ? 'text-emerald-400 font-bold' :
+                      log.type === 'error'   ? 'text-rose-400 font-bold' :
+                      'text-slate-300'
                     }>
                       {log.message}
                     </span>
